@@ -22,7 +22,7 @@ from udm.weapons import weapons
 # =============================================================================
 # Store a map of weapon tag and their udm.weapons._Weapon instances
 _weapons_by_tag = {
-    tag: weapons.by_tag(tag) for tag in weapons.tags
+    tag: weapons.by_tag(tag) for tag in ('secondary', 'primary', 'grenade')
 }
 
 
