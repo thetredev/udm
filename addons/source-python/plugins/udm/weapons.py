@@ -23,14 +23,6 @@ from udm.info import info
 
 
 # =============================================================================
-# >> PRIVATE GLOBAL VARIABLES
-# =============================================================================
-# Load the weapon names configuration in ../addons/source-python/data/plugins/udm/weapons/<GAME_NAME>.ini
-# If no file has been found, this will be an empty dictionary and the server won't crash
-_weapon_names = ConfigObj(PLUGIN_DATA_PATH / info.name / 'weapons' / GAME_NAME + '.ini')
-
-
-# =============================================================================
 # >> PRIVATE CLASSES
 # =============================================================================
 class _Weapon(object):
@@ -52,9 +44,12 @@ class _Weapon(object):
     @property
     def display_name(self):
         """Return the weapon's display name."""
+        # Get the INI configuration for this weapon
+        ini = weapons.ini[self.tag] if self.tag in weapons.ini else list()
+
         # Return the name found in _weapon_names
-        if self._basename in _weapon_names:
-            return _weapon_names[self._basename]
+        if self._basename in ini:
+            return ini[self._basename]
 
         # Otherwise simply return the weapon's basename
         return self._basename
@@ -71,12 +66,15 @@ class _Weapon(object):
 class Weapons(dict):
     """Convenience class used to mimic weapons.manager.weapon_manager and add a method to return all items by tag."""
 
+    # Load the weapon names configuration in ../addons/source-python/data/plugins/udm/weapons/<GAME_NAME>.ini
+    ini = ConfigObj(PLUGIN_DATA_PATH / info.name / 'weapons' / GAME_NAME + '.ini')
+
     # Store relevant weapon tags in a list
     tags = [tag for tag in weapon_manager.tags if tag != 'all']
 
     def by_tag(self, tag):
         """Yield all _Weapon instances categorized by <tag>."""
-        return [weapon for weapon in self.values() if weapon.tag == tag]
+        return [self[Weapons.format_classname(classname)] for classname in self.ini[tag]]
 
     @staticmethod
     def format_classname(classname):
