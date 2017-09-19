@@ -15,7 +15,6 @@ from core import GAME_NAME
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
-from weapons.entity import Weapon as Weapon
 from weapons.manager import weapon_manager
 
 # Script Imports
