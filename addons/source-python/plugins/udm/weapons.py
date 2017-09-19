@@ -71,12 +71,7 @@ class Weapons(dict):
 
     def by_tag(self, tag):
         """Yield all _Weapon instances categorized by <tag>."""
-        # Loop through all items in this dictionary
-        for classname, weapon in self.items():
-
-            # Yield the weapon's classname and the _Weapon instance if the weapon is categorized by <tag>
-            if tag == weapon.tag:
-                yield classname, weapon
+        return [weapon for weapon in self.values() if weapon.tag == tag]
 
     @staticmethod
     def format_classname(classname):
