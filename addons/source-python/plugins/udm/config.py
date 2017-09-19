@@ -20,11 +20,6 @@ from udm.info import info
 # Write the configuration file ../cfg/source-python/udm.cfg
 with ConfigManager(info.name, f'{info.name}_') as config:
 
-    # The chat command used to open the weapons menu
-    cvar_saycommand = config.cvar(
-        'saycommand', 'guns', 'The chat command used to open the weapons menu.'
-    )
-
     # The delay after which the player gets equipped on spawn
     cvar_equip_delay = config.cvar(
         'equip_delay', 0.0, 'The delay after which the player gets equipped on spawn. Must be positive!'
@@ -33,4 +28,9 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     # The respawn delay in seconds
     cvar_respawn_delay = config.cvar(
         'respawn_delay', 2, 'The respawn delay in seconds.'
+    )
+
+    # The chat command used to open the weapons menu
+    cvar_saycommand = config.cvar(
+        'saycommand', 'guns', 'The chat command used to open the weapons menu.'
     )
