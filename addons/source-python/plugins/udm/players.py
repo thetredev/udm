@@ -50,17 +50,6 @@ class _Inventory(list):
         # Return the weapon entity given to the player
         return player.give_named_item(classname)
 
-    def remove(self, classname):
-        """Override list.remove() to remove a weapon from the player's inventory in a safe way."""
-        # Correct the classname given in case it is only the weapon's basename
-        classname = Weapons.format_classname(classname)
-
-        # Get a PlayerEntity instance for the player's index
-        player = PlayerEntity(self._player_index)
-
-        # Safely remove the weapon entity if the player is currently owning it
-        self._safe_remove(player, classname)
-
     def _safe_remove(self, player, classname=None, **kwargs):
         """Safely remove a player's weapon entity and its index from this inventory."""
         # Loop through all the weapons the player is currently owning for the parameters provided
