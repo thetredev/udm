@@ -25,6 +25,7 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         'saycommand', 'guns', 'The chat command used to open the weapons menu.'
     )
 
+    # The delay after which the player gets equipped on spawn
     cvar_equip_delay = config.cvar(
         'equip_delay', 0.0, 'The delay after which the player gets equipped on spawn. Must be positive!'
     )
