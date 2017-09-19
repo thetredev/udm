@@ -18,15 +18,6 @@ from udm.weapons import weapons
 
 
 # =============================================================================
-# >> PRIVATE GLOBAL VARIABLES
-# =============================================================================
-# Store a map of weapon tag and their udm.weapons._Weapon instances
-_weapons_by_tag = {
-    tag: weapons.by_tag(tag) for tag in ('secondary', 'primary', 'grenade')
-}
-
-
-# =============================================================================
 # >> PRIVATE CLASSES
 # =============================================================================
 class _WeaponMenu(PagedRadioMenu):
@@ -37,7 +28,7 @@ class _WeaponMenu(PagedRadioMenu):
         # Call the super class constructor using the list of weapons mapped to the tag
         # and this menu's select callback
         super().__init__(
-            [PagedRadioOption(weapon.display_name, weapon.basename) for weapon in _weapons_by_tag[tag]],
+            [PagedRadioOption(weapon.display_name, weapon.basename) for weapon in weapons.by_tag(tag)],
             select_callback=self.select_callback, title=title
         )
 
