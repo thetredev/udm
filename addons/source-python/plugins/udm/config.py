@@ -21,4 +21,6 @@ from udm.info import info
 with ConfigManager(info.name, f'{info.name}_') as config:
 
     # The chat command used to open the weapons menu
-    cvar_saycommand = config.cvar('saycommand', 'guns', 'The chat command used to open the weapons menu.')
+    cvar_saycommand = config.cvar(
+        'saycommand', 'guns', 'The chat command used to open the weapons menu.'
+    )
