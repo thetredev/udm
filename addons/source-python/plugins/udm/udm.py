@@ -8,12 +8,33 @@
 # Source.Python Imports
 #   Commands
 from commands.typed import TypedSayCommand
+#   Events
+from events import Event
+#   Listeners
+from listeners.tick import Delay
 
 # Script Imports
 #   Config
+from udm.config import cvar_equip_delay
 from udm.config import cvar_saycommand
 #   Menus
 from udm.menus import secondary_menu
+#   Players
+from udm.players import PlayerEntity
+
+
+# =============================================================================
+# >> EVENTS
+# =============================================================================
+@Event('player_spawn')
+def on_player_spawn(event):
+    """Prepare the player for battle if the player is alive and on a team."""
+    # Get a udm.players.PlayerEntity instance for the player's userid
+    player = PlayerEntity.from_userid(event.get_int('userid'))
+
+    # Prepare the player if they're alive and on a team
+    if player.team > 1 and not player.dead:
+        Delay(abs(cvar_equip_delay.get_float()), player.prepare)
 
 
 # =============================================================================
