@@ -73,7 +73,7 @@ class Weapons(dict):
     tags = [tag for tag in weapon_manager.tags if tag != 'all']
 
     def by_tag(self, tag):
-        """Yield all _Weapon instances categorized by <tag>."""
+        """Return all _Weapon instances categorized by <tag>."""
         return [self[Weapons.format_classname(classname)] for classname in self.ini[tag]]
 
     @staticmethod
