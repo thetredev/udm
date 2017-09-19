@@ -42,7 +42,7 @@ class _Weapon(object):
         # Store the weapon's basename
         self._basename = weapon_class.basename
 
-        # Store the instance's primary tag
+        # Store the weapon's primary tag
         self._tag = [tag for tag in weapon_class.tags if tag != 'all'][0]
 
     @property
