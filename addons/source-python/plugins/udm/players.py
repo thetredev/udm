@@ -50,6 +50,9 @@ class _Inventory(list):
         # Add the weapon's index to this inventory
         super().append(weapon.index)
 
+        # Return the weapon entity given to the player
+        return weapon
+
     def remove(self, classname):
         """Override list.remove() to remove a weapon from the player's inventory in a safe way."""
         # Correct the classname given in case it is only the weapon's basename
