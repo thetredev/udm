@@ -44,14 +44,11 @@ class _Inventory(list):
         # Safely remove any weapon of the given tag the player is currently owning
         self._safe_remove(player, is_filters=weapons[classname].tag)
 
-        # Give the player the weapon
-        weapon = player.give_named_item(classname)
-
         # Add the weapon's index to this inventory
-        super().append(weapon.index)
+        super().append(classname)
 
         # Return the weapon entity given to the player
-        return weapon
+        return player.give_named_item(classname)
 
     def remove(self, classname):
         """Override list.remove() to remove a weapon from the player's inventory in a safe way."""
@@ -72,9 +69,8 @@ class _Inventory(list):
             # Remove the weapon entity from the server
             weapon.remove()
 
-            # Remove the weapon's index from this inventory if it has been added
-            if weapon.index in self:
-                super().remove(weapon.index)
+            if weapon.classname in self:
+                super().remove(weapon.classname)
 
 
 # =============================================================================
