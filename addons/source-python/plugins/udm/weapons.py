@@ -66,8 +66,8 @@ class _Weapon(object):
 class Weapons(dict):
     """Convenience class used to mimic weapons.manager.weapon_manager and add a method to return all items by tag."""
 
-    # Store weapons.manager.weapon_manager.prefix as a shortcut
-    prefix = weapon_manager.prefix
+    # Store relevant weapon tags in a list
+    tags = [tag for tag in weapon_manager.tags if tag != 'all']
 
     def by_tag(self, tag):
         """Yield all _Weapon instances categorized by <tag>."""
