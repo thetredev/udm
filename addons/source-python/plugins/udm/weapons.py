@@ -85,6 +85,7 @@ class Weapons(dict):
         if not classname.startswith(weapon_manager.prefix):
             classname = f'{weapon_manager.prefix}{classname}'
 
+        # Return the (formatted) classname
         return classname
 
 
