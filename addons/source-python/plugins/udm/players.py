@@ -89,6 +89,19 @@ class PlayerEntity(Player):
         - Wrap players.entity.Player.give_named_item() to return an actual weapons.entity.Weapon instance
         - Provide a safe and easy way to access the player's inventory"""
 
+    def prepare(self):
+        """Prepare the player for battle."""
+        # Loop through all the player's weapons except for 'knife'
+        for weapon in self.weapons(not_filters='knife'):
+
+            # Remove the weapon it doesn't exist in in the player's inventory
+            if weapon.classname not in self.inventory:
+                weapon.remove()
+
+        # Equip the player with all the weapons stored in their inventory
+        for classname in self.inventory:
+            self.give_named_item(classname)
+
     def give_named_item(self, classname):
         """Make self.give_named_item() return an actual weapons.entity.Weapon instance."""
         return make_object(Weapon, super().give_named_item(classname))
