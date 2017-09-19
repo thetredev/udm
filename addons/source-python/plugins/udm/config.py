@@ -29,3 +29,8 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     cvar_equip_delay = config.cvar(
         'equip_delay', 0.0, 'The delay after which the player gets equipped on spawn. Must be positive!'
     )
+
+    # The respawn delay in seconds
+    cvar_respawn_delay = config.cvar(
+        'respawn_delay', 2, 'The respawn delay in seconds.'
+    )
