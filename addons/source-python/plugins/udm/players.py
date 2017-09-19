@@ -5,6 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Random
+import random
+
 # Source.Python Imports
 #   Memory
 from memory import make_object
@@ -68,6 +72,9 @@ class _Inventory(list):
 # Store a global map of players and their inventories
 _inventories = dict()
 
+# Store the weapon tags for random weapons
+_random_weapon_tags = ('secondary', 'primary', 'grenade')
+
 
 # =============================================================================
 # >> PUBLIC CLASSES
@@ -90,6 +97,9 @@ class PlayerEntity(Player):
         # Equip the player with all the weapons stored in their inventory
         for classname in self.inventory:
             self.give_named_item(classname)
+        else:
+            for tag in _random_weapon_tags:
+                self.give_named_item(random.choice(weapons.by_tag(tag)).basename)
 
     def give_named_item(self, classname):
         """Make self.give_named_item() return an actual weapons.entity.Weapon instance."""
