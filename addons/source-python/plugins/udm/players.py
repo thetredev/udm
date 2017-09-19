@@ -16,6 +16,7 @@ from weapons.entity import Weapon
 # Script Imports
 #   Weapons
 from udm.weapons import weapons
+from udm.weapons import Weapons
 
 
 # =============================================================================
@@ -35,7 +36,7 @@ class _Inventory(list):
     def append(self, classname):
         """Override list.append() to equip the player with the given weapon in a safe way."""
         # Correct the classname given in case it is only the weapon's basename
-        classname = _Inventory.format_classname(classname)
+        classname = Weapons.format_classname(classname)
 
         # Get a PlayerEntity instance for the player's index
         player = PlayerEntity(self._player_index)
@@ -52,7 +53,7 @@ class _Inventory(list):
     def remove(self, classname):
         """Override list.remove() to remove a weapon from the player's inventory in a safe way."""
         # Correct the classname given in case it is only the weapon's basename
-        classname = _Inventory.format_classname(classname)
+        classname = Weapons.format_classname(classname)
 
         # Get a PlayerEntity instance for the player's index
         player = PlayerEntity(self._player_index)
@@ -71,16 +72,6 @@ class _Inventory(list):
             # Remove the weapon's index from this inventory if it has been added
             if weapon.index in self:
                 super().remove(weapon.index)
-
-    @staticmethod
-    def format_classname(classname):
-        """Convenience method to format a classname with the game's weapon prefix."""
-        # Add the weapon prefix to the classname if the classname doesn't start with it
-        if not classname.startswith(weapons.prefix):
-            classname = f'{weapons.prefix}{classname}'
-
-        # Return the (re-formatted) classname
-        return classname
 
 
 # =============================================================================

@@ -60,7 +60,10 @@ class _Weapon(object):
         return self._tag
 
 
-class _Weapons(dict):
+# =============================================================================
+# >> PUBLIC CLASSES
+# =============================================================================
+class Weapons(dict):
     """Convenience class used to mimic weapons.manager.weapon_manager and add a method to return all items by tag."""
 
     # Store weapons.manager.weapon_manager.prefix as a shortcut
@@ -75,11 +78,20 @@ class _Weapons(dict):
             if tag == weapon.tag:
                 yield classname, weapon
 
+    @staticmethod
+    def format_classname(classname):
+        """Convenience method to format a classname with the game's weapon prefix."""
+        # Add the weapon prefix to the classname if the classname doesn't start with it
+        if not classname.startswith(weapon_manager.prefix):
+            classname = f'{weapon_manager.prefix}{classname}'
+
+        return classname
+
 
 # =============================================================================
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
 # Store a map of weapon classname and _Weapon instance for all weapons found in weapons.manager.weapon_manager
-weapons = _Weapons({
+weapons = Weapons({
     classname: _Weapon(weapon_class) for classname, weapon_class in weapon_manager.items()
 })
