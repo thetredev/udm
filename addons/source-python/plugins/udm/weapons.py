@@ -45,6 +45,11 @@ class _Weapon(object):
         self._tag = [tag for tag in weapon_class.tags if tag != 'all'][0]
 
     @property
+    def basename(self):
+        """Return the weapon's basename."""
+        return self._basename
+
+    @property
     def display_name(self):
         """Return the weapon's display name."""
         # Return the name found in _weapon_names
