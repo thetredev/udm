@@ -93,6 +93,10 @@ class PlayerEntity(Player):
 
     def give_named_item(self, classname):
         """Make self.give_named_item() return an actual weapons.entity.Weapon instance."""
+        # Format the classname with the weapons prefix, if neededf
+        classname = Weapons.format_classname(classname)
+
+        # Give the player the weapon and return its weapons.entity.Weapon instance
         return make_object(Weapon, super().give_named_item(classname))
 
     @property
