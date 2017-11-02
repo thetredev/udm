@@ -61,5 +61,5 @@ def on_saycommand_guns(command_info):
     # Send the Secondary Weapons menu to the player
     secondary_menu.send(command_info.index)
 
-    # Block the text from appearing in the chat
+    # Block the text from appearing in the chat window
     return False
