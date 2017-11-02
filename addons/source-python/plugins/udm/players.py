@@ -10,12 +10,8 @@
 import random
 
 # Source.Python Imports
-#   Memory
-from memory import make_object
 #   Players
 from players.entity import Player as Player
-#   Weapons
-from weapons.entity import Weapon
 
 # Script Imports
 #   Weapons
@@ -103,12 +99,8 @@ class PlayerEntity(Player):
                 self.give_named_item(random.choice(weapons.by_tag(tag)).basename)
 
     def give_named_item(self, classname):
-        """Make self.give_named_item() return an actual weapons.entity.Weapon instance."""
-        # Format the classname with the weapons prefix, if neededf
-        classname = Weapons.format_classname(classname)
-
-        # Give the player the weapon and return its weapons.entity.Weapon instance
-        return make_object(Weapon, super().give_named_item(classname))
+        """Make sure to correct the classname before passing it to the base give_named_item() method."""
+        super().give_named_item(Weapons.format_classname(classname))
 
     def spawn(self):
         """Safely respawn the player."""
