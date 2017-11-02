@@ -22,6 +22,8 @@ from udm.config import cvar_saycommand
 from udm.menus import secondary_menu
 #   Players
 from udm.players import PlayerEntity
+#   Weapons
+from udm.weapons import weapon_iter
 
 
 # =============================================================================
@@ -44,12 +46,14 @@ def on_player_death(event):
     # Get a udm.players.PlayerEntity instance for the victim's userid
     victim = PlayerEntity.from_userid(event.get_int('userid'))
 
-    # Remove all the weapons the victim currently owns
-    for weapon in victim.weapons():
-        weapon.remove()
+    # Get the delay value configured in the cvar 'udm_respawn_delay'
+    delay = abs(cvar_respawn_delay.get_float())
 
-    # Respawn the victim using the cvar 'udm_respawn_delay'
-    Delay(abs(cvar_respawn_delay.get_float()), victim.spawn, (True,))
+    # Remove all idle weapons after half the delay
+    Delay(delay / 2.0, weapon_iter.remove_idle)
+
+    # Safely respawn the victim after the delay
+    Delay(delay, victim.spawn, (True,))
 
 
 # =============================================================================
