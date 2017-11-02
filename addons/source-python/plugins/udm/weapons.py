@@ -42,16 +42,19 @@ class _Weapon(object):
 
     def __init__(self, weapon_class):
         """Initialize this object with a weapons.instance.WeaponClass instance."""
+        # Store the weapon's basename
+        self._basename = weapon_class.basename
+
+        # Store the weapon's maxammo value
+        self._maxammo = weapon_class.maxammo
+
         # Store the weapon's primary tag
         self._tag = [tag for tag in weapon_class.tags if tag != 'all'][0]
-
-        # Store the weapon class object
-        self._weapon_class = weapon_class
 
     @property
     def basename(self):
         """Return the weapon's basename."""
-        return self.weapon_class.basename
+        return self._basename
 
     @property
     def display_name(self):
@@ -67,13 +70,13 @@ class _Weapon(object):
         return self.basename
 
     @property
+    def maxammo(self):
+        return self._maxammo
+
+    @property
     def tag(self):
         """Return the weapon's primary tag."""
         return self._tag
-
-    @property
-    def weapon_class(self):
-        return self._weapon_class
 
 
 # =============================================================================
