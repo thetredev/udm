@@ -53,7 +53,7 @@ def on_player_death(event):
     Delay(delay / 2.0, weapon_iter.remove_idle)
 
     # Safely respawn the victim after the delay
-    Delay(delay, victim.spawn, (True,))
+    Delay(delay, victim.spawn)
 
 
 # =============================================================================
