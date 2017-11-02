@@ -10,6 +10,10 @@
 import random
 
 # Source.Python Imports
+#   Engines
+from engines.server import global_vars
+#   Listeners
+from listeners.tick import Delay
 #   Players
 from players.entity import Player as Player
 
@@ -110,6 +114,19 @@ class PlayerEntity(Player):
         """Make sure to correct the classname before passing it to the base give_named_item() method."""
         super().give_named_item(Weapons.format_classname(classname))
 
+    def refill_ammo(self):
+        """Refill the player's ammo on reload after the reload animation has finished."""
+        if self.active_weapon is not None:
+
+            # Get the 'next attack' property for the current weapon, plus a tolerance value of one second
+            next_attack = self.active_weapon.get_property_float('m_flNextPrimaryAttack') + 1
+
+            # Calculate the amount of time it would take for the reload animation to finish (tolerance included)
+            duration = next_attack - global_vars.current_time
+
+            # Refill the weapon's ammo after the reload animation has finished
+            Delay(duration, self._refill_ammo)
+
     def spawn(self):
         """Safely respawn the player."""
         if self.is_connected():
@@ -129,3 +146,8 @@ class PlayerEntity(Player):
         # If the player is disconnected, remove the player's inventory
         if self.index in _inventories:
             del _inventories[self.index]
+
+    def _refill_ammo(self):
+        """Refill the player's ammo."""
+        if self.active_weapon is not None:
+            self.active_weapon.ammo = weapons[self.active_weapon.classname].weapon_class.maxammo

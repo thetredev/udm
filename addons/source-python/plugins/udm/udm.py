@@ -77,6 +77,11 @@ def on_round_start(event):
             entity.remove()
 
 
+@Event('weapon_reload')
+def on_weapon_reload(event):
+    PlayerEntity.from_userid(event.get_int('userid')).refill_ammo()
+
+
 # =============================================================================
 # >> SAY COMMANDS
 # =============================================================================
