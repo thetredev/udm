@@ -45,8 +45,7 @@ class _Inventory(list):
         self._safe_remove(player, weapons[classname].tag)
 
         # Add the classname to this inventory
-        if classname not in self:
-            super().append(classname)
+        super().append(classname)
 
         # Return the weapon entity given to the player
         return player.give_named_item(classname)
@@ -61,6 +60,9 @@ class _Inventory(list):
 
             # Remove the weapon entity from the server
             weapon.remove()
+
+            if weapon.classname in self:
+                self.remove(weapon.classname)
 
 
 # =============================================================================
