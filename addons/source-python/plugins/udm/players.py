@@ -51,6 +51,9 @@ class _Inventory(list):
         # Return the weapon entity given to the player
         return player.give_named_item(classname)
 
+    def sorted_by_tags(self):
+        return sorted(self, key=lambda classname: weapons[classname].tag, reverse=True)
+
     def _safe_remove(self, player, tag):
         """Safely remove a player's weapon entity and its index from this inventory."""
         # Loop through all the weapons the player is currently owning for the parameters provided
@@ -90,8 +93,11 @@ class PlayerEntity(Player):
 
 
         # Equip the player with all the weapons stored in their inventory
-        for classname in self.inventory:
-            self.give_named_item(classname)
+        if self.inventory:
+            for classname in self.inventory.sorted_by_tags():
+                self.give_named_item(classname)
+
+        # Or give random weapons, if the inventory is empty
         else:
             for tag in _random_weapon_tags:
                 self.give_named_item(random.choice(weapons.by_tag(tag)).basename)
