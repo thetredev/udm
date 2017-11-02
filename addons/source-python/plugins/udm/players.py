@@ -42,24 +42,22 @@ class _Inventory(list):
         player = PlayerEntity(self._player_index)
 
         # Safely remove any weapon of the given tag the player is currently owning
-        self._safe_remove(player, is_filters=weapons[classname].tag)
+        self._safe_remove(player, weapons[classname].tag)
 
-        # Add the weapon's index to this inventory
-        super().append(classname)
+        # Add the classname to this inventory
+        if classname not in self:
+            super().append(classname)
 
         # Return the weapon entity given to the player
         return player.give_named_item(classname)
 
-    def _safe_remove(self, player, classname=None, **kwargs):
+    def _safe_remove(self, player, tag):
         """Safely remove a player's weapon entity and its index from this inventory."""
         # Loop through all the weapons the player is currently owning for the parameters provided
-        for weapon in player.weapons(classname, **kwargs):
+        for weapon in player.weapons(None, is_filters=tag):
 
             # Remove the weapon entity from the server
             weapon.remove()
-
-            if weapon.classname in self:
-                super().remove(weapon.classname)
 
 
 # =============================================================================
