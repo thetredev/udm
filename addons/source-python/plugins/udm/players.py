@@ -119,7 +119,7 @@ class PlayerEntity(Player):
 
     def refill_ammo(self):
         """Refill the player's ammo on reload after the reload animation has finished."""
-        if self.active_weapon is not None:
+        if self.active_weapon is not None and 'meele' not in weapons[self.active_weapon.classname].tag:
 
             # Get the 'next attack' property for the current weapon, plus a tolerance value of one second
             next_attack = self.active_weapon.get_property_float('m_flNextPrimaryAttack') + 1
@@ -152,5 +152,6 @@ class PlayerEntity(Player):
 
     def _refill_ammo(self):
         """Refill the player's ammo."""
-        if self.is_connected() and self.active_weapon is not None:
+        if self.is_connected() and self.active_weapon is not None\
+                and 'meele' not in weapons[self.active_weapon.classname].tag:
             self.active_weapon.ammo = weapons[self.active_weapon.classname].maxammo
