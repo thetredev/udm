@@ -87,6 +87,9 @@ class PlayerEntity(Player):
 
     def prepare(self):
         """Prepare the player for battle."""
+        # Equip the player with an assault suit
+        super().give_named_item('item_assaultsuit')
+
         # Loop through all the player's weapons except for 'knife'
         for weapon in self.weapons(not_filters='knife'):
 
