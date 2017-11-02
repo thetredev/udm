@@ -61,6 +61,7 @@ class _Inventory(list):
         player.give_named_item(classname)
 
     def sorted_by_tags(self):
+        """Return this inventory's classnames sorted by their weapon tags."""
         return sorted(self, key=lambda classname: weapons[classname].tag, reverse=True)
 
     def _safe_remove(self, player, tag):
