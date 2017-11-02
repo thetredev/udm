@@ -112,6 +112,11 @@ class PlayerEntity(Player):
         # Give the player the weapon and return its weapons.entity.Weapon instance
         return make_object(Weapon, super().give_named_item(classname))
 
+    def spawn(self, force):
+        """Safely respawn the player."""
+        if self.is_connected():
+            super().spawn(force)
+
     @property
     def inventory(self):
         """Provide access to the player's inventory in a safe and easy way."""
