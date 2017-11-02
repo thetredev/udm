@@ -204,7 +204,7 @@ class PlayerEntity(Player):
     def _refill_ammo(self):
         """Refill the player's ammo."""
         if self.is_connected() and self.active_weapon is not None \
-                and 'meele' not in weapons[self.active_weapon.classname].tag:
+                and weapons[self.active_weapon.classname].tag != 'meele':
             self.active_weapon.ammo = weapons[self.active_weapon.classname].maxammo
 
     def _unprotect(self):
