@@ -18,6 +18,7 @@ from listeners.tick import Delay
 # Script Imports
 #   Config
 from udm.config import cvar_equip_delay
+from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_saycommand
 #   Menus
@@ -81,6 +82,13 @@ def on_round_start(event):
 def on_weapon_reload(event):
     """Refill the player's ammo after the reload animation has finished."""
     PlayerEntity.from_userid(event.get_int('userid')).refill_ammo()
+
+
+@Event('hegrenade_detonate')
+def on_hegrenade_detonate(event):
+    """Equip the player with another High Explosive grenade if configured that way."""
+    if cvar_equip_hegrenade.get_int() == 2:
+        PlayerEntity.from_userid(event.get_int('userid')).give_named_item('hegrenade')
 
 
 # =============================================================================

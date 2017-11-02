@@ -18,6 +18,8 @@ from listeners.tick import Delay
 from players.entity import Player as Player
 
 # Script Imports
+#   Config
+from udm.config import cvar_equip_hegrenade
 #   Weapons
 from udm.weapons import weapons
 from udm.weapons import Weapons
@@ -101,8 +103,9 @@ class PlayerEntity(Player):
         # Equip the player with an assault suit
         super().give_named_item('item_assaultsuit')
 
-        # Equip the player with a High Explosive grenade
-        self.give_named_item('hegrenade')
+        # Equip the player with a High Explosive grenade if configured that way
+        if cvar_equip_hegrenade.get_int() > 0:
+            self.give_named_item('hegrenade')
 
         # Equip the player with all the weapons stored in their inventory
         if self.inventory:
