@@ -13,7 +13,7 @@ from configobj import ConfigObj
 #   Core
 from core import GAME_NAME
 #   Filters
-from filters.weapons import WeaponIter as _WeaponIter
+from filters.weapons import WeaponIter as WeaponIter
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
@@ -27,6 +27,16 @@ from udm.info import info
 # =============================================================================
 # >> PRIVATE CLASSES
 # =============================================================================
+class _WeaponIter(WeaponIter):
+    """Class used to extend filters.weapons.WeaponIter with a method to remove all idle weapons."""
+
+    def remove_idle(self):
+        """Remove all idle weapon entities on the server."""
+        for weapon in self:
+            if weapon.owner == None:
+                weapon.remove()
+
+
 class _Weapon(object):
     """Convenience class used to provide a weapon's display name and tag properties."""
 
@@ -89,16 +99,6 @@ class Weapons(dict):
         return classname
 
 
-class WeaponIter(_WeaponIter):
-    """Class used to extend filters.weapons.WeaponIter with a method to remove all idle weapons."""
-
-    def remove_idle(self):
-        """Remove all idle weapon entities on the server."""
-        for weapon in self:
-            if weapon.owner == None:
-                weapon.remove()
-
-
 # =============================================================================
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
@@ -108,4 +108,4 @@ weapons = Weapons({
 })
 
 # Store an instance of WeaponIter to be able to remove idle weapons
-weapon_iter = WeaponIter()
+weapon_iter = _WeaponIter()
