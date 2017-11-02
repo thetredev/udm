@@ -88,6 +88,10 @@ class PlayerEntity(Player):
         - Wrap players.entity.Player.give_named_item() to return an actual weapons.entity.Weapon instance
         - Provide a safe and easy way to access the player's inventory"""
 
+    def give_named_item(self, classname):
+        """Make sure to correct the classname before passing it to the base give_named_item() method."""
+        super().give_named_item(Weapons.format_classname(classname))
+
     def prepare(self):
         """Prepare the player for battle."""
         # Remove all the player's weapons except for 'knife'
@@ -109,10 +113,6 @@ class PlayerEntity(Player):
         else:
             for tag in _random_weapon_tags:
                 self.give_named_item(random.choice(weapons.by_tag(tag)).basename)
-
-    def give_named_item(self, classname):
-        """Make sure to correct the classname before passing it to the base give_named_item() method."""
-        super().give_named_item(Weapons.format_classname(classname))
 
     def refill_ammo(self):
         """Refill the player's ammo on reload after the reload animation has finished."""
