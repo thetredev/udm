@@ -79,6 +79,7 @@ def on_round_start(event):
 
 @Event('weapon_reload')
 def on_weapon_reload(event):
+    """Refill the player's ammo after the reload animation has finished."""
     PlayerEntity.from_userid(event.get_int('userid')).refill_ammo()
 
 
