@@ -19,7 +19,7 @@ from udm.config import cvar_equip_delay
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_saycommand
 #   Menus
-from udm.menus import secondary_menu
+from udm.menus import primary_menu
 #   Players
 from udm.players import PlayerEntity
 #   Weapons
@@ -61,8 +61,8 @@ def on_player_death(event):
 # =============================================================================
 @TypedSayCommand(cvar_saycommand.get_string())
 def on_saycommand_guns(command_info):
-    """Send the Secondary Weapons menu to the player."""
-    secondary_menu.send(command_info.index)
+    """Send the Primary Weapons menu to the player."""
+    primary_menu.send(command_info.index)
 
     # Block the text from appearing in the chat window
     return False

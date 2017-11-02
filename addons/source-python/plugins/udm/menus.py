@@ -48,11 +48,8 @@ class _WeaponMenu(PagedRadioMenu):
 # =============================================================================
 # >> PUBLIC GLOBAL VARAIBLES
 # =============================================================================
-# Create the Grenade menu without any <next_menu>
-grenade_menu = _WeaponMenu('grenade', 'Grenade', None)
+# Create the Secondary Weapons menu using the Primary Weapons menu as the <next_menu> parameter
+secondary_menu = _WeaponMenu('secondary', 'Secondary Weapons', None)
 
 # Create the Primary Weapons menu using the Grenade menu as the <next_menu> parameter
-primary_menu = _WeaponMenu('primary', 'Primary Weapons', grenade_menu)
-
-# Create the Secondary Weapons menu using the Primary Weapons menu as the <next_menu> parameter
-secondary_menu = _WeaponMenu('secondary', 'Secondary Weapons', primary_menu)
+primary_menu = _WeaponMenu('primary', 'Primary Weapons', secondary_menu)

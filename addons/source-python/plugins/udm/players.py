@@ -73,7 +73,7 @@ class _Inventory(list):
 _inventories = dict()
 
 # Store the weapon tags for random weapons
-_random_weapon_tags = ('secondary', 'primary', 'grenade')
+_random_weapon_tags = ('secondary', 'primary')
 
 
 # =============================================================================
