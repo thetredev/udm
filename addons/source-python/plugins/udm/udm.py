@@ -10,6 +10,8 @@
 from commands.typed import TypedSayCommand
 #   Events
 from events import Event
+#   Filters
+from filters.entities import EntityIter
 #   Listeners
 from listeners.tick import Delay
 
@@ -24,6 +26,17 @@ from udm.menus import primary_menu
 from udm.players import PlayerEntity
 #   Weapons
 from udm.weapons import weapon_iter
+
+
+# =============================================================================
+# >> PUBLIC GLOBAL VARIABLES
+# =============================================================================
+# Store a tuple of map functions, so we can remove them on round start
+map_functions = (
+    EntityIter('func_buyzone'),
+    EntityIter('func_bomb_target'),
+    EntityIter('func_hostage_rescue')
+)
 
 
 # =============================================================================
@@ -54,6 +67,14 @@ def on_player_death(event):
 
     # Safely respawn the victim after the delay
     Delay(delay, victim.spawn)
+
+
+@Event('round_start')
+def on_round_start(event):
+    """Remove all specified map functions from the map."""
+    for map_function in map_functions:
+        for entity in map_function:
+            entity.remove()
 
 
 # =============================================================================
