@@ -10,6 +10,9 @@
 import random
 
 # Source.Python Imports
+#   Colors
+from colors import Color
+from colors import WHITE
 #   Engines
 from engines.server import global_vars
 #   Listeners
@@ -20,6 +23,7 @@ from players.entity import Player
 # Script Imports
 #   Config
 from udm.config import cvar_equip_hegrenade
+from udm.config import cvar_spawn_protection_delay
 #   Weapons
 from udm.weapons import weapons
 from udm.weapons import Weapons
@@ -94,8 +98,26 @@ class PlayerEntity(Player):
         """Make sure to correct the classname before passing it to the base give_named_item() method."""
         super().give_named_item(Weapons.format_classname(classname))
 
+    def _protect(self):
+        """Protect the player for the configured spawn protection duration."""
+        # Enable god mode
+        self.godmode = True
+
+        # Set the player's color
+        self.color = Color(
+            210 if self.team == 2 else 0,
+            0,
+            210 if self.team == 3 else 0
+        )
+
+        # Call _unprotect() after the configured spawn protection duration
+        Delay(cvar_spawn_protection_delay.get_int(), self._unprotect)
+
     def prepare(self):
         """Prepare the player for battle."""
+        # Protect the player from any damage
+        self._protect()
+
         # Remove all the player's weapons except for 'knife'
         for weapon in self.weapons(not_filters='knife'):
             weapon.remove()
@@ -155,3 +177,13 @@ class PlayerEntity(Player):
         if self.is_connected() and self.active_weapon is not None\
                 and 'meele' not in weapons[self.active_weapon.classname].tag:
             self.active_weapon.ammo = weapons[self.active_weapon.classname].maxammo
+
+    def _unprotect(self):
+        """Enable default gameplay, if they're still online."""
+        if self.is_connected():
+
+            # Disable god mode
+            self.godmode = False
+
+            # Reset the player's color
+            self.color = WHITE
