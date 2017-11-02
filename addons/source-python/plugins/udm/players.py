@@ -30,6 +30,16 @@ from udm.weapons import Weapons
 
 
 # =============================================================================
+# >> PRIVATE GLOBAL VARIABLES
+# =============================================================================
+# Store a global map of players and their inventories
+_inventories = dict()
+
+# Store the weapon tags for random weapons
+_random_weapon_tags = ('secondary', 'primary')
+
+
+# =============================================================================
 # >> PRIVATE CLASSES
 # =============================================================================
 class _Inventory(list):
@@ -77,14 +87,7 @@ class _Inventory(list):
                 self.remove(weapon.classname)
 
 
-# =============================================================================
-# >> PRIVATE GLOBAL VARIABLES
-# =============================================================================
-# Store a global map of players and their inventories
-_inventories = dict()
 
-# Store the weapon tags for random weapons
-_random_weapon_tags = ('secondary', 'primary')
 
 
 # =============================================================================
