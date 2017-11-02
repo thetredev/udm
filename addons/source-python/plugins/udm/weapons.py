@@ -42,16 +42,16 @@ class _Weapon(object):
 
     def __init__(self, weapon_class):
         """Initialize this object with a weapons.instance.WeaponClass instance."""
-        # Store the weapon's basename
-        self._basename = weapon_class.basename
-
         # Store the weapon's primary tag
         self._tag = [tag for tag in weapon_class.tags if tag != 'all'][0]
+
+        # Store the weapon class object
+        self._weapon_class = weapon_class
 
     @property
     def basename(self):
         """Return the weapon's basename."""
-        return self._basename
+        return self._weapon_class.basename
 
     @property
     def display_name(self):
@@ -60,11 +60,11 @@ class _Weapon(object):
         ini = weapons.ini[self.tag] if self.tag in weapons.ini else list()
 
         # Return the name found in _weapon_names
-        if self._basename in ini:
-            return ini[self._basename]
+        if self.basename in ini:
+            return ini[self.basename]
 
         # Otherwise simply return the weapon's basename
-        return self._basename
+        return self.basename
 
     @property
     def tag(self):
