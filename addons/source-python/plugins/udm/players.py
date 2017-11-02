@@ -53,8 +53,8 @@ class _Inventory(list):
         # Add the classname to this inventory
         super().append(classname)
 
-        # Return the weapon entity given to the player
-        return player.give_named_item(classname)
+        # Give the player the weapon
+        player.give_named_item(classname)
 
     def sorted_by_tags(self):
         return sorted(self, key=lambda classname: weapons[classname].tag, reverse=True)
