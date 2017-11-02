@@ -62,7 +62,6 @@ def on_player_death(event):
 @TypedSayCommand(cvar_saycommand.get_string())
 def on_saycommand_guns(command_info):
     """Send the Secondary Weapons menu to the player."""
-    # Send the Secondary Weapons menu to the player
     secondary_menu.send(command_info.index)
 
     # Block the text from appearing in the chat window
