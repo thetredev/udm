@@ -15,7 +15,7 @@ from engines.server import global_vars
 #   Listeners
 from listeners.tick import Delay
 #   Players
-from players.entity import Player as Player
+from players.entity import Player
 
 # Script Imports
 #   Config
