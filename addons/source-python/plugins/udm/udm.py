@@ -62,7 +62,14 @@ def on_player_death(event):
 @TypedSayCommand(cvar_saycommand.get_string())
 def on_saycommand_guns(command_info):
     """Send the Primary Weapons menu to the player."""
-    primary_menu.send(command_info.index)
+    # Get a udm.players.PlayerEntity instance for the player who entered the say command
+    player = PlayerEntity(command_info.index)
+
+    # Clear their inventory
+    player.inventory.clear()
+
+    # Send the Primary Weapons menu to them
+    primary_menu.send(player.index)
 
     # Block the text from appearing in the chat window
     return False
