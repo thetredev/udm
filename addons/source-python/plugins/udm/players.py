@@ -149,5 +149,5 @@ class PlayerEntity(Player):
 
     def _refill_ammo(self):
         """Refill the player's ammo."""
-        if self.active_weapon is not None:
+        if self.is_connected() and self.active_weapon is not None:
             self.active_weapon.ammo = weapons[self.active_weapon.classname].maxammo
