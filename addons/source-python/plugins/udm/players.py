@@ -72,6 +72,7 @@ class _Inventory(list):
             # Remove the weapon entity from the server
             weapon.remove()
 
+            # Remove the classname from this inventory
             if weapon.classname in self:
                 self.remove(weapon.classname)
 
