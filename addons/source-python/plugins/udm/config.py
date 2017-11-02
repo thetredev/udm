@@ -25,6 +25,7 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         'equip_delay', 0.0, 'The delay after which the player gets equipped on spawn. Must be positive!'
     )
 
+    # High Explosive grenade equipment behaviour
     cvar_equip_hegrenade = config.cvar(
         'equip_hegrenade', 1, '0 = Off; 1 = Equip on spawn; 2 = Equip on spawn and after each detonation'
     )
