@@ -120,9 +120,14 @@ class PlayerEntity(Player):
     @property
     def inventory(self):
         """Provide access to the player's inventory in a safe and easy way."""
-        # Create an _Inventory instance if no inventory exists for the player yet
-        if self.index not in _inventories:
-            _inventories[self.index] = _Inventory(self.index)
+        # If the player is connected, create an _Inventory instance if no inventory exists for the player yet
+        if self.is_connected():
+            if self.index not in _inventories:
+                _inventories[self.index] = _Inventory(self.index)
 
-        # Return the player's inventory
-        return _inventories[self.index]
+            # Return the player's inventory
+            return _inventories[self.index]
+
+        # If the player is disconnected, remove the player's inventory
+        if self.index in _inventories:
+            del _inventories[self.index]
