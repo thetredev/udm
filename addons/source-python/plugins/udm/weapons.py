@@ -51,7 +51,7 @@ class _Weapon(object):
     @property
     def basename(self):
         """Return the weapon's basename."""
-        return self._weapon_class.basename
+        return self.weapon_class.basename
 
     @property
     def display_name(self):
@@ -70,6 +70,10 @@ class _Weapon(object):
     def tag(self):
         """Return the weapon's primary tag."""
         return self._tag
+
+    @property
+    def weapon_class(self):
+        return self._weapon_class
 
 
 # =============================================================================
