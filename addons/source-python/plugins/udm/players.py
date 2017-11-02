@@ -91,6 +91,8 @@ class PlayerEntity(Player):
         # Equip the player with an assault suit
         super().give_named_item('item_assaultsuit')
 
+        # Equip the player with a High Explosive grenade
+        self.give_named_item('hegrenade')
 
         # Equip the player with all the weapons stored in their inventory
         if self.inventory:
