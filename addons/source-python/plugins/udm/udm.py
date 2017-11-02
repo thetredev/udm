@@ -28,6 +28,9 @@ from udm.players import PlayerEntity
 #   Weapons
 from udm.weapons import weapon_iter
 
+from udm.players import spawnpoints
+from udm.players import SpawnPoint
+
 
 # =============================================================================
 # >> PUBLIC GLOBAL VARIABLES
@@ -59,6 +62,10 @@ def on_player_death(event):
     """Remove all weapons the player owns and respawn the player."""
     # Get a udm.players.PlayerEntity instance for the victim's userid
     victim = PlayerEntity.from_userid(event.get_int('userid'))
+
+    # Add the victim's location as a spawn point
+    # Note: This is for testing purposes only...
+    spawnpoints.append(SpawnPoint(victim.origin.x, victim.origin.y, victim.origin.z, victim.view_angle))
 
     # Get the delay value configured in the cvar 'udm_respawn_delay'
     delay = abs(cvar_respawn_delay.get_float())
