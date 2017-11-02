@@ -35,6 +35,12 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         'respawn_delay', 2, 'The respawn delay in seconds.'
     )
 
+    # The minimum distance players have to have between a spawn point for it to be 'safe'
+    cvar_spawn_point_distance = config.cvar(
+        'spawn_point_distance', 150,
+        "The minimum distance players have to have between a spawn point for it to be 'safe'."
+    )
+
     # The spawn protection duration in seconds
     cvar_spawn_protection_delay = config.cvar(
         'spawn_protection_delay', 5, 'The spawn protection delay in seconds.'
