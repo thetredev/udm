@@ -35,7 +35,7 @@ from udm.players import SpawnPoint
 # =============================================================================
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
-# Store a tuple of map functions, so we can remove them on round start
+# Store a tuple of map functions, so we can disable them on round start
 map_functions = (
     EntityIter('func_buyzone'),
     EntityIter('func_bomb_target'),
@@ -79,10 +79,10 @@ def on_player_death(event):
 
 @Event('round_start')
 def on_round_start(event):
-    """Remove all specified map functions from the map."""
+    """Disable all specified map functions."""
     for map_function in map_functions:
         for entity in map_function:
-            entity.remove()
+            entity.call_input('Disable')
 
 
 @Event('weapon_reload')
@@ -115,3 +115,13 @@ def on_saycommand_guns(command_info):
 
     # Block the text from appearing in the chat window
     return False
+
+
+# =============================================================================
+# >> UNLOAD
+# =============================================================================
+def unload():
+    """Enable all specified map functions."""
+    for map_function in map_functions:
+        for entity in map_function:
+            entity.call_input('Enable')
