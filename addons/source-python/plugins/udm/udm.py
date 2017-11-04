@@ -25,11 +25,11 @@ from udm.config import cvar_saycommand
 from udm.menus import primary_menu
 #   Players
 from udm.players import PlayerEntity
+#   Spawn Points
+from udm.spawnpoints import spawnpoints
+from udm.spawnpoints import SpawnPoint
 #   Weapons
 from udm.weapons import weapon_iter
-
-from udm.players import spawnpoints
-from udm.players import SpawnPoint
 
 
 # =============================================================================
