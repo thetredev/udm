@@ -1,4 +1,4 @@
-# ../udm/menus.py
+# ../udm/weapons/menus.py
 
 """Provides a convenience class to create weapon menus in an easy way."""
 
@@ -48,8 +48,8 @@ class _WeaponMenu(PagedRadioMenu):
 # =============================================================================
 # >> PUBLIC GLOBAL VARAIBLES
 # =============================================================================
-# Create the Secondary Weapons menu using the Primary Weapons menu as the <next_menu> parameter
+# Create the Secondary Weapons menu using no <next_menu>
 secondary_menu = _WeaponMenu('secondary', 'Secondary Weapons', None)
 
-# Create the Primary Weapons menu using the Grenade menu as the <next_menu> parameter
+# Create the Primary Weapons menu using the Secondary Weapons menu as the <next_menu> parameter
 primary_menu = _WeaponMenu('primary', 'Primary Weapons', secondary_menu)
