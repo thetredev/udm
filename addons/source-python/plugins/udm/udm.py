@@ -19,10 +19,13 @@ from listeners.tick import Delay
 from players.helpers import userid_from_index
 
 # Script Imports
+#   Admin
+from udm.admin import admin_menu
 #   Config
 from udm.config import cvar_equip_delay
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_respawn_delay
+from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
 #   Delays
 from udm.delays import delay_manager
@@ -143,6 +146,15 @@ def on_saycommand_guns(command_info):
 
     # Send the Primary Weapons menu to them
     primary_menu.send(player.index)
+
+    # Block the text from appearing in the chat window
+    return False
+
+
+@TypedSayCommand(cvar_saycommand_admin.get_string(), permission='udm.admin')
+def on_saycommand_admin(command_info):
+    """Send the admin menu to the player."""
+    admin_menu.send(command_info.index)
 
     # Block the text from appearing in the chat window
     return False

@@ -46,6 +46,11 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         'spawn_protection_delay', 2, 'The spawn protection delay in seconds.'
     )
 
+    # The chat command used to open the admin menu
+    cvar_saycommand_admin = config.cvar(
+        'saycommand_admin', '!udm', 'The chat command used to open the admin menu.'
+    )
+
     # The chat command used to open the weapons menu
     cvar_saycommand_guns = config.cvar(
         'saycommand_guns', 'guns', 'The chat command used to open the weapons menu.'
