@@ -13,7 +13,10 @@ from events import Event
 #   Filters
 from filters.entities import EntityIter
 #   Listeners
+from listeners import OnClientDisconnect
 from listeners.tick import Delay
+#   Players
+from players.helpers import userid_from_index
 
 # Script Imports
 #   Config
@@ -21,6 +24,8 @@ from udm.config import cvar_equip_delay
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_saycommand
+#   Delays
+from udm.delays import delay_manager
 #   Menus
 from udm.menus import primary_menu
 #   Players
@@ -67,14 +72,17 @@ def on_player_death(event):
     # Note: This is for testing purposes only...
     spawnpoints.append(SpawnPoint(victim.origin.x, victim.origin.y, victim.origin.z, victim.view_angle))
 
-    # Get the delay value configured in the cvar 'udm_respawn_delay'
-    delay = abs(cvar_respawn_delay.get_float())
+    # Get the time delay value configured in the cvar 'udm_respawn_delay'
+    time_delay = abs(cvar_respawn_delay.get_float())
+
+    # Get the delay list from the delay manager
+    delay_list = delay_manager[f'respawn_{victim.userid}']
 
     # Remove all idle weapons after half the delay
-    Delay(delay / 2.0, weapon_iter.remove_idle)
+    delay_list.append(Delay(time_delay / 2.0, weapon_iter.remove_idle))
 
     # Safely respawn the victim after the delay
-    Delay(delay, victim.spawn)
+    delay_list.append(Delay(time_delay, victim.spawn))
 
 
 @Event('round_start')
@@ -83,6 +91,13 @@ def on_round_start(event):
     for map_function in map_functions:
         for entity in map_function:
             entity.call_input('Disable')
+
+
+@Event('round_end')
+def on_round_end(event):
+    """Cancel all pending delays."""
+    for key in delay_manager.copy():
+        delay_manager.cancel_delays(key)
 
 
 @Event('weapon_reload')
@@ -96,6 +111,22 @@ def on_hegrenade_detonate(event):
     """Equip the player with another High Explosive grenade if configured that way."""
     if cvar_equip_hegrenade.get_int() == 2:
         PlayerEntity.from_userid(event.get_int('userid')).give_named_item('hegrenade')
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnClientDisconnect
+def on_client_disconnect(index):
+    """Cancel all pending delays of the client."""
+    # Note: This is done, because the event 'player_disconnect' somehow does not get fired...
+
+    # Get the userid of the client
+    userid = userid_from_index(index)
+
+    # Cancel the client's pending delays
+    delay_manager.cancel_delays(f"respawn_{userid}")
+    delay_manager.cancel_delays(f"protect_{userid}")
 
 
 # =============================================================================

@@ -6,6 +6,8 @@
 # >> IMPORTS
 # =============================================================================
 # Python Imports
+#   Contextlib
+from contextlib import suppress
 #   Random
 import random
 
@@ -16,6 +18,7 @@ from colors import WHITE
 #   Engines
 from engines.server import global_vars
 #   Listeners
+from listeners import OnEntityDeleted
 from listeners.tick import Delay
 #   Players
 from players.entity import Player
@@ -24,6 +27,8 @@ from players.entity import Player
 #   Config
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_spawn_protection_delay
+#   Delays
+from udm.delays import delay_manager
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
 #   Weapons
@@ -115,7 +120,7 @@ class PlayerEntity(Player):
         )
 
         # Call _unprotect() after the configured spawn protection duration
-        Delay(cvar_spawn_protection_delay.get_int(), self._unprotect)
+        delay_manager[f'protect_{self.userid}'].append(Delay(cvar_spawn_protection_delay.get_int(), self._unprotect))
 
     def prepare(self):
         """Prepare the player for battle."""
@@ -153,15 +158,19 @@ class PlayerEntity(Player):
 
     def refill_ammo(self):
         """Refill the player's ammo on reload after the reload animation has finished."""
-        if self.active_weapon is not None and weapons[self.active_weapon.classname].tag != 'meele':
-            # Get the 'next attack' property for the current weapon, plus a tolerance value of one second
-            next_attack = self.active_weapon.get_property_float('m_flNextPrimaryAttack') + 1
+        with suppress(ValueError):
+            if weapons[self.active_weapon.classname].tag != 'meele':
 
-            # Calculate the amount of time it would take for the reload animation to finish (tolerance included)
-            duration = next_attack - global_vars.current_time
+                # Get the 'next attack' property for the current weapon, plus a tolerance value of one second
+                next_attack = self.active_weapon.get_property_float('m_flNextPrimaryAttack') + 1
 
-            # Refill the weapon's ammo after the reload animation has finished
-            Delay(duration, self._refill_ammo)
+                # Calculate the amount of time it would take for the reload animation to finish (tolerance included)
+                duration = next_attack - global_vars.current_time
+
+                # Refill the weapon's ammo after the reload animation has finished
+                delay_manager[f'refill_{self.active_weapon.index}'].append(
+                    Delay(duration, self._refill_ammo, (self.active_weapon, ))
+                )
 
     def spawn(self):
         """Safely respawn the player."""
@@ -183,15 +192,15 @@ class PlayerEntity(Player):
         if self.index in _inventories:
             del _inventories[self.index]
 
-    def _refill_ammo(self):
+    def _refill_ammo(self, weapon):
         """Refill the player's ammo."""
-        if self.is_connected() and self.active_weapon is not None \
-                and weapons[self.active_weapon.classname].tag != 'meele':
-            self.active_weapon.ammo = weapons[self.active_weapon.classname].maxammo
+        if weapon.owner is not None:
+            weapon.ammo = weapons[weapon.classname].maxammo
 
     def _unprotect(self):
         """Enable default gameplay, if they're still online."""
         if self.is_connected():
+
             # Disable god mode
             self.godmode = False
 
@@ -202,3 +211,7 @@ class PlayerEntity(Player):
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
+@OnEntityDeleted
+def on_entity_deleted(entity):
+    """Cancel the refill delay for the deleted entity."""
+    delay_manager.cancel_delays(f'refill_{entity.index}')
