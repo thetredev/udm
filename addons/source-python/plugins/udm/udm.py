@@ -23,7 +23,7 @@ from players.helpers import userid_from_index
 from udm.config import cvar_equip_delay
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_respawn_delay
-from udm.config import cvar_saycommand
+from udm.config import cvar_saycommand_guns
 #   Delays
 from udm.delays import delay_manager
 #   Menus
@@ -132,7 +132,7 @@ def on_client_disconnect(index):
 # =============================================================================
 # >> SAY COMMANDS
 # =============================================================================
-@TypedSayCommand(cvar_saycommand.get_string())
+@TypedSayCommand(cvar_saycommand_guns.get_string())
 def on_saycommand_guns(command_info):
     """Send the Primary Weapons menu to the player."""
     # Get a udm.players.PlayerEntity instance for the player who entered the say command
