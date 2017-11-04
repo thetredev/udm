@@ -164,7 +164,12 @@ def on_saycommand_admin(command_info):
 # >> UNLOAD
 # =============================================================================
 def unload():
-    """Enable all specified map functions."""
+    """Clean up."""
+    # Cancel all pending delays
+    for key in delay_manager.copy():
+        delay_manager.cancel_delays(key)
+
+    # Enable all specified map functions
     for map_function in map_functions:
         for entity in map_function:
             entity.call_input('Enable')
