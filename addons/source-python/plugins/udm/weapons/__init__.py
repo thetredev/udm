@@ -1,4 +1,4 @@
-# ../udm/weapons.py
+# ../udm/weapons/__init__.py
 
 """Provides convenience classes and global variables for weapon entities."""
 

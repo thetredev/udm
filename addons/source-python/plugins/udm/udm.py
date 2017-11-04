@@ -27,7 +27,7 @@ from udm.config import cvar_saycommand_guns
 #   Delays
 from udm.delays import delay_manager
 #   Menus
-from udm.menus import primary_menu
+from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import PlayerEntity
 #   Spawn Points
