@@ -75,7 +75,7 @@ def on_player_death(event):
     # Note: This is for testing purposes only...
     spawnpoints.append(SpawnPoint(victim.origin.x, victim.origin.y, victim.origin.z, victim.view_angle))
 
-    # Get the time delay value configured in the cvar 'udm_respawn_delay'
+    # Get the time delay value configured in the cvar 'respawn_delay'
     time_delay = abs(cvar_respawn_delay.get_float())
 
     # Get the delay list from the delay manager
