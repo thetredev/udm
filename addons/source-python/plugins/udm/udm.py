@@ -71,9 +71,6 @@ def on_player_death(event):
     # Get a udm.players.PlayerEntity instance for the victim's userid
     victim = PlayerEntity.from_userid(event.get_int('userid'))
 
-    # Add the victim's location as a spawn point
-    # Note: This is for testing purposes only...
-    spawnpoints.append(SpawnPoint(victim.origin.x, victim.origin.y, victim.origin.z, victim.view_angle))
 
     # Get the time delay value configured in the cvar 'respawn_delay'
     time_delay = abs(cvar_respawn_delay.get_float())
