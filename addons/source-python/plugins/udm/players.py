@@ -104,7 +104,7 @@ class PlayerEntity(Player):
         - Wrap players.entity.Player.give_named_item() to return an actual weapons.entity.Weapon instance
         - Provide a safe and easy way to access the player's inventory"""
 
-    def equip(self):
+    def equip(self, admin=False):
         """Equip the player with their inventory or random weapons."""
         # Equip the player with an assault suit
         super().give_named_item('item_assaultsuit')
@@ -123,6 +123,11 @@ class PlayerEntity(Player):
             for tag in _random_weapon_tags:
                 self.give_named_item(random.choice(weapons.by_tag(tag)).basename)
 
+        # Unprotect and re-equip the knife when the player closes the admin menu
+        if admin:
+            self.unprotect()
+            self.give_named_item('knife')
+
     def give_named_item(self, classname):
         """Make sure to correct the classname before passing it to the base give_named_item() method."""
         super().give_named_item(Weapons.format_classname(classname))
@@ -140,8 +145,8 @@ class PlayerEntity(Player):
             self.origin = spawnpoint
             self.view_angle = spawnpoint.angle
 
-        # Strip the player off their weapons
-        self.strip()
+        # Strip the player off their weapons, but keep the knife
+        self.strip('knife')
 
         # Equip the player
         self.equip()
@@ -183,9 +188,9 @@ class PlayerEntity(Player):
         if self.is_connected():
             super().spawn(True)
 
-    def strip(self):
+    def strip(self, keep=None):
         """Remove all the player's weapons except for 'knife'."""
-        for weapon in self.weapons(not_filters='knife'):
+        for weapon in self.weapons(not_filters=keep):
             weapon.remove()
 
     def unprotect(self):
