@@ -150,6 +150,8 @@ class SpawnPointManagerMenu(CloseButtonPagedMenu):
             spawnpoints.save()
             SayText2(f'{ORANGE}[{WHITE}Admin Menu{ORANGE}] Spawn Points have been saved.').send(player_index)
 
+            menu.send(player_index)
+
         # Handle the option 'List': Send the _SpawnPointManagerListMenu to the player
         else:
             option.value.send(player_index)
