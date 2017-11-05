@@ -77,6 +77,7 @@ class _SpawnPointManagerMenuOptions(IntEnum):
     ADD = 0,
     REMOVE = 1
     LIST = 2
+    SAVE = 3
 
 
 class SpawnPointManagerMenu(CloseButtonPagedMenu):
@@ -90,7 +91,9 @@ class SpawnPointManagerMenu(CloseButtonPagedMenu):
                 PagedRadioOption('Add', _SpawnPointManagerMenuOptions.ADD),
                 PagedRadioOption('Remove', _SpawnPointManagerMenuOptions.REMOVE),
                 ' ',
-                PagedRadioOption('List', _SpawnPointManagerListMenu(self))
+                PagedRadioOption('List', _SpawnPointManagerListMenu(self)),
+                ' ',
+                PagedRadioOption('Save', _SpawnPointManagerMenuOptions.SAVE)
             ], select_callback=self._select_callback, title='Spawn Point Manager'
         )
 
@@ -142,6 +145,10 @@ class SpawnPointManagerMenu(CloseButtonPagedMenu):
 
             # Send the menu back to the player
             menu.send(player_index)
+
+        elif option.value == _SpawnPointManagerMenuOptions.SAVE:
+            spawnpoints.save()
+            SayText2(f'{ORANGE}[{WHITE}Admin Menu{ORANGE}] Spawn Points have been saved.').send(player_index)
 
         # Handle the option 'List': Send the _SpawnPointManagerListMenu to the player
         else:
