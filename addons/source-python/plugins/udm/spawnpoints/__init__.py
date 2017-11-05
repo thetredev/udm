@@ -102,7 +102,7 @@ class _SpawnPoints(list):
 
         # Dump the contents of this list to file
         with self.json_file.open('w') as f:
-            json.dump([spawnpoint.json for spawnpoint in self], f)
+            json.dump([spawnpoint.json for spawnpoint in self], f, indent=4)
 
     def get_random(self):
         """Return a random spawn point safely."""
