@@ -130,7 +130,7 @@ class PlayerEntity(Player):
     def prepare(self):
         """Prepare the player for battle."""
         # Protect the player from any damage
-        self._protect()
+        self._protect(cvar_spawn_protection_delay.get_int())
 
         # Choose a random spawn point
         spawnpoint = spawnpoints.get_random()
@@ -192,7 +192,7 @@ class PlayerEntity(Player):
         if weapon.owner is not None:
             weapon.ammo = weapons[weapon.classname].maxammo
 
-    def _protect(self):
+    def _protect(self, time_delay=None):
         """Protect the player for the configured spawn protection duration."""
         # Enable god mode
         self.godmode = True
@@ -205,7 +205,8 @@ class PlayerEntity(Player):
         )
 
         # Call _unprotect() after the configured spawn protection duration
-        delay_manager[f'protect_{self.userid}'].append(Delay(cvar_spawn_protection_delay.get_int(), self._unprotect))
+        if time_delay is not None:
+            delay_manager[f'protect_{self.userid}'].append(Delay(time_delay, self._unprotect))
 
     def _unprotect(self):
         """Enable default gameplay, if they're still online."""
