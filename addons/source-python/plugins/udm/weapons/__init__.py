@@ -107,11 +107,19 @@ class Weapons(dict):
                 for weapon_class in [weapon_manager[Weapons.format_classname(key)] for key in weapon_names]
             })
 
+        # Store the tags provided
+        self._tags = list(data.keys())
+
     def by_tag(self, tag):
         """Return all _Weapon instances categorized by <tag>."""
         for weapon in self.values():
             if weapon.tag == tag:
                 yield weapon
+
+    @property
+    def tags(self):
+        """Return the tags provided."""
+        return self._tags
 
     @staticmethod
     def format_classname(classname):
