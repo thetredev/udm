@@ -13,8 +13,6 @@ from enum import IntEnum
 from colors import WHITE
 from colors import ORANGE
 #   Menus
-from menus.radio import BUTTON_CLOSE
-from menus.radio import PagedRadioMenu
 from menus.radio import PagedRadioOption
 #   Messages
 from messages import SayText2
@@ -24,6 +22,8 @@ from players.entity import Player
 # Script Imports
 #   Config
 from udm.config import cvar_spawn_point_distance
+#   Menus
+from udm.menus import CloseButtonPagedMenu
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
 from udm.spawnpoints import SpawnPoint
@@ -32,7 +32,7 @@ from udm.spawnpoints import SpawnPoint
 # =============================================================================
 # >> PRIVATE CLASSES
 # =============================================================================
-class _SpawnPointManagerListMenu(PagedRadioMenu):
+class _SpawnPointManagerListMenu(CloseButtonPagedMenu):
     """Menu class used to
 
         - Enumerate all available spawn points and make them selectable
@@ -41,9 +41,15 @@ class _SpawnPointManagerListMenu(PagedRadioMenu):
         - React to the 'close' button
     """
 
-    def __init__(self):
+    def __init__(self, parent_menu):
         """Initialize this menu using the internal build and select callbacks."""
-        super().__init__(build_callback=self._build_callback, select_callback=self._select_callback)
+        super().__init__(
+            parent_menu.send,
+            build_callback=self._build_callback, select_callback=self._select_callback
+        )
+
+        # Store the parent menu
+        self._parent_menu = parent_menu
 
     def _build_callback(self, menu, player_index):
         """Refill the menu with all available spawn points."""
@@ -51,15 +57,6 @@ class _SpawnPointManagerListMenu(PagedRadioMenu):
         menu.extend(
             [PagedRadioOption(f'#{index + 1}', spawnpoint) for index, spawnpoint in enumerate(spawnpoints)]
         )
-
-    def _select(self, player_index, choice_index):
-        """Override _select() to be able to react to the 'close' button within this menu."""
-        # Send the player the Spawn Point Manager menu if the player closes this menu
-        if choice_index == BUTTON_CLOSE:
-            spawnpoint_manager_menu.send(player_index)
-
-        # Continue the base class routine
-        super()._select(player_index, choice_index)
 
     def _select_callback(self, menu, player_index, option):
         """Spawn the player at the selected location."""
@@ -71,11 +68,7 @@ class _SpawnPointManagerListMenu(PagedRadioMenu):
         player.view_angle = option.value.angle
 
         # Send them the Spawn Point Manager menu
-        spawnpoint_manager_menu.send(player_index)
-
-
-# Store an instance of _SpawnPointManagerListMenu
-_spawnpoint_manager_list_menu = _SpawnPointManagerListMenu()
+        self._parent_menu.send(player_index)
 
 
 class _SpawnPointManagerMenuOptions(IntEnum):
@@ -86,17 +79,20 @@ class _SpawnPointManagerMenuOptions(IntEnum):
     LIST = 2
 
 
-class _SpawnPointManagerMenu(PagedRadioMenu):
+class SpawnPointManagerMenu(CloseButtonPagedMenu):
     """Menu class used to manage spawn points."""
 
-    def __init__(self):
+    def __init__(self, parent_menu):
         """Initialize this menu using the 'Add', 'Remove', and 'List' options and the internal select callback."""
-        super().__init__([
-            PagedRadioOption('Add', _SpawnPointManagerMenuOptions.ADD),
-            PagedRadioOption('Remove', _SpawnPointManagerMenuOptions.REMOVE),
-            ' ',
-            PagedRadioOption('List', _SpawnPointManagerMenuOptions.LIST)
-        ], self._select_callback, title='Spawn Point Manager')
+        super().__init__(
+            lambda player_index: parent_menu.send(player_index),
+            data=[
+                PagedRadioOption('Add', _SpawnPointManagerMenuOptions.ADD),
+                PagedRadioOption('Remove', _SpawnPointManagerMenuOptions.REMOVE),
+                ' ',
+                PagedRadioOption('List', _SpawnPointManagerListMenu(self))
+            ], select_callback=self._select_callback, title='Spawn Point Manager'
+        )
 
     def _select_callback(self, menu, player_index, option):
         """Handle the selected option."""
@@ -125,7 +121,7 @@ class _SpawnPointManagerMenu(PagedRadioMenu):
             menu.send(player_index)
 
         # Handle the option 'Remove'
-        if option.value == _SpawnPointManagerMenuOptions.REMOVE:
+        elif option.value == _SpawnPointManagerMenuOptions.REMOVE:
 
             # Find the spawn point closest to the player's current location
             for spawnpoint in spawnpoints.copy():
@@ -148,9 +144,5 @@ class _SpawnPointManagerMenu(PagedRadioMenu):
             menu.send(player_index)
 
         # Handle the option 'List': Send the _SpawnPointManagerListMenu to the player
-        if option.value == _SpawnPointManagerMenuOptions.LIST:
-            _spawnpoint_manager_list_menu.send(player_index)
-
-
-# Store a global instance of _SpawnPointManagerMenu
-spawnpoint_manager_menu = _SpawnPointManagerMenu()
+        else:
+            option.value.send(player_index)
