@@ -1,6 +1,6 @@
 # ../udm/admin.py
 
-"""Provides admin functionality."""
+"""Provides the Admin menu."""
 
 # =============================================================================
 # >> IMPORTS
