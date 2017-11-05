@@ -121,7 +121,7 @@ class PlayerEntity(Player):
         # Or give random weapons, if the inventory is empty
         else:
             for tag in _random_weapon_tags:
-                self.give_named_item(random.choice(weapons.by_tag(tag)).basename)
+                self.give_named_item(random.choice(list(weapons.by_tag(tag))).basename)
 
         # Unprotect and re-equip the knife when the player closes the admin menu
         if admin:

@@ -25,6 +25,13 @@ from udm.info import info
 
 
 # =============================================================================
+# >> PRIVATE GLOBAL VARIABLES
+# =============================================================================
+# Store the path to the weapons data file
+_weapons_ini = PLUGIN_DATA_PATH.joinpath(info.name, 'weapons', f'{GAME_NAME}.ini')
+
+
+# =============================================================================
 # >> PRIVATE CLASSES
 # =============================================================================
 class _WeaponIter(WeaponIter):
@@ -38,18 +45,24 @@ class _WeaponIter(WeaponIter):
 
 
 class _Weapon(object):
-    """Convenience class used to provide a weapon's display name and tag properties."""
+    """Class used to store information about a weapon."""
 
-    def __init__(self, weapon_class):
-        """Initialize this object with a weapons.instance.WeaponClass instance."""
+    def __init__(self, weapon_class, display_name, tag):
+        """Object initialization."""
         # Store the weapon's basename
         self._basename = weapon_class.basename
+
+        # Store the weapon's
+        self._display_name = display_name
+
+        # Store the weapon's name
+        self._name = weapon_class.name
 
         # Store the weapon's maxammo value
         self._maxammo = weapon_class.maxammo
 
         # Store the weapon's primary tag
-        self._tag = [tag for tag in weapon_class.tags if tag != 'all'][0]
+        self._tag = tag
 
     @property
     def basename(self):
@@ -59,19 +72,17 @@ class _Weapon(object):
     @property
     def display_name(self):
         """Return the weapon's display name."""
-        # Get the INI configuration for this weapon
-        ini = weapons.ini[self.tag] if self.tag in weapons.ini else list()
-
-        # Return the name found in _weapon_names
-        if self.basename in ini:
-            return ini[self.basename]
-
-        # Otherwise simply return the weapon's basename
-        return self.basename
+        return self._display_name
 
     @property
     def maxammo(self):
+        """Return the weapon's maxammo property."""
         return self._maxammo
+
+    @property
+    def name(self):
+        """Return the weapon's full name."""
+        return self._name
 
     @property
     def tag(self):
@@ -83,17 +94,24 @@ class _Weapon(object):
 # >> PUBLIC CLASSES
 # =============================================================================
 class Weapons(dict):
-    """Convenience class used to mimic weapons.manager.weapon_manager and add a method to return all items by tag."""
+    """Class used to map each weapon specified in the weapons data file to a _Weapon object."""
 
-    # Load the weapon names configuration in ../addons/source-python/data/plugins/udm/weapons/<GAME_NAME>.ini
-    ini = ConfigObj(PLUGIN_DATA_PATH / info.name / 'weapons' / f'{GAME_NAME}.ini')
+    def __init__(self, data):
+        """Object initialization."""
+        super().__init__()
 
-    # Store relevant weapon tags in a list
-    tags = [tag for tag in weapon_manager.tags if tag != 'all']
+        # Update this dictionary with the entries to map
+        for tag, weapon_names in data.items():
+            self.update({
+                weapon_class.name: _Weapon(weapon_class, weapon_names[weapon_class.basename], tag)
+                for weapon_class in [weapon_manager[Weapons.format_classname(key)] for key in weapon_names]
+            })
 
     def by_tag(self, tag):
         """Return all _Weapon instances categorized by <tag>."""
-        return [self[Weapons.format_classname(classname)] for classname in self.ini[tag]]
+        for weapon in self.values():
+            if weapon.tag == tag:
+                yield weapon
 
     @staticmethod
     def format_classname(classname):
@@ -109,10 +127,8 @@ class Weapons(dict):
 # =============================================================================
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
-# Store a map of weapon classname and _Weapon instance for all weapons found in weapons.manager.weapon_manager
-weapons = Weapons({
-    classname: _Weapon(weapon_class) for classname, weapon_class in weapon_manager.items()
-})
+# Store a global map of weapon classnames and _Weapon objects using the weapon data file
+weapons = Weapons(ConfigObj(_weapons_ini))
 
 # Store an instance of WeaponIter to be able to remove idle weapons
 weapon_iter = _WeaponIter()
