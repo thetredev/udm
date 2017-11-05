@@ -172,7 +172,7 @@ def on_saycommand_guns(command_info):
 
 @TypedSayCommand(cvar_saycommand_admin.get_string(), permission='udm.admin')
 def on_saycommand_admin(command_info):
-    """Send the admin menu to the player."""
+    """Send the Admin menu to the player."""
     # Get a PlayerEntity instance for the player
     player = PlayerEntity(command_info.index)
 
