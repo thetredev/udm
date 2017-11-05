@@ -105,8 +105,7 @@ def on_round_start(event):
 @Event('round_end')
 def on_round_end(event):
     """Cancel all pending delays."""
-    for key in delay_manager.copy():
-        delay_manager.cancel_delays(key)
+    delay_manager.cancel_all()
 
 
 @Event('weapon_reload')
@@ -142,8 +141,7 @@ def on_client_disconnect(index):
 @OnLevelEnd
 def on_level_end():
     """Cancel all pending delays."""
-    for key in delay_manager.copy():
-        delay_manager.cancel_delays(key)
+    delay_manager.cancel_all()
 
 
 @OnLevelInit
@@ -187,8 +185,7 @@ def on_saycommand_admin(command_info):
 def unload():
     """Clean up."""
     # Cancel all pending delays
-    for key in delay_manager.copy():
-        delay_manager.cancel_delays(key)
+    delay_manager.cancel_all()
 
     # Enable all specified map functions
     for map_function in map_functions:

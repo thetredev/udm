@@ -14,6 +14,11 @@ class _DelayManager(dict):
         value = self[key] = list()
         return value
 
+    def cancel_all(self):
+        """Cancel all pending delays."""
+        for key in self.copy():
+            self.cancel_delays(key)
+
     def cancel_delays(self, key):
         """Cancel all delays for the given key."""
         # Get the delay list for the given key
