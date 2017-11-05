@@ -108,21 +108,6 @@ class PlayerEntity(Player):
         """Make sure to correct the classname before passing it to the base give_named_item() method."""
         super().give_named_item(Weapons.format_classname(classname))
 
-    def _protect(self):
-        """Protect the player for the configured spawn protection duration."""
-        # Enable god mode
-        self.godmode = True
-
-        # Set the player's color
-        self.color = Color(
-            210 if self.team == 2 else 0,
-            0,
-            210 if self.team == 3 else 0
-        )
-
-        # Call _unprotect() after the configured spawn protection duration
-        delay_manager[f'protect_{self.userid}'].append(Delay(cvar_spawn_protection_delay.get_int(), self._unprotect))
-
     def prepare(self):
         """Prepare the player for battle."""
         # Protect the player from any damage
@@ -197,6 +182,21 @@ class PlayerEntity(Player):
         """Refill the player's ammo."""
         if weapon.owner is not None:
             weapon.ammo = weapons[weapon.classname].maxammo
+
+    def _protect(self):
+        """Protect the player for the configured spawn protection duration."""
+        # Enable god mode
+        self.godmode = True
+
+        # Set the player's color
+        self.color = Color(
+            210 if self.team == 2 else 0,
+            0,
+            210 if self.team == 3 else 0
+        )
+
+        # Call _unprotect() after the configured spawn protection duration
+        delay_manager[f'protect_{self.userid}'].append(Delay(cvar_spawn_protection_delay.get_int(), self._unprotect))
 
     def _unprotect(self):
         """Enable default gameplay, if they're still online."""
