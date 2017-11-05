@@ -165,6 +165,9 @@ def on_saycommand_admin(command_info):
     # Get a PlayerEntity instance for the player
     player = PlayerEntity(command_info.index)
 
+    # Cancel the protect delay so we can ensure that the next call to `player.protect()` stays unaffected by it
+    delay_manager.cancel_delays(f'protect_{player.userid}')
+
     # Protect the player for an unknown amount of time
     player.protect()
 
