@@ -5,6 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Contextlib
+import contextlib
+
 # Source.Python Imports
 #   Commands
 from commands.typed import TypedSayCommand
@@ -123,13 +127,14 @@ def on_hegrenade_detonate(event):
 def on_client_disconnect(index):
     """Cancel all pending delays of the client."""
     # Note: This is done, because the event 'player_disconnect' somehow does not get fired...
+    with contextlib.suppress(ValueError):
 
-    # Get the userid of the client
-    userid = userid_from_index(index)
+        # Get the userid of the client
+        userid = userid_from_index(index)
 
-    # Cancel the client's pending delays
-    delay_manager.cancel_delays(f"respawn_{userid}")
-    delay_manager.cancel_delays(f"protect_{userid}")
+        # Cancel the client's pending delays
+        delay_manager.cancel_delays(f"respawn_{userid}")
+        delay_manager.cancel_delays(f"protect_{userid}")
 
 
 # =============================================================================
