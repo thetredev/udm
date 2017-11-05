@@ -7,7 +7,7 @@
 # =============================================================================
 # Python Imports
 #   Contextlib
-from contextlib import suppress
+import contextlib
 #   Random
 import random
 
@@ -159,7 +159,7 @@ class PlayerEntity(Player):
 
     def refill_ammo(self):
         """Refill the player's ammo on reload after the reload animation has finished."""
-        with suppress(ValueError):
+        with contextlib.suppress(ValueError):
             if weapons[self.active_weapon.classname].tag != 'meele':
 
                 # Get the 'next attack' property for the current weapon, plus a tolerance value of one second
