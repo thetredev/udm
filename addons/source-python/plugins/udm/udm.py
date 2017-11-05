@@ -14,8 +14,6 @@ import contextlib
 from commands.typed import TypedSayCommand
 #   Events
 from events import Event
-#   Filters
-from filters.entities import EntityIter
 #   Listeners
 from listeners import OnClientDisconnect
 from listeners import OnLevelEnd
@@ -35,6 +33,8 @@ from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
 #   Delays
 from udm.delays import delay_manager
+#   Maps
+from udm.maps import map_functions
 #   Menus
 from udm.weapons.menus import primary_menu
 #   Players
@@ -49,12 +49,6 @@ from udm.weapons import weapon_iter
 # =============================================================================
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
-# Store a tuple of map functions, so we can disable them on round start
-map_functions = (
-    EntityIter('func_buyzone'),
-    EntityIter('func_bomb_target'),
-    EntityIter('func_hostage_rescue')
-)
 
 
 # =============================================================================
@@ -97,9 +91,7 @@ def on_player_death(event):
 @Event('round_start')
 def on_round_start(event):
     """Disable all specified map functions."""
-    for map_function in map_functions:
-        for entity in map_function:
-            entity.call_input('Disable')
+    map_functions.disable()
 
 
 @Event('round_end')
@@ -198,6 +190,4 @@ def unload():
     delay_manager.cancel_all()
 
     # Enable all specified map functions
-    for map_function in map_functions:
-        for entity in map_function:
-            entity.call_input('Enable')
+    map_functions.enable()
