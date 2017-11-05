@@ -173,6 +173,16 @@ def on_saycommand_guns(command_info):
 @TypedSayCommand(cvar_saycommand_admin.get_string(), permission='udm.admin')
 def on_saycommand_admin(command_info):
     """Send the admin menu to the player."""
+    # Get a PlayerEntity instance for the player
+    player = PlayerEntity(command_info.index)
+
+    # Protect the player for an unknown amount of time
+    player.protect()
+
+    # Strip the player off their weapons
+    player.strip()
+
+    # Send the Admin menu to the player
     admin_menu.send(command_info.index)
 
     # Block the text from appearing in the chat window
