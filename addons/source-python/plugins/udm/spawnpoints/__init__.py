@@ -86,9 +86,6 @@ class _SpawnPoints(list):
         if not self.json_file.exists():
             return
 
-        # Remove all spawn points from this list
-        self.clear()
-
         # Read the spawn points data file into memory
         with self.json_file.open() as f:
             contents = json.load(f)
