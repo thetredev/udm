@@ -104,6 +104,25 @@ class PlayerEntity(Player):
         - Wrap players.entity.Player.give_named_item() to return an actual weapons.entity.Weapon instance
         - Provide a safe and easy way to access the player's inventory"""
 
+    def equip(self):
+        """Equip the player with their inventory or random weapons."""
+        # Equip the player with an assault suit
+        super().give_named_item('item_assaultsuit')
+
+        # Equip the player with a High Explosive grenade if configured that way
+        if cvar_equip_hegrenade.get_int() > 0:
+            self.give_named_item('hegrenade')
+
+        # Equip the player with all the weapons stored in their inventory
+        if self.inventory:
+            for classname in self.inventory.sorted_by_tags():
+                self.give_named_item(classname)
+
+        # Or give random weapons, if the inventory is empty
+        else:
+            for tag in _random_weapon_tags:
+                self.give_named_item(random.choice(weapons.by_tag(tag)).basename)
+
     def give_named_item(self, classname):
         """Make sure to correct the classname before passing it to the base give_named_item() method."""
         super().give_named_item(Weapons.format_classname(classname))
@@ -121,26 +140,11 @@ class PlayerEntity(Player):
             self.origin = spawnpoint
             self.view_angle = spawnpoint.angle
 
-        # Remove all the player's weapons except for 'knife'
-        for weapon in self.weapons(not_filters='knife'):
-            weapon.remove()
+        # Strip the player off their weapons
+        self.strip()
 
-        # Equip the player with an assault suit
-        super().give_named_item('item_assaultsuit')
-
-        # Equip the player with a High Explosive grenade if configured that way
-        if cvar_equip_hegrenade.get_int() > 0:
-            self.give_named_item('hegrenade')
-
-        # Equip the player with all the weapons stored in their inventory
-        if self.inventory:
-            for classname in self.inventory.sorted_by_tags():
-                self.give_named_item(classname)
-
-        # Or give random weapons, if the inventory is empty
-        else:
-            for tag in _random_weapon_tags:
-                self.give_named_item(random.choice(weapons.by_tag(tag)).basename)
+        # Equip the player
+        self.equip()
 
     def refill_ammo(self):
         """Refill the player's ammo on reload after the reload animation has finished."""
@@ -162,6 +166,11 @@ class PlayerEntity(Player):
         """Safely respawn the player."""
         if self.is_connected():
             super().spawn(True)
+
+    def strip(self):
+        """Remove all the player's weapons except for 'knife'."""
+        for weapon in self.weapons(not_filters='knife'):
+            weapon.remove()
 
     @property
     def inventory(self):
