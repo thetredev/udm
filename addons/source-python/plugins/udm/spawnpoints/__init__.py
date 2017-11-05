@@ -12,6 +12,8 @@ import json
 import random
 
 # Source.Python Imports
+#   Core
+from core import GAME_NAME
 #   Engines
 from engines.server import global_vars
 #   Filters
@@ -34,7 +36,7 @@ from udm.config import cvar_spawn_point_distance
 _playeriter_alive = PlayerIter('alive')
 
 # Store the path to the plugin's spawn points data
-_spawnpoints_path = PLUGIN_DATA_PATH.joinpath('udm', 'spawnpoints')
+_spawnpoints_path = PLUGIN_DATA_PATH.joinpath('udm', 'spawnpoints', GAME_NAME)
 
 # Create the spawn points data path if it does not exist
 if not _spawnpoints_path.exists():
