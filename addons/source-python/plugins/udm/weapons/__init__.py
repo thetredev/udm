@@ -33,7 +33,7 @@ class _WeaponIter(WeaponIter):
     def remove_idle(self):
         """Remove all idle weapon entities on the server."""
         for weapon in self:
-            if weapon.owner == None:
+            if weapon.owner is None:
                 weapon.remove()
 
 
@@ -86,7 +86,7 @@ class Weapons(dict):
     """Convenience class used to mimic weapons.manager.weapon_manager and add a method to return all items by tag."""
 
     # Load the weapon names configuration in ../addons/source-python/data/plugins/udm/weapons/<GAME_NAME>.ini
-    ini = ConfigObj(PLUGIN_DATA_PATH / info.name / 'weapons' / GAME_NAME + '.ini')
+    ini = ConfigObj(PLUGIN_DATA_PATH / info.name / 'weapons' / f'{GAME_NAME}.ini')
 
     # Store relevant weapon tags in a list
     tags = [tag for tag in weapon_manager.tags if tag != 'all']
