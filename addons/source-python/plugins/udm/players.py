@@ -130,7 +130,7 @@ class PlayerEntity(Player):
     def prepare(self):
         """Prepare the player for battle."""
         # Protect the player from any damage
-        self._protect(cvar_spawn_protection_delay.get_int())
+        self.protect(cvar_spawn_protection_delay.get_int())
 
         # Choose a random spawn point
         spawnpoint = spawnpoints.get_random()
@@ -145,6 +145,22 @@ class PlayerEntity(Player):
 
         # Equip the player
         self.equip()
+
+    def protect(self, time_delay=None):
+        """Protect the player for the configured spawn protection duration."""
+        # Enable god mode
+        self.godmode = True
+
+        # Set the player's color
+        self.color = Color(
+            210 if self.team == 2 else 0,
+            0,
+            210 if self.team == 3 else 0
+        )
+
+        # Call _unprotect() after the configured spawn protection duration
+        if time_delay is not None:
+            delay_manager[f'protect_{self.userid}'].append(Delay(time_delay, self.unprotect))
 
     def refill_ammo(self):
         """Refill the player's ammo on reload after the reload animation has finished."""
@@ -172,6 +188,16 @@ class PlayerEntity(Player):
         for weapon in self.weapons(not_filters='knife'):
             weapon.remove()
 
+    def unprotect(self):
+        """Enable default gameplay, if they're still online."""
+        if self.is_connected():
+
+            # Disable god mode
+            self.godmode = False
+
+            # Reset the player's color
+            self.color = WHITE
+
     @property
     def inventory(self):
         """Provide access to the player's inventory in a safe and easy way."""
@@ -191,32 +217,6 @@ class PlayerEntity(Player):
         """Refill the player's ammo."""
         if weapon.owner is not None:
             weapon.ammo = weapons[weapon.classname].maxammo
-
-    def _protect(self, time_delay=None):
-        """Protect the player for the configured spawn protection duration."""
-        # Enable god mode
-        self.godmode = True
-
-        # Set the player's color
-        self.color = Color(
-            210 if self.team == 2 else 0,
-            0,
-            210 if self.team == 3 else 0
-        )
-
-        # Call _unprotect() after the configured spawn protection duration
-        if time_delay is not None:
-            delay_manager[f'protect_{self.userid}'].append(Delay(time_delay, self._unprotect))
-
-    def _unprotect(self):
-        """Enable default gameplay, if they're still online."""
-        if self.is_connected():
-
-            # Disable god mode
-            self.godmode = False
-
-            # Reset the player's color
-            self.color = WHITE
 
 
 # =============================================================================
