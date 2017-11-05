@@ -85,7 +85,7 @@ class _Inventory(list):
     def _safe_remove(self, player, tag):
         """Safely remove a player's weapon entity and its index from this inventory."""
         # Loop through all the weapons the player is currently owning for the parameters provided
-        for weapon in player.weapons(None, is_filters=tag):
+        for weapon in player.weapons(is_filters=tag):
 
             # Remove the weapon entity from the server
             weapon.remove()
