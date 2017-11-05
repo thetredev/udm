@@ -18,6 +18,8 @@ from events import Event
 from filters.entities import EntityIter
 #   Listeners
 from listeners import OnClientDisconnect
+from listeners import OnLevelEnd
+from listeners import OnLevelInit
 from listeners.tick import Delay
 #   Players
 from players.helpers import userid_from_index
@@ -135,6 +137,20 @@ def on_client_disconnect(index):
         # Cancel the client's pending delays
         delay_manager.cancel_delays(f"respawn_{userid}")
         delay_manager.cancel_delays(f"protect_{userid}")
+
+
+@OnLevelEnd
+def on_level_end():
+    """Cancel all pending delays."""
+    for key in delay_manager.copy():
+        delay_manager.cancel_delays(key)
+
+
+@OnLevelInit
+def on_level_init(map_name):
+    """Reload spawn points."""
+    spawnpoints.clear()
+    spawnpoints.load()
 
 
 # =============================================================================
