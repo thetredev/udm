@@ -43,9 +43,6 @@ from udm.weapons import Weapons
 # Store a global map of players and their inventories
 _inventories = dict()
 
-# Store the weapon tags for random weapons
-_random_weapon_tags = ('secondary', 'primary')
-
 
 # =============================================================================
 # >> INVENTORY
@@ -120,7 +117,7 @@ class PlayerEntity(Player):
 
         # Or give random weapons, if the inventory is empty
         else:
-            for tag in _random_weapon_tags:
+            for tag in weapons.tags:
                 self.give_named_item(random.choice(list(weapons.by_tag(tag))).basename)
 
         # Unprotect and re-equip the knife when the player closes the admin menu
