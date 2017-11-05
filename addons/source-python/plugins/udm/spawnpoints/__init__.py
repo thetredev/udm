@@ -106,14 +106,18 @@ class _SpawnPoints(list):
 
     def get_random(self):
         """Return a random spawn point safely."""
+        # Get a shuffled copy of this list
+        shuffled = self.copy()
+        random.shuffle(shuffled)
+
         # Get origins for alive players
         player_origins = [player.origin for player in _playeriter_alive]
 
         # Store possible vectors to spawn on
         possible = list()
 
-        # Loop through all spawn points in this list
-        for spawnpoint in self:
+        # Loop through the shuffled spawn points list
+        for spawnpoint in shuffled:
 
             # Calculate the distances between this spawn point and player origins
             distances = [origin.get_distance(spawnpoint) for origin in player_origins]
