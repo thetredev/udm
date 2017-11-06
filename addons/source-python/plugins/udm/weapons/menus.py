@@ -28,7 +28,7 @@ class _WeaponMenu(PagedRadioMenu):
         # Call the super class constructor using the list of weapons mapped to the tag
         # and this menu's select callback
         super().__init__(
-            [PagedRadioOption(weapon.display_name, weapon.basename) for weapon in weapons.by_tag(tag)],
+            [PagedRadioOption(weapon.display_name, weapon.name) for weapon in weapons.by_tag(tag)],
             select_callback=self.select_callback, title=title
         )
 

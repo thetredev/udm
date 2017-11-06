@@ -12,7 +12,6 @@ from players.helpers import index_from_steamid
 
 # Script Imports
 #   Weapons
-from udm.weapons import Weapons
 from udm.weapons import weapons
 
 
@@ -32,9 +31,6 @@ class PlayerInventory(list):
 
     def append(self, classname):
         """Override list.append() to equip the player with the given weapon in a safe way."""
-        # Correct the classname given in case it is only the weapon's basename
-        classname = Weapons.format_classname(classname)
-
         # Get a PlayerEntity instance for the player's index
         player = Player(index_from_steamid(self._player_steamid))
 
