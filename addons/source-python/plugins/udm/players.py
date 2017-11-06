@@ -22,7 +22,7 @@ from listeners import OnEntityDeleted
 from listeners.tick import Delay
 #   Players
 from players.entity import Player
-from players.helpers import index_from_userid
+from players.helpers import index_from_steamid
 
 # Script Imports
 #   Config
@@ -50,13 +50,13 @@ _inventories = dict()
 class _Inventory(list):
     """Convenience class used to provide safe ways to equip and remove weapons from a player and act as an inventory."""
 
-    def __init__(self, player_userid):
-        """Initialize this list with the player's index."""
+    def __init__(self, player_steamid):
+        """Initialize this list with the player's SteamID."""
         # Call the super class constructor
         super().__init__()
 
         # Store the player's index
-        self._player_userid = player_userid
+        self._player_steamid = player_steamid
 
     def append(self, classname):
         """Override list.append() to equip the player with the given weapon in a safe way."""
@@ -64,7 +64,7 @@ class _Inventory(list):
         classname = Weapons.format_classname(classname)
 
         # Get a PlayerEntity instance for the player's index
-        player = PlayerEntity(index_from_userid(self._player_userid))
+        player = PlayerEntity(index_from_steamid(self._player_steamid))
 
         # Safely remove any weapon of the given tag the player is currently owning
         self._safe_remove(player, weapons[classname].tag)
@@ -204,16 +204,12 @@ class PlayerEntity(Player):
     def inventory(self):
         """Provide access to the player's inventory in a safe and easy way."""
         # If the player is connected, create an _Inventory instance if no inventory exists for the player yet
-        if self.is_connected():
-            if self.userid not in _inventories:
-                _inventories[self.userid] = _Inventory(self.userid)
+        # if self.is_connected():
+        if self.uniqueid not in _inventories:
+            _inventories[self.uniqueid] = _Inventory(self.uniqueid)
 
-            # Return the player's inventory
-            return _inventories[self.userid]
-
-        # If the player is disconnected, remove the player's inventory
-        if self.userid in _inventories:
-            del _inventories[self.userid]
+        # Return the player's inventory
+        return _inventories[self.uniqueid]
 
     def _refill_ammo(self, weapon):
         """Refill the player's ammo."""
