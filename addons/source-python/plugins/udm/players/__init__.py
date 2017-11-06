@@ -32,6 +32,7 @@ from udm.delays import delay_manager
 #   Players
 from udm.players.inventories import PlayerInventory
 from udm.players.inventories import player_inventories
+from udm.players.inventories import player_inventory_selections
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
 #   Weapons
@@ -48,18 +49,29 @@ class PlayerEntity(Player):
         - Wrap players.entity.Player.give_named_item() to return an actual weapons.entity.Weapon instance
         - Provide a safe and easy way to access the player's inventory"""
 
-    def equip(self, admin=False):
+    def equip(self, inventory_index=None, admin=False):
         """Equip the player with their inventory or random weapons."""
-        # Equip the player with an assault suit
-        super().give_named_item('item_assaultsuit')
+        # Equip weapons only?
+        if inventory_index is None:
 
-        # Equip the player with a High Explosive grenade if configured that way
-        if cvar_equip_hegrenade.get_int() > 0:
-            self.give_named_item('hegrenade')
+            # If not, equip the player with armor
+            super().give_named_item('item_assaultsuit')
+
+            # Equip the player with a High Explosive grenade if configured that way
+            if cvar_equip_hegrenade.get_int() > 0:
+                self.give_named_item('hegrenade')
+
+            # Get the inventory selection
+            inventory_index = self.inventory_selection
 
         # Equip the player with all the weapons stored in their inventory
-        if self.inventory:
-            for classname in self.inventory.sorted_by_tags():
+        if inventory_index not in self.inventories:
+            self.inventories[inventory_index] = PlayerInventory(self.uniqueid)
+
+        inventory = self.inventories[inventory_index]
+
+        if inventory:
+            for classname in inventory.sorted_by_tags():
                 self.give_named_item(classname)
 
         # Or give random weapons, if the inventory is empty
@@ -90,7 +102,7 @@ class PlayerEntity(Player):
             self.view_angle = spawnpoint.angle
 
         # Strip the player off their weapons, but keep the knife
-        self.strip('knife')
+        self.strip(('melee', 'grenade'))
 
         # Equip the player
         self.equip()
@@ -148,15 +160,22 @@ class PlayerEntity(Player):
             self.color = WHITE
 
     @property
-    def inventory(self):
-        """Provide access to the player's inventory in a safe and easy way."""
-        # If the player is connected, create an _Inventory instance if no inventory exists for the player yet
-        # if self.is_connected():
-        if self.uniqueid not in player_inventories:
-            player_inventories[self.uniqueid] = PlayerInventory(self.uniqueid)
-
-        # Return the player's inventory
+    def inventories(self):
+        """Provide access to the player's inventories."""
         return player_inventories[self.uniqueid]
+
+    def set_inventory_selection(self, inventory_index):
+        """Set the player's inventory selection to `inventory_index`."""
+        player_inventory_selections[self.userid] = inventory_index
+
+    def get_inventory_selection(self):
+        """Return the player's inventory selection - 0 if not present."""
+        if self.userid in player_inventory_selections:
+            return player_inventory_selections[self.userid]
+
+        return 0
+
+    inventory_selection = property(get_inventory_selection, set_inventory_selection)
 
     def _refill_ammo(self, weapon):
         """Refill the player's ammo."""

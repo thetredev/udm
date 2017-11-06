@@ -10,6 +10,9 @@
 import contextlib
 
 # Source.Python Imports
+#   Colors
+from colors import ORANGE
+from colors import WHITE
 #   Commands
 from commands.typed import TypedSayCommand
 #   Events
@@ -19,6 +22,8 @@ from listeners import OnClientDisconnect
 from listeners import OnLevelEnd
 from listeners import OnLevelInit
 from listeners.tick import Delay
+#   Messages
+from messages import SayText2
 #   Players
 from players.helpers import userid_from_index
 
@@ -39,9 +44,10 @@ from udm.maps import map_functions
 from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import PlayerEntity
+from udm.players.inventories import PlayerInventory
+from udm.players.inventories import player_inventory_selections
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
-from udm.spawnpoints import SpawnPoint
 #   Weapons
 from udm.weapons import weapon_iter
 
@@ -144,16 +150,72 @@ def on_level_init(map_name):
 # >> SAY COMMANDS
 # =============================================================================
 @TypedSayCommand(cvar_saycommand_guns.get_string())
-def on_saycommand_guns(command_info):
+def on_saycommand_guns(command_info, *args):
     """Send the Primary Weapons menu to the player."""
     # Get a udm.players.PlayerEntity instance for the player who entered the say command
     player = PlayerEntity(command_info.index)
 
-    # Clear their inventory
-    player.inventory.clear()
+    # Store a variable to decide whether the player wants to edit their current inventory
+    edit = False
 
-    # Send the Primary Weapons menu to them
-    primary_menu.send(player.index)
+    # Figure out the selection index
+    if not args:
+        index = player.inventory_selection
+
+    # Do nothing if the first argument is not an integer
+    elif not args[0].isdigit():
+        SayText2(
+            f'{ORANGE}[{WHITE}UDM{ORANGE}] Inventory {WHITE}{player.inventory_selection} {ORANGE}unchanged.'
+        ).send(command_info.index)
+
+        return False
+
+    # Calculate the selection index
+    else:
+        index = int(args[0]) - 1
+
+    # If we get a negative value, print an error message
+    if index < 0:
+        SayText2(
+            f'{ORANGE}[{WHITE}UDM{ORANGE}] Inventory {WHITE}{index + 1} {ORANGE} not found.'
+        ).send(command_info.index)
+
+        return False
+
+    # Fix `index` if it is too high
+    if index > len(player.inventories):
+        index = len(player.inventories)
+
+    # Create an empty inventory at `index` if none is present
+    if index not in player.inventories:
+        player.inventories[index] = PlayerInventory(player.uniqueid)
+
+    # The player wants to edit the current inventory, if the player is already equipped with it
+    if player.userid in player_inventory_selections and player.inventory_selection == index:
+        edit = True
+
+    # Store the inventory selection
+    player.inventory_selection = index
+
+    # Get the inventory at `index`
+    inventory = player.inventories[index]
+
+    # Equip the player if they don't want to edit the inventory and if there are weapons present in it
+    if not edit and inventory:
+        player.strip(('melee', 'grenade'))
+        player.equip(inventory_index=index)
+
+        SayText2(
+            f'{ORANGE}[{WHITE}UDM{ORANGE}] Equipping inventory {WHITE}{index + 1}'
+        ).send(command_info.index)
+
+    # Else edit that inventory
+    else:
+        SayText2(
+            f'{ORANGE}[{WHITE}UDM{ORANGE}] Editing inventory {WHITE}{index + 1}'
+        ).send(command_info.index)
+
+        primary_menu.send(player.index)
 
     # Block the text from appearing in the chat window
     return False
