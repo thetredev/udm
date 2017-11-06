@@ -133,6 +133,15 @@ class Weapons(dict):
 
 
 # =============================================================================
+# >> PUBLIC FUNCTIONS
+# =============================================================================
+def refill_ammo(weapon):
+    """Refill the weapon's ammo."""
+    if weapon.owner is not None:
+        weapon.ammo = weapons[weapon.classname].maxammo
+
+
+# =============================================================================
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
 # Store a global map of weapon classnames and _Weapon objects using the weapon data file

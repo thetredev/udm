@@ -35,6 +35,7 @@ from udm.players.inventories import player_inventories
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
 #   Weapons
+from udm.weapons import refill_ammo
 from udm.weapons import weapons
 from udm.weapons import Weapons
 
@@ -135,7 +136,7 @@ class PlayerEntity(Player):
 
                 # Refill the weapon's ammo after the reload animation has finished
                 delay_manager[f'refill_{self.active_weapon.index}'].append(
-                    Delay(duration, self._refill_ammo, (self.active_weapon, ))
+                    Delay(duration, refill_ammo, (self.active_weapon, ))
                 )
 
     def spawn(self):
@@ -175,11 +176,6 @@ class PlayerEntity(Player):
         return 0
 
     inventory_selection = property(get_inventory_selection, set_inventory_selection)
-
-    def _refill_ammo(self, weapon):
-        """Refill the player's ammo."""
-        if weapon.owner is not None:
-            weapon.ammo = weapons[weapon.classname].maxammo
 
 
 # =============================================================================
