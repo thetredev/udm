@@ -1,4 +1,4 @@
-# ../udm/players.py
+# ../udm/players/__init__.py
 
 """Provides convenience classes for player entities and a player inventory class."""
 
