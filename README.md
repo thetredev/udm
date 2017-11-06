@@ -11,6 +11,7 @@ Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like 
 
 ## Features
 * Weapon Menu - accessible via the chat command **guns**
+* Multiple inventories! See commit [a6dd66e](https://github.com/backraw/udm/commit/a6dd66e61a463d5ddd6c50ad8b49581eb6aa2d86) for details.
 * Spawn Points
 * Refill ammo after the reload animation has finished
 * Admin Menu
@@ -19,7 +20,7 @@ Spawn points are loaded after a map change and on plugin load. The current map i
 See [the spawnpoints folder for Counter-Strike: Source](https://github.com/backraw/udm/tree/master/addons/source-python/data/plugins/udm/spawnpoints/cstrike) for examples.
 
 ## The Admin Menu
-The Admin menu is accessible to admins vial the chat command **!udm** and currently provides the following functionality:
+The Admin menu is accessible to admins via the chat command **!udm** and currently provides the following functionality:
 * Spawn Point Manager
 	* Add: current location
 	* Remove: current location
