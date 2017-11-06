@@ -32,7 +32,6 @@ from udm.delays import delay_manager
 #   Players
 from udm.players.inventories import PlayerInventory
 from udm.players.inventories import player_inventories
-from udm.players.inventories import player_inventory_selections
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
 #   Weapons
@@ -166,12 +165,12 @@ class PlayerEntity(Player):
 
     def set_inventory_selection(self, inventory_index):
         """Set the player's inventory selection to `inventory_index`."""
-        player_inventory_selections[self.userid] = inventory_index
+        player_inventories.selections[self.userid] = inventory_index
 
     def get_inventory_selection(self):
         """Return the player's inventory selection - 0 if not present."""
-        if self.userid in player_inventory_selections:
-            return player_inventory_selections[self.userid]
+        if self.userid in player_inventories.selections:
+            return player_inventories.selections[self.userid]
 
         return 0
 

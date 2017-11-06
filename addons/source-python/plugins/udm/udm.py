@@ -45,7 +45,7 @@ from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import PlayerEntity
 from udm.players.inventories import PlayerInventory
-from udm.players.inventories import player_inventory_selections
+from udm.players.inventories import player_inventories
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
 #   Weapons
@@ -191,7 +191,7 @@ def on_saycommand_guns(command_info, *args):
         player.inventories[index] = PlayerInventory(player.uniqueid)
 
     # The player wants to edit the current inventory, if the player is already equipped with it
-    if player.userid in player_inventory_selections and player.inventory_selection == index:
+    if player.userid in player_inventories.selections and player.inventory_selection == index:
         edit = True
 
     # Store the inventory selection

@@ -5,8 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-from collections import defaultdict
-
 # Source.Python Imports
 #   Players
 from players.entity import Player
@@ -71,9 +69,20 @@ class PlayerInventory(list):
         return sorted(self, key=lambda classname: weapons[classname].tag, reverse=True)
 
 
+class _PlayerInventories(dict):
+    """Class used to store player inventories and their weapon selections."""
+
+    # Store each player's weapon selections
+    selections = dict()
+
+    def __missing__(self, key):
+        """Set and return an empty dictionary object as the value for `key`."""
+        value = self[key] = dict()
+        return value
+
+
 # =============================================================================
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
-# Store a global map of players and their inventories, plus their inventory selections
-player_inventories = defaultdict(dict)
-player_inventory_selections = dict()
+# Create a global instance of _PlayerInventories
+player_inventories = _PlayerInventories()
