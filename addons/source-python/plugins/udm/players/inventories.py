@@ -65,14 +65,21 @@ class PlayerInventory(dict):
         self._player_steamid = player_steamid
 
     def add_weapon(self, classname):
+        """Add the weapon to the inventory and equip the player with it."""
+        # Get the weapon's class
         weapon_class = weapons[classname]
 
+        # Create a new inventory item if the player doesn't own any weapon of the same tag
         if weapon_class.tag not in self.keys():
             self[weapon_class.tag] = _InventoryItem(classname)
 
+        # Get the inventory item object
         item = self[weapon_class.tag]
+
+        # Set the item's classname
         item.classname = classname
 
+        # Equip the player with the item
         player = Player(index_from_steamid(self._player_steamid))
         item.equip(player)
 
