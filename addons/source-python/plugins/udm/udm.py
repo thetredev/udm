@@ -1,6 +1,6 @@
 # ../udm/udm.py
 
-"""Main plugin module: adds Deathmatch gameplay."""
+"""Ultimate Deathmatch Plugin"""
 
 # =============================================================================
 # >> IMPORTS
@@ -47,7 +47,7 @@ from udm.weapons import weapon_iter
 @Event('player_spawn')
 def on_player_spawn(event):
     """Prepare the player for battle if the player is alive and on a team."""
-    # Get a udm.players.PlayerEntity instance for the player's userid
+    # Get a PlayerEntity instance for the player
     player = PlayerEntity.from_userid(event.get_int('userid'))
 
     # Prepare the player if they're alive and on a team
@@ -57,26 +57,26 @@ def on_player_spawn(event):
 
 @Event('player_death')
 def on_player_death(event):
-    """Remove all weapons the player owns and respawn the player."""
-    # Get a udm.players.PlayerEntity instance for the victim's userid
+    """Respawn the victim."""
+    # Get a PlayerEntity instance for the victim
     victim = PlayerEntity.from_userid(event.get_int('userid'))
 
-    # Get the time delay value configured in the cvar 'respawn_delay'
+    # Get the respawn time delay
     time_delay = abs(cvar_respawn_delay.get_float())
 
-    # Get the delay list from the delay manager
+    # Get the delay list for `respawn_<victim.userid>`
     delay_list = delay_manager[f'respawn_{victim.userid}']
 
-    # Remove all idle weapons after half the delay
-    delay_list.append(Delay(time_delay / 2.0, weapon_iter.remove_idle))
+    # Remove all idle weapons after `time_delay / 2`
+    delay_list.append(Delay(time_delay / 2, weapon_iter.remove_idle))
 
-    # Safely respawn the victim after the delay
+    # Respawn the victim after `time_delay`
     delay_list.append(Delay(time_delay, victim.spawn))
 
 
 @Event('round_start')
 def on_round_start(event):
-    """Disable all specified map functions."""
+    """Disable map function entities."""
     map_functions.disable()
 
 
@@ -88,7 +88,7 @@ def on_round_end(event):
 
 @Event('weapon_reload')
 def on_weapon_reload(event):
-    """Refill the player's ammo after the reload animation has finished."""
+    """Refill the player's active weapon's ammo after the reload animation has finished."""
     PlayerEntity.from_userid(event.get_int('userid')).refill_ammo()
 
 
@@ -104,8 +104,8 @@ def on_hegrenade_detonate(event):
 # =============================================================================
 @TypedSayCommand(cvar_saycommand_guns.get_string())
 def on_saycommand_guns(command_info, *args):
-    """Send the Primary Weapons menu to the player."""
-    # Get a udm.players.PlayerEntity instance for the player who entered the say command
+    """Allow the player to edit & equip one of their inventories."""
+    # Get a PlayerEntity instance for the player who entered the chat command
     player = PlayerEntity(command_info.index)
 
     # Store a variable to decide whether the player wants to edit their current inventory
@@ -113,9 +113,9 @@ def on_saycommand_guns(command_info, *args):
 
     # Figure out the selection index
     if not args:
-        index = player.inventory_selection
+        inventory_index = player.inventory_selection
 
-    # Do nothing if the first argument is not an integer
+    # Skip if the first argument is not an integer
     elif not args[0].isdigit():
         SayText2(
             f'{ORANGE}[{WHITE}UDM{ORANGE}] Inventory {WHITE}{player.inventory_selection} {ORANGE}unchanged.'
@@ -125,47 +125,47 @@ def on_saycommand_guns(command_info, *args):
 
     # Calculate the selection index
     else:
-        index = int(args[0]) - 1
+        inventory_index = int(args[0]) - 1
 
-    # If we get a negative value, print an error message
-    if index < 0:
+    # Print an error message if `inventory_index` is invalid
+    if inventory_index < 0:
         SayText2(
-            f'{ORANGE}[{WHITE}UDM{ORANGE}] Inventory {WHITE}{index + 1} {ORANGE} not found.'
+            f'{ORANGE}[{WHITE}UDM{ORANGE}] Inventory {WHITE}{inventory_index + 1} {ORANGE} not found.'
         ).send(command_info.index)
 
         return False
 
-    # Fix `index` if it is too high
-    if index > len(player.inventories):
-        index = len(player.inventories)
+    # Fix `inventory_index` if it is too high
+    if inventory_index > len(player.inventories):
+        inventory_index = len(player.inventories)
 
-    # Create an empty inventory at `index` if none is present
-    if index not in player.inventories:
-        player.inventories[index] = PlayerInventory(player.uniqueid)
+    # Create an empty inventory at `inventory_index` if none is present
+    if inventory_index not in player.inventories:
+        player.inventories[inventory_index] = PlayerInventory(player.uniqueid)
 
     # The player wants to edit the current inventory, if the player is already equipped with it
-    if player.userid in player_inventories.selections and player.inventory_selection == index:
+    if player.userid in player_inventories.selections and player.inventory_selection == inventory_index:
         edit = True
 
-    # Store the inventory selection
-    player.inventory_selection = index
+    # Set the inventory at `inventory_index` as the player's current inventory selection
+    player.inventory_selection = inventory_index
 
-    # Get the inventory at `index`
-    inventory = player.inventories[index]
+    # Get the inventory at `inventory_index`
+    inventory = player.inventories[inventory_index]
 
-    # Equip the player if they don't want to edit the inventory and if there are weapons present in it
+    # Equip the player if they don't want to edit the inventory and if there are weapons present in the inventory
     if not edit and inventory:
         player.strip(('melee', 'grenade'))
-        player.equip(inventory_index=index)
+        player.equip(inventory_index=inventory_index)
 
         SayText2(
-            f'{ORANGE}[{WHITE}UDM{ORANGE}] Equipping inventory {WHITE}{index + 1}'
+            f'{ORANGE}[{WHITE}UDM{ORANGE}] Equipping inventory {WHITE}{inventory_index + 1}'
         ).send(command_info.index)
 
-    # Else edit that inventory
+    # Otherwise edit the player's current inventory
     else:
         SayText2(
-            f'{ORANGE}[{WHITE}UDM{ORANGE}] Editing inventory {WHITE}{index + 1}'
+            f'{ORANGE}[{WHITE}UDM{ORANGE}] Editing inventory {WHITE}{inventory_index + 1}'
         ).send(command_info.index)
 
         primary_menu.send(player.index)
@@ -180,10 +180,10 @@ def on_saycommand_admin(command_info):
     # Get a PlayerEntity instance for the player
     player = PlayerEntity(command_info.index)
 
-    # Cancel the protect delay so we can ensure that the next call to `player.protect()` stays unaffected by it
+    # Cancel the damage protect delay so we can ensure that the next call to `player.protect()` is unaffected by it
     delay_manager.cancel_delays(f'protect_{player.userid}')
 
-    # Protect the player for an unknown amount of time
+    # Protect the player indefinitely
     player.protect()
 
     # Strip the player off their weapons
