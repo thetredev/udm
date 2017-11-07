@@ -1,6 +1,6 @@
 # ../udm/weapons/menus.py
 
-"""Provides a convenience class to create weapon menus in an easy way."""
+"""Provides Secondary Weapons and Primary Weapons menus."""
 
 # =============================================================================
 # >> IMPORTS
@@ -19,15 +19,13 @@ from udm.weapons import weapon_manager
 
 
 # =============================================================================
-# >> PRIVATE CLASSES
+# >> WEAPON MENU
 # =============================================================================
 class _WeaponMenu(CloseButtonPagedMenu):
-    """Convenience class used to create weapon menus dynamically on-the-fly."""
+    """Class used to create a weapon menu for any given weapon tag using the weapons data file."""
 
     def __init__(self, tag, title, next_menu):
-        """Initialize this menu using the given tag."""
-        # Call the super class constructor using the list of weapons mapped to the tag
-        # and this menu's select callback
+        """Create a menu with weapons of the tag in `tag`."""
         super().__init__(
             close_callback=self._close_callback,
             data=[PagedRadioOption(weapon_data.display_name, weapon_data.name) for weapon_data in weapon_manager.by_tag(tag)],
@@ -44,8 +42,7 @@ class _WeaponMenu(CloseButtonPagedMenu):
             self._next_menu.send(player_index)
 
     def _select_callback(self, menu, player_index, option):
-        """Handle the chosen menu item."""
-        # Give the player the weapon they chose
+        """Equip the player with the selected weapon."""
         player = PlayerEntity(player_index)
         player.inventories[player.inventory_selection].add_weapon(option.value)
 
@@ -54,11 +51,8 @@ class _WeaponMenu(CloseButtonPagedMenu):
             self._next_menu.send(player_index)
 
 
-# =============================================================================
-# >> PUBLIC GLOBAL VARAIBLES
-# =============================================================================
-# Create the Secondary Weapons menu using no <next_menu>
+# Create the Secondary Weapons menu using no `next_menu`
 secondary_menu = _WeaponMenu('secondary', 'Secondary Weapons', None)
 
-# Create the Primary Weapons menu using the Secondary Weapons menu as the <next_menu> parameter
+# Create the Primary Weapons menu using the Secondary Weapons menu as `next_menu`
 primary_menu = _WeaponMenu('primary', 'Primary Weapons', secondary_menu)
