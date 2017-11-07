@@ -1,6 +1,6 @@
 # ../udm/menus.py
 
-"""Provides a convenience class to add a 'close callback' to the PagedRadioMenu."""
+"""Provides the `CloseButtonPagedMenu` which calls a callback when a player decides to close the menu."""
 
 # =============================================================================
 # >> IMPORTS
@@ -12,10 +12,10 @@ from menus.radio import PagedRadioMenu
 
 
 # =============================================================================
-# >> PUBLIC CLASSES
+# >> CLOSE BUTTON PAGED MENU
 # =============================================================================
 class CloseButtonPagedMenu(PagedRadioMenu):
-    """Menu class used to react to the 'close' button."""
+    """Class used to call a callback when a player decides to close the menu."""
 
     def __init__(self, close_callback, **kwargs):
         """Object initialization."""
@@ -25,8 +25,7 @@ class CloseButtonPagedMenu(PagedRadioMenu):
         self._close_callback = close_callback
 
     def _select(self, player_index, choice_index):
-        """Override _select() to be able to react to the 'close' button within this menu."""
-        # Call the close callback if the 'close' button has been selected
+        """Call the close callback if the close button has been selected."""
         if choice_index == BUTTON_CLOSE:
             self._close_callback(player_index)
 
