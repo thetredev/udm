@@ -38,6 +38,7 @@ from udm.players import PlayerEntity
 from udm.players.inventories import PlayerInventory
 from udm.players.inventories import player_inventories
 #   Weapons
+from udm.weapons import weapon_manager
 from udm.weapons import weapon_iter
 
 
@@ -57,7 +58,14 @@ def on_player_spawn(event):
 
 @Event('player_death')
 def on_player_death(event):
-    """Respawn the victim."""
+    """Refill the attacker's active weapon's clip for a headshot & respawn the victim."""
+    # Get a PlayerEntity instance for the attacker
+    attacker = PlayerEntity.from_userid(event.get_int('attacker'))
+
+    # Refill the attacker's active weapon's clip for a headshot
+    if event.get_bool('headshot'):
+        attacker.active_weapon.clip = weapon_manager.by_name(attacker.active_weapon.classname).clip
+
     # Get a PlayerEntity instance for the victim
     victim = PlayerEntity.from_userid(event.get_int('userid'))
 
