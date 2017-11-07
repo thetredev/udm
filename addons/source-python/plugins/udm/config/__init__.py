@@ -1,4 +1,4 @@
-# ../udm/config.py
+# ../udm/config/__init__.py
 
 """Provides cvars for plugin configuration."""
 
