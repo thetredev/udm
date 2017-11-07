@@ -156,6 +156,10 @@ class _WeaponManager(dict):
         """Return the `_WeaponData` object for the weapon no matter the weapon prefix."""
         return self[f"{name.replace(sp_weapon_manager.prefix, '')}"]
 
+    def silencer_allowed(self, basename):
+        """Return whether the weapon of classname `name` is allowed to be silenced."""
+        return basename in self.keys() and basename.replace('_silenced', '') in self.keys()
+
     @property
     def tags(self):
         """Return the tags provided by the weapon data file."""

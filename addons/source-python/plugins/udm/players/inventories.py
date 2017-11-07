@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-# Contextlib
-import contextlib
-
 # Source.Python Imports
 #   Memory
 from memory import make_object
@@ -54,7 +50,7 @@ class _InventoryItem(object):
             weapon = make_object(Weapon, player.give_named_item(self.data.name))
 
         # Set silencer on for weapons which are supposed to be silenced
-        with contextlib.suppress(ValueError):
+        if weapon_manager.silencer_allowed(self.basename):
             weapon.set_property_bool('m_bSilencerOn', self.data.silenced)
 
     @property
