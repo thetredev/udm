@@ -5,6 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+# Contextlib
+import contextlib
+
 # Source.Python Imports
 #   Memory
 from memory import make_object
@@ -34,9 +38,6 @@ class _InventoryItem(object):
         # Get a list of weapons owned by the player of the same weapon tag as this inventory item
         equipped = list(player.weapons(is_filters=self.data.tag))
 
-        # Evaluate the weapon entity in the process
-        weapon = None
-
         # Remove the weapon the player currently owns before equipping this one
         if equipped:
             entity = equipped[0]
@@ -45,14 +46,16 @@ class _InventoryItem(object):
             if entity.classname != self.data.name:
                 entity.remove()
                 weapon = make_object(Weapon, player.give_named_item(self.data.name))
+            else:
+                weapon = entity
 
         # Equip the item straight away, if the player doesn't own any weapon of this inventory item's weapon tag
         else:
             weapon = make_object(Weapon, player.give_named_item(self.data.name))
 
         # Set silencer on for weapons which are supposed to be silenced
-        if weapon is not None and self.data.silenced:
-            weapon.set_property_bool('m_bSilencerOn', True)
+        with contextlib.suppress(ValueError):
+            weapon.set_property_bool('m_bSilencerOn', self.data.silenced)
 
     @property
     def data(self):
