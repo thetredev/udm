@@ -12,6 +12,7 @@ Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like 
 ## Features
 * Weapon Menu - accessible via the chat command **guns**
 * Multiple inventories! See commit [a6dd66e](https://github.com/backraw/udm/commit/a6dd66e61a463d5ddd6c50ad8b49581eb6aa2d86) for details.
+* Each inventory can hold either one or two weapons - easy primary/secondary only handling!
 * Spawn Points
 * Refill ammo after the reload animation has finished
 * Admin Menu
