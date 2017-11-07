@@ -1,6 +1,6 @@
 # ../udm/delays.py
 
-"""Provides convenience classes for delay management."""
+"""Provides delay management."""
 
 # =============================================================================
 # >> IMPORTS
@@ -18,10 +18,10 @@ from players.helpers import userid_from_index
 
 
 # =============================================================================
-# >> PRIVATE CLASSES
+# >> DELAY MANAGER
 # =============================================================================
 class _DelayManager(dict):
-    """Class used to store all delays so they can be cancelled when needed."""
+    """Class used to group delays and cancel any such group if needed."""
 
     def __missing__(self, key):
         """Set and return an empty list as the key's value."""
@@ -34,8 +34,8 @@ class _DelayManager(dict):
             self.cancel_delays(key)
 
     def cancel_delays(self, key):
-        """Cancel all delays for the given key."""
-        # Get the delay list for the given key
+        """Cancel all delays for `key`."""
+        # Get the delay list for `key`
         delay_list = self[key]
 
         # Cancel all delays in the delay list
@@ -47,7 +47,7 @@ class _DelayManager(dict):
         delay_list.clear()
 
 
-# Store a global instance of _DelayManager
+# Store a global instance of `_DelayManager`
 delay_manager = _DelayManager()
 
 
