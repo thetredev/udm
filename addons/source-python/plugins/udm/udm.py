@@ -127,11 +127,10 @@ def on_saycommand_guns(command_info, *args):
     else:
         inventory_index = int(args[0]) - 1
 
-    # Print an error message if `inventory_index` is invalid
+    # Equip the player with random weapons if `inventory_index` is lower than 0 (`zero`)
     if inventory_index < 0:
-        SayText2(
-            f'{ORANGE}[{WHITE}UDM{ORANGE}] Inventory {WHITE}{inventory_index + 1} {ORANGE} not found.'
-        ).send(command_info.index)
+        player.strip(('melee', 'grenade'))
+        player.equip(force_random=True)
 
         return False
 
@@ -145,7 +144,12 @@ def on_saycommand_guns(command_info, *args):
 
     # The player wants to edit the current inventory, if the player is already equipped with it
     if player.userid in player_inventories.selections and player.inventory_selection == inventory_index:
-        edit = True
+
+        # Make sure that the player currently owns the inventory's items
+        weapons_owned = sorted([weapon.classname for weapon in player.weapons(not_filters=('melee', 'grenade'))])
+        inventory_items = sorted([item.classname for item in player.inventories[inventory_index].values()])
+
+        edit = weapons_owned == inventory_items
 
     # Set the inventory at `inventory_index` as the player's current inventory selection
     player.inventory_selection = inventory_index
