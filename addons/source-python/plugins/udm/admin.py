@@ -30,12 +30,20 @@ class _AdminMenu(CloseButtonPagedMenu):
     def __init__(self):
         """Object initialization"""
         super().__init__(
-            lambda player_index: PlayerEntity(player_index).equip(admin=True),
+            close_callback=self._close_callback,
+            select_callback=lambda menu, player_index, option: option.value.send(player_index),
             data=[
                 PagedRadioOption('SpawnPoint Manager', SpawnPointManagerMenu(self)),
-            ],
-            select_callback=lambda menu, player_index, option: option.value.send(player_index)
+            ]
         )
+
+    def _close_callback(self, player_index):
+        """Enable default gameplay for the admin player who just closed this menu."""
+        player = PlayerEntity(player_index)
+
+        player.equip(inventory_index=player.inventory_selection)
+        player.unprotect()
+        player.give_named_item('weapon_knife')
 
 
 # =============================================================================
