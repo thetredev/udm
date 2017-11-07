@@ -61,7 +61,6 @@ def on_player_death(event):
     # Get a udm.players.PlayerEntity instance for the victim's userid
     victim = PlayerEntity.from_userid(event.get_int('userid'))
 
-
     # Get the time delay value configured in the cvar 'respawn_delay'
     time_delay = abs(cvar_respawn_delay.get_float())
 
