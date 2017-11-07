@@ -1,6 +1,6 @@
 # ../udm/weapons/__init__.py
 
-"""Provides convenience classes and global variables for weapon entities."""
+"""Provides helper functions and an interface between the weapon data file and the plugin."""
 
 # =============================================================================
 # >> IMPORTS
@@ -25,6 +25,15 @@ from udm.info import info
 
 
 # =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
+def refill_ammo(weapon):
+    """Refill the weapon's ammo."""
+    if weapon.owner is not None:
+        weapon.ammo = weapons[weapon.classname].maxammo
+
+
+# =============================================================================
 # >> PRIVATE GLOBAL VARIABLES
 # =============================================================================
 # Store the path to the weapons data file
@@ -32,10 +41,10 @@ _weapons_ini = PLUGIN_DATA_PATH.joinpath(info.name, 'weapons', f'{GAME_NAME}.ini
 
 
 # =============================================================================
-# >> PRIVATE CLASSES
+# >> WEAPON ITERATOR
 # =============================================================================
 class _WeaponIter(WeaponIter):
-    """Class used to extend filters.weapons.WeaponIter with a method to remove all idle weapons."""
+    """Class used to provide a method to remove all idle weapon entities from the server."""
 
     def remove_idle(self):
         """Remove all idle weapon entities on the server."""
@@ -44,8 +53,15 @@ class _WeaponIter(WeaponIter):
                 weapon.remove()
 
 
+# Store a global instance of `_WeaponIter`
+weapon_iter = _WeaponIter()
+
+
+# =============================================================================
+# >> WEAPON DATA
+# =============================================================================
 class _Weapon(object):
-    """Class used to store information about a weapon."""
+    """Class used to store weapon data."""
 
     def __init__(self, weapon_class, display_name, tag):
         """Object initialization."""
@@ -83,51 +99,37 @@ class _Weapon(object):
 
 
 # =============================================================================
-# >> PUBLIC CLASSES
+# >> WEAPON MANAGER
 # =============================================================================
 class _Weapons(dict):
-    """Class used to map each weapon specified in the weapons data file to a _Weapon object."""
+    """Class used to manage weapons listed in the weapons data file."""
 
     def __init__(self, data):
         """Object initialization."""
+        # Call dict's constructor
         super().__init__()
 
-        # Update this dictionary with the entries to map
+        # Update this dictionary with the weapon data file entries
         for tag, weapon_names in data.items():
             self.update({
                 weapon_class.name: _Weapon(weapon_class, weapon_names[weapon_class.basename], tag)
                 for weapon_class in [weapon_manager[f'{weapon_manager.prefix}{key}'] for key in weapon_names]
             })
 
-        # Store the tags provided
+        # Store the tags provided by the weapon data file
         self._tags = list(data.keys())
 
     def by_tag(self, tag):
-        """Return all _Weapon instances categorized by <tag>."""
+        """Return all _Weapon instances categorized by `tag`."""
         for weapon in self.values():
             if weapon.tag == tag:
                 yield weapon
 
     @property
     def tags(self):
-        """Return the tags provided."""
+        """Return the tags provided by the weapon data file."""
         return self._tags
 
 
-# =============================================================================
-# >> PUBLIC FUNCTIONS
-# =============================================================================
-def refill_ammo(weapon):
-    """Refill the weapon's ammo."""
-    if weapon.owner is not None:
-        weapon.ammo = weapons[weapon.classname].maxammo
-
-
-# =============================================================================
-# >> PUBLIC GLOBAL VARIABLES
-# =============================================================================
-# Store a global map of weapon classnames and _Weapon objects using the weapon data file
+# Store a global instance of `_Weapons`
 weapons = _Weapons(ConfigObj(_weapons_ini))
-
-# Store an instance of WeaponIter to be able to remove idle weapons
-weapon_iter = _WeaponIter()
