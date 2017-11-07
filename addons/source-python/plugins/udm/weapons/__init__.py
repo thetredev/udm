@@ -83,7 +83,7 @@ class _WeaponData(object):
         # Store the weapon's primary tag
         self._tag = tag
 
-        # Store `silenced`
+        # Store whether the weapon should be silenced
         self._silenced = basename.endswith('_silenced')
 
     @property
