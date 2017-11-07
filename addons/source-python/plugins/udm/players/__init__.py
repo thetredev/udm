@@ -59,12 +59,12 @@ class PlayerEntity(Player):
         # Get the inventory at `inventory_index`
         inventory = self.inventories[inventory_index]
 
-        # Equip all weapons in `inventory`
+        # Equip all weapons in the inventory
         if inventory:
             for item in inventory.values():
                 item.equip(self)
 
-        # Give random weapons, if `inventory` is empty
+        # Give random weapons, if the inventory is empty
         else:
             self.equip_random_weapons()
 
