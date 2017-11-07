@@ -68,6 +68,9 @@ class _WeaponData(object):
         # Store the weapon's basename
         self._basename = basename
 
+        # Store the weapon's clip
+        self._clip = weapon_class.clip
+
         # Store the weapon's display name
         self._display_name = display_name
 
@@ -87,6 +90,11 @@ class _WeaponData(object):
     def basename(self):
         """Return the weapon's basename."""
         return self._basename
+
+    @property
+    def clip(self):
+        """Return the weapon's clip."""
+        return self._clip
 
     @property
     def display_name(self):
