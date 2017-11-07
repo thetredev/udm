@@ -50,32 +50,28 @@ class PlayerEntity(Player):
         * ammo refill
     """
 
-    def equip(self, inventory_index=None, force_random=False):
+    def equip(self, inventory_index=None):
         """Equip the inventory at `inventory_index`."""
-        # Equip random weapons if forced to
-        if force_random:
-            for tag in weapon_manager.tags:
-                self.give_named_item(random.choice(list(weapon_manager.by_tag(tag))).name)
+        # Add a new inventory at `inventory_index` if none is present
+        if inventory_index not in self.inventories:
+            self.inventories[inventory_index] = PlayerInventory(self.uniqueid)
 
-        # Otherwise equip the inventory at `inventory_index`
+        # Get the inventory at `inventory_index`
+        inventory = self.inventories[inventory_index]
+
+        # Equip all weapons in `inventory`
+        if inventory:
+            for item in inventory.values():
+                item.equip(self)
+
+        # Give random weapons, if `inventory` is empty
         else:
+            self.equip_random_weapons()
 
-            # Add a new inventory at `inventory_index` if none is present
-            if inventory_index not in self.inventories:
-                self.inventories[inventory_index] = PlayerInventory(self.uniqueid)
-
-            # Get the inventory at `inventory_index`
-            inventory = self.inventories[inventory_index]
-
-            # Equip all weapons in `inventory`
-            if inventory:
-                for item in inventory.values():
-                    item.equip(self)
-
-            # Give random weapons, if `inventory` is empty
-            else:
-                for tag in weapon_manager.tags:
-                    self.give_named_item(random.choice(list(weapon_manager.by_tag(tag))).name)
+    def equip_random_weapons(self):
+        """Equip random weapons by weapon tag."""
+        for tag in weapon_manager.tags:
+            self.give_named_item(random.choice(list(weapon_manager.by_tag(tag))).name)
 
     def strip(self, keep=None):
         """Remove all the player's weapons except for those in `keep`."""
