@@ -39,7 +39,7 @@ class _WeaponMenu(PagedRadioMenu):
         """Handle the chosen menu item."""
         # Give the player the weapon they chose
         player = PlayerEntity(player_index)
-        player.inventories[player.inventory_selection].append(option.value)
+        player.inventories[player.inventory_selection].add_weapon(option.value)
 
         # Send the next menu to the player if it is a valid menu instance
         if self._next_menu is not None:

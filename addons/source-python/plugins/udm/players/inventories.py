@@ -16,10 +16,45 @@ from udm.weapons import weapons
 
 
 # =============================================================================
+# >> PRIVATE CLASSES
+# =============================================================================
+class _InventoryItem(object):
+    """Class used to provide an inventory item."""
+
+    def __init__(self, classname):
+        """Object initialization."""
+        # Store the item's classname
+        self.classname = classname
+
+    def equip(self, player):
+        """Equip the player with this inventory item."""
+        # Get a list of weapons of the same tag as this item owned by the player
+        equipped = list(player.weapons(is_filters=self.tag))
+
+        # Remove the weapon the player currently owns before equipping this one
+        if equipped:
+            entity = equipped[0]
+
+            # Don't equip if this item already is the weapon owned by the player
+            if entity.classname != self.classname:
+                entity.remove()
+                player.give_named_item(self.classname)
+
+        # Equip the item straight away, if the player doesn't own any weapon of its tag
+        else:
+            player.give_named_item(self.classname)
+
+    @property
+    def tag(self):
+        """Return this item's weapon tag."""
+        return weapons[self.classname].tag
+
+
+# =============================================================================
 # >> PUBLIC CLASSES
 # =============================================================================
-class PlayerInventory(list):
-    """Convenience class used to provide safe ways to equip and remove weapons from a player and act as an inventory."""
+class PlayerInventory(dict):
+    """Class used to provide a weapon inventory for players."""
 
     def __init__(self, player_steamid):
         """Initialize this list with the player's SteamID."""
@@ -29,40 +64,21 @@ class PlayerInventory(list):
         # Store the player's index
         self._player_steamid = player_steamid
 
-    def append(self, classname):
-        """Override list.append() to equip the player with the given weapon in a safe way."""
-        # Get a PlayerEntity instance for the player's index
+    def add_weapon(self, classname):
+        weapon_class = weapons[classname]
+
+        if weapon_class.tag not in self.keys():
+            self[weapon_class.tag] = _InventoryItem(classname)
+
+        item = self[weapon_class.tag]
+        item.classname = classname
+
         player = Player(index_from_steamid(self._player_steamid))
+        item.equip(player)
 
-        # Store a variable to decide whether to equip the weapon
-        equip = True
-
-        # Loop through all the player's weapons by tag
-        for weapon in player.weapons(is_filters=weapons[classname].tag, not_filters=('melee', 'grenade')):
-
-            # Remove the weapon if it's not the desired one
-            if weapon.classname != classname:
-                weapon.remove()
-
-                # Remove the weapon's classname from this inventory as well
-                if weapon.classname in self:
-                    self.remove(weapon.classname)
-
-            # If the player already has the weapon, don't equip it again
-            else:
-                equip = False
-
-        # Add the classname to this inventory
-        if classname not in self.copy():
-            super().append(classname)
-
-        # Give the player the weapon if it is allowed
-        if equip:
-            player.give_named_item(classname)
-
-    def sorted_by_tags(self):
-        """Return this inventory's classnames sorted by their weapon tags."""
-        return sorted(self, key=lambda classname: weapons[classname].tag, reverse=True)
+    def values(self):
+        for key in sorted(self.keys(), reverse=True):
+            yield self[key]
 
 
 class _PlayerInventories(dict):

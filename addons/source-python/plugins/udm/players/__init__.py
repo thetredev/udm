@@ -37,7 +37,6 @@ from udm.spawnpoints import spawnpoints
 #   Weapons
 from udm.weapons import refill_ammo
 from udm.weapons import weapons
-from udm.weapons import Weapons
 
 
 # =============================================================================
@@ -49,47 +48,37 @@ class PlayerEntity(Player):
         - Wrap players.entity.Player.give_named_item() to return an actual weapons.entity.Weapon instance
         - Provide a safe and easy way to access the player's inventory"""
 
-    def equip(self, inventory_index=None, admin=False):
-        """Equip the player with their inventory or random weapons."""
-        # Equip weapons only?
-        if inventory_index is None:
-
-            # If not, equip the player with armor
-            super().give_named_item('item_assaultsuit')
-
-            # Equip the player with a High Explosive grenade if configured that way
-            if cvar_equip_hegrenade.get_int() > 0:
-                self.give_named_item('hegrenade')
-
-            # Get the inventory selection
-            inventory_index = self.inventory_selection
-
-        # Equip the player with all the weapons stored in their inventory
+    def equip(self, inventory_index):
+        """Equip the player with their inventory."""
+        # Equip the player their inventory
         if inventory_index not in self.inventories:
             self.inventories[inventory_index] = PlayerInventory(self.uniqueid)
 
         inventory = self.inventories[inventory_index]
 
+        # Equip only if the player has chosen any weapons
         if inventory:
-            for classname in inventory.sorted_by_tags():
-                self.give_named_item(classname)
+            for item in inventory.values():
+                item.equip(self)
 
         # Or give random weapons, if the inventory is empty
         else:
             for tag in weapons.tags:
-                self.give_named_item(random.choice(list(weapons.by_tag(tag))).basename)
-
-        # Unprotect and re-equip the knife when the player closes the admin menu
-        if admin:
-            self.unprotect()
-            self.give_named_item('knife')
+                self.give_named_item(random.choice(list(weapons.by_tag(tag))).name)
 
     def give_named_item(self, classname):
         """Make sure to correct the classname before passing it to the base give_named_item() method."""
-        super().give_named_item(Weapons.format_classname(classname))
+        super().give_named_item(classname)
 
     def prepare(self):
         """Prepare the player for battle."""
+        # Equip the player with armor
+        super().give_named_item('item_assaultsuit')
+
+        # Equip the player with a High Explosive grenade if configured that way
+        if cvar_equip_hegrenade.get_int() > 0:
+            self.give_named_item('weapon_hegrenade')
+
         # Protect the player from any damage
         self.protect(cvar_spawn_protection_delay.get_int())
 
@@ -105,7 +94,7 @@ class PlayerEntity(Player):
         self.strip(('melee', 'grenade'))
 
         # Equip the player
-        self.equip()
+        self.equip(self.inventory_selection)
 
     def protect(self, time_delay=None):
         """Protect the player for the configured spawn protection duration."""

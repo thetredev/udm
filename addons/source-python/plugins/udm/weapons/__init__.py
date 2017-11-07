@@ -93,7 +93,7 @@ class _Weapon(object):
 # =============================================================================
 # >> PUBLIC CLASSES
 # =============================================================================
-class Weapons(dict):
+class _Weapons(dict):
     """Class used to map each weapon specified in the weapons data file to a _Weapon object."""
 
     def __init__(self, data):
@@ -104,7 +104,7 @@ class Weapons(dict):
         for tag, weapon_names in data.items():
             self.update({
                 weapon_class.name: _Weapon(weapon_class, weapon_names[weapon_class.basename], tag)
-                for weapon_class in [weapon_manager[Weapons.format_classname(key)] for key in weapon_names]
+                for weapon_class in [weapon_manager[f'{weapon_manager.prefix}{key}'] for key in weapon_names]
             })
 
         # Store the tags provided
@@ -121,16 +121,6 @@ class Weapons(dict):
         """Return the tags provided."""
         return self._tags
 
-    @staticmethod
-    def format_classname(classname):
-        """Convenience method to format a classname with the game's weapon prefix."""
-        # Add the weapon prefix to the classname if the classname doesn't start with it
-        if not classname.startswith(weapon_manager.prefix):
-            classname = f'{weapon_manager.prefix}{classname}'
-
-        # Return the (formatted) classname
-        return classname
-
 
 # =============================================================================
 # >> PUBLIC FUNCTIONS
@@ -145,7 +135,7 @@ def refill_ammo(weapon):
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
 # Store a global map of weapon classnames and _Weapon objects using the weapon data file
-weapons = Weapons(ConfigObj(_weapons_ini))
+weapons = _Weapons(ConfigObj(_weapons_ini))
 
 # Store an instance of WeaponIter to be able to remove idle weapons
 weapon_iter = _WeaponIter()
