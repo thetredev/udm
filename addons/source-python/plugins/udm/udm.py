@@ -159,7 +159,7 @@ def on_saycommand_guns(command_info, *args):
 
     # Equip the player if they don't want to edit the inventory and if there are weapons present in the inventory
     if not edit and inventory:
-        player.equip(inventory_index=inventory_index)
+        player.equip_inventory(inventory_index=inventory_index)
 
         SayText2(
             f'{ORANGE}[{WHITE}UDM{ORANGE}] Equipping inventory {WHITE}{inventory_index + 1}'

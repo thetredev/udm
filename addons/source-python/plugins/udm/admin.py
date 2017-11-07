@@ -43,7 +43,7 @@ class _AdminMenu(CloseButtonPagedMenu):
         player = PlayerEntity(player_index)
 
         # Equip the player with their inventory selection
-        player.equip(inventory_index=player.inventory_selection)
+        player.equip_inventory(inventory_index=player.inventory_selection)
 
         # Disable damage protection
         player.disable_damage_protection()

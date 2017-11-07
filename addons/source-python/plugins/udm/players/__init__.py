@@ -50,7 +50,7 @@ class PlayerEntity(Player):
         * ammo refill
     """
 
-    def equip(self, inventory_index=None):
+    def equip_inventory(self, inventory_index=None):
         """Equip the inventory at `inventory_index`."""
         # Add a new inventory at `inventory_index` if none is present
         if inventory_index not in self.inventories:
@@ -99,7 +99,7 @@ class PlayerEntity(Player):
             self.view_angle = spawnpoint.angle
 
         # Equip the current inventory
-        self.equip(self.inventory_selection)
+        self.equip_inventory(self.inventory_selection)
 
     def enable_damage_protection(self, time_delay=None):
         """Enable damage protection and disable it after `time_delay` if `time_delay` is not None."""
