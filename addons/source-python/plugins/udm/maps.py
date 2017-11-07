@@ -1,6 +1,6 @@
 # ../udm/maps.py
 
-"""Provides a convenience class to handle map functions."""
+"""Provides map function handling."""
 
 # =============================================================================
 # >> IMPORTS
@@ -11,17 +11,17 @@ from filters.entities import EntityIter
 
 
 # =============================================================================
-# >> PRIVATE CLASSES
+# >> MAP FUNCTIONS
 # =============================================================================
 class _MapFunctions(list):
-    """List class used to handle map functions."""
+    """Class used to enable and disable map function entities."""
 
     def disable(self):
-        """Call the 'Disable' input for all entity iterators in this list."""
+        """Call the `Disable` input for all entity iterators in this list."""
         self._call_input('Disable')
 
     def enable(self):
-        """Call the 'Enable' input for all entity iterators in this list."""
+        """Call the `Enable` input for all entity iterators in this list."""
         self._call_input('Enable')
 
     def _call_input(self, value):
@@ -31,10 +31,7 @@ class _MapFunctions(list):
                 entity.call_input(value)
 
 
-# =============================================================================
-# >> PUBLIC GLOBAL VARIABLES
-# =============================================================================
-# Store a global instance of _MapFunctions
+# Store a global instance of `_MapFunctions`
 map_functions = _MapFunctions([
     EntityIter('func_buyzone'),
     EntityIter('func_bomb_target'),
