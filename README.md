@@ -6,13 +6,14 @@ Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like 
 ## Game Support
 | Game | Status |
 | ---- | ------ |
-| Counter-Strike: Source | Tested |
+| Counter-Strike: Source | Testing |
 | Counter-Strike: Global Offensive | Untested |
 
 ## Features
 * Weapon Menu - accessible via the chat command **guns**
 * Multiple inventories! See commit [a6dd66e](https://github.com/backraw/udm/commit/a6dd66e61a463d5ddd6c50ad8b49581eb6aa2d86) for details.
 * Each inventory can hold either one or two weapons - easy primary/secondary only handling!
+* Support for auto-silencing weapons (e.g. [*M4A1 Silenced* & *USP Silenced* for Counter-Strike: Source](https://github.com/backraw/udm/blob/master/addons/source-python/data/plugins/udm/weapons/cstrike.ini))
 * Spawn Points
 * Refill ammo after the reload animation has finished
 * Admin Menu
