@@ -102,9 +102,6 @@ class PlayerEntity(Player):
             self.origin = spawnpoint
             self.view_angle = spawnpoint.angle
 
-        # Strip the player off their weapons, but keep melee weapons and grenades
-        self.strip(('melee', 'grenade'))
-
         # Equip the current inventory
         self.equip(self.inventory_selection)
 
