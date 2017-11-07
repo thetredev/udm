@@ -16,19 +16,22 @@ from filters.entities import EntityIter
 class _MapFunctions(list):
     """Class used to enable and disable map function entities."""
 
+    def __call__(self, *args, **kwargs):
+        """Call the `value` input from `args` for all entities in each entity iterator in this list, if provided."""
+        if len(args) > 0:
+            value = args[0]
+
+            for iterator in self:
+                for entity in iterator:
+                    entity.call_input(value)
+
     def disable(self):
         """Call the `Disable` input for all entity iterators in this list."""
-        self._call_input('Disable')
+        self('Disable')
 
     def enable(self):
         """Call the `Enable` input for all entity iterators in this list."""
-        self._call_input('Enable')
-
-    def _call_input(self, value):
-        """Call the `value` input for all entities in each entity iterator in this list."""
-        for it in self:
-            for entity in it:
-                entity.call_input(value)
+        self('Enable')
 
 
 # Store a global instance of `_MapFunctions`
