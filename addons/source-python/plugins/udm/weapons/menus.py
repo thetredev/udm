@@ -31,7 +31,7 @@ class _WeaponMenu(CloseButtonPagedMenu):
         super().__init__(
             close_callback=self._close_callback,
             data=[PagedRadioOption(weapon.display_name, weapon.name) for weapon in weapons.by_tag(tag)],
-            select_callback=self.select_callback,
+            select_callback=self._select_callback,
             title=title
         )
 
@@ -43,7 +43,7 @@ class _WeaponMenu(CloseButtonPagedMenu):
         if self._next_menu is not None:
             self._next_menu.send(player_index)
 
-    def select_callback(self, menu, player_index, option):
+    def _select_callback(self, menu, player_index, option):
         """Handle the chosen menu item."""
         # Give the player the weapon they chose
         player = PlayerEntity(player_index)
