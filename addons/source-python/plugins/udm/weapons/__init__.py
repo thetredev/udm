@@ -104,20 +104,20 @@ class _WeaponData(object):
 class _Weapons(dict):
     """Class used to manage weapons listed in the weapons data file."""
 
-    def __init__(self, data):
+    def __init__(self, data_file):
         """Object initialization."""
         # Call dict's constructor
         super().__init__()
 
         # Update this dictionary with the weapon data file entries
-        for tag, weapon_names in data.items():
+        for tag, weapon_names in data_file.items():
             self.update({
                 weapon_class.name: _WeaponData(weapon_class, weapon_names[weapon_class.basename], tag)
                 for weapon_class in [weapon_manager[f'{weapon_manager.prefix}{key}'] for key in weapon_names]
             })
 
         # Store the tags provided by the weapon data file
-        self._tags = list(data.keys())
+        self._tags = list(data_file.keys())
 
     def by_tag(self, tag):
         """Return all _Weapon instances categorized by `tag`."""
