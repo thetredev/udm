@@ -17,7 +17,7 @@ from filters.weapons import WeaponIter as WeaponIter
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
-from weapons.manager import weapon_manager
+from weapons.manager import weapon_manager as sp_weapon_manager
 
 # Script Imports
 #   Info
@@ -30,7 +30,7 @@ from udm.info import info
 def refill_ammo(weapon):
     """Refill the weapon's ammo."""
     if weapon.owner is not None:
-        weapon.ammo = weapons[weapon.classname].maxammo
+        weapon.ammo = weapon_manager[weapon.classname].maxammo
 
 
 # =============================================================================
@@ -101,7 +101,7 @@ class _WeaponData(object):
 # =============================================================================
 # >> WEAPON MANAGER
 # =============================================================================
-class _Weapons(dict):
+class _WeaponManager(dict):
     """Class used to manage weapons listed in the weapons data file."""
 
     def __init__(self, data_file):
@@ -113,7 +113,7 @@ class _Weapons(dict):
         for tag, weapon_names in data_file.items():
             self.update({
                 weapon_class.name: _WeaponData(weapon_class, weapon_names[weapon_class.basename], tag)
-                for weapon_class in [weapon_manager[f'{weapon_manager.prefix}{key}'] for key in weapon_names]
+                for weapon_class in [sp_weapon_manager[f'{sp_weapon_manager.prefix}{key}'] for key in weapon_names]
             })
 
         # Store the tags provided by the weapon data file
@@ -131,5 +131,5 @@ class _Weapons(dict):
         return self._tags
 
 
-# Store a global instance of `_Weapons`
-weapons = _Weapons(ConfigObj(_weapons_ini))
+# Store a global instance of `_WeaponManager`
+weapon_manager = _WeaponManager(ConfigObj(_weapons_ini))

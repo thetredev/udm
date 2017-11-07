@@ -15,7 +15,7 @@ from udm.menus import CloseButtonPagedMenu
 #   Players
 from udm.players import PlayerEntity
 #   Weapons
-from udm.weapons import weapons
+from udm.weapons import weapon_manager
 
 
 # =============================================================================
@@ -30,7 +30,7 @@ class _WeaponMenu(CloseButtonPagedMenu):
         # and this menu's select callback
         super().__init__(
             close_callback=self._close_callback,
-            data=[PagedRadioOption(weapon_data.display_name, weapon_data.name) for weapon_data in weapons.by_tag(tag)],
+            data=[PagedRadioOption(weapon_data.display_name, weapon_data.name) for weapon_data in weapon_manager.by_tag(tag)],
             select_callback=self._select_callback,
             title=title
         )

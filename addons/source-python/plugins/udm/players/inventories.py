@@ -12,7 +12,7 @@ from players.helpers import index_from_steamid
 
 # Script Imports
 #   Weapons
-from udm.weapons import weapons
+from udm.weapons import weapon_manager
 
 
 # =============================================================================
@@ -46,7 +46,7 @@ class _InventoryItem(object):
     @property
     def tag(self):
         """Return this inventory item's weapon tag."""
-        return weapons[self.classname].tag
+        return weapon_manager[self.classname].tag
 
 
 # =============================================================================
@@ -66,7 +66,7 @@ class PlayerInventory(dict):
     def add_weapon(self, classname):
         """Add an inventory item for `classname` and equip the player with it."""
         # Get the weapon's data
-        weapon_data = weapons[classname]
+        weapon_data = weapon_manager[classname]
 
         # Create a new inventory item if the player doesn't own any weapon of the weapon's tag
         if weapon_data.tag not in self.keys():
