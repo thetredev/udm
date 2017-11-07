@@ -60,7 +60,7 @@ weapon_iter = _WeaponIter()
 # =============================================================================
 # >> WEAPON DATA
 # =============================================================================
-class _Weapon(object):
+class _WeaponData(object):
     """Class used to store weapon data."""
 
     def __init__(self, weapon_class, display_name, tag):
@@ -112,7 +112,7 @@ class _Weapons(dict):
         # Update this dictionary with the weapon data file entries
         for tag, weapon_names in data.items():
             self.update({
-                weapon_class.name: _Weapon(weapon_class, weapon_names[weapon_class.basename], tag)
+                weapon_class.name: _WeaponData(weapon_class, weapon_names[weapon_class.basename], tag)
                 for weapon_class in [weapon_manager[f'{weapon_manager.prefix}{key}'] for key in weapon_names]
             })
 

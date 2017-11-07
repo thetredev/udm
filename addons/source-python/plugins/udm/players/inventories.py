@@ -65,15 +65,15 @@ class PlayerInventory(dict):
 
     def add_weapon(self, classname):
         """Add an inventory item for `classname` and equip the player with it."""
-        # Get the weapon's class
-        weapon_class = weapons[classname]
+        # Get the weapon's data
+        weapon_data = weapons[classname]
 
         # Create a new inventory item if the player doesn't own any weapon of the weapon's tag
-        if weapon_class.tag not in self.keys():
-            self[weapon_class.tag] = _InventoryItem(classname)
+        if weapon_data.tag not in self.keys():
+            self[weapon_data.tag] = _InventoryItem(classname)
 
         # Get the inventory item
-        item = self[weapon_class.tag]
+        item = self[weapon_data.tag]
 
         # Set the inventory item's classname
         item.classname = classname

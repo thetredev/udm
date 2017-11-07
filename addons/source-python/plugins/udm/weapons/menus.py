@@ -30,7 +30,7 @@ class _WeaponMenu(CloseButtonPagedMenu):
         # and this menu's select callback
         super().__init__(
             close_callback=self._close_callback,
-            data=[PagedRadioOption(weapon.display_name, weapon.name) for weapon in weapons.by_tag(tag)],
+            data=[PagedRadioOption(weapon_data.display_name, weapon_data.name) for weapon_data in weapons.by_tag(tag)],
             select_callback=self._select_callback,
             title=title
         )
