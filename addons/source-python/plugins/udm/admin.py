@@ -5,6 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Random
+import random
+
 # Source.Python Imports
 #   Menus
 from menus.radio import PagedRadioOption
@@ -16,6 +20,8 @@ from udm.menus import CloseButtonPagedMenu
 from udm.players import PlayerEntity
 #   Spawn Points
 from udm.spawnpoints.menus import SpawnPointManagerMenu
+#   Weapons
+from udm.weapons import melee_weapons
 
 
 # =============================================================================
@@ -48,8 +54,8 @@ class _AdminMenu(CloseButtonPagedMenu):
         # Disable damage protection
         player.disable_damage_protection()
 
-        # Give knife
-        player.give_named_item('weapon_knife')
+        # Give a random melee weapon
+        player.give_named_item(random.choice(melee_weapons))
 
 
 # Store a global instance of `_AdminMenu`

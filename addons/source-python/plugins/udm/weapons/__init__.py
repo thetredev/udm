@@ -168,3 +168,6 @@ class _WeaponManager(dict):
 
 # Store a global instance of `_WeaponManager`
 weapon_manager = _WeaponManager(ConfigObj(_weapons_ini))
+
+# Store a global list of melee weapons for the game
+melee_weapons = [weapon.name for weapon in sp_weapon_manager.values() if 'melee' in weapon.tags]
