@@ -44,8 +44,9 @@ class _SpawnPointManagerListMenu(CloseButtonPagedMenu):
     def __init__(self, parent_menu):
         """Initialize this menu using the internal build and select callbacks."""
         super().__init__(
-            parent_menu.send,
-            build_callback=self._build_callback, select_callback=self._select_callback
+            close_callback=parent_menu.send,
+            build_callback=self._build_callback,
+            select_callback=self._select_callback
         )
 
         # Store the parent menu
@@ -86,7 +87,7 @@ class SpawnPointManagerMenu(CloseButtonPagedMenu):
     def __init__(self, parent_menu):
         """Initialize this menu using the 'Add', 'Remove', and 'List' options and the internal select callback."""
         super().__init__(
-            lambda player_index: parent_menu.send(player_index),
+            close_callback=parent_menu.send,
             data=[
                 PagedRadioOption('Add', _SpawnPointManagerMenuOptions.ADD),
                 PagedRadioOption('Remove', _SpawnPointManagerMenuOptions.REMOVE),
