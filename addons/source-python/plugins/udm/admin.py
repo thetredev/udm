@@ -46,7 +46,7 @@ class _AdminMenu(CloseButtonPagedMenu):
         player.equip(inventory_index=player.inventory_selection)
 
         # Disable damage protection
-        player.unprotect()
+        player.disable_damage_protection()
 
         # Give knife
         player.give_named_item('weapon_knife')

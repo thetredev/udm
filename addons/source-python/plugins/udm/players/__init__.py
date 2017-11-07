@@ -92,7 +92,7 @@ class PlayerEntity(Player):
             self.give_named_item('weapon_hegrenade')
 
         # Enable damage protect
-        self.protect(cvar_spawn_protection_delay.get_int())
+        self.enable_damage_protection(cvar_spawn_protection_delay.get_int())
 
         # Choose a random spawn point
         spawnpoint = spawnpoints.get_random()
@@ -108,7 +108,7 @@ class PlayerEntity(Player):
         # Equip the current inventory
         self.equip(self.inventory_selection)
 
-    def protect(self, time_delay=None):
+    def enable_damage_protection(self, time_delay=None):
         """Enable damage protection and disable it after `time_delay` if `time_delay` is not None."""
         # Enable god mode
         self.godmode = True
@@ -122,9 +122,9 @@ class PlayerEntity(Player):
 
         # Disable protection after `time_delay`
         if time_delay is not None:
-            delay_manager[f'protect_{self.userid}'].append(Delay(time_delay, self.unprotect))
+            delay_manager[f'protect_{self.userid}'].append(Delay(time_delay, self.disable_damage_protection))
 
-    def unprotect(self):
+    def disable_damage_protection(self):
         """Disable damage protection."""
         # Disable god mode
         self.godmode = False

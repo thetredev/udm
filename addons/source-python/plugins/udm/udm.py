@@ -188,7 +188,7 @@ def on_saycommand_admin(command_info):
     delay_manager.cancel_delays(f'protect_{player.userid}')
 
     # Protect the player indefinitely
-    player.protect()
+    player.enable_damage_protection()
 
     # Strip the player off their weapons
     player.strip()
