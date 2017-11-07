@@ -96,7 +96,7 @@ def on_weapon_reload(event):
 def on_hegrenade_detonate(event):
     """Equip the player with another High Explosive grenade if configured that way."""
     if cvar_equip_hegrenade.get_int() == 2:
-        PlayerEntity.from_userid(event.get_int('userid')).give_named_item('hegrenade')
+        PlayerEntity.from_userid(event.get_int('userid')).give_named_item('weapon_hegrenade')
 
 
 # =============================================================================
