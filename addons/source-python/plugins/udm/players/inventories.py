@@ -74,7 +74,7 @@ class PlayerInventory(dict):
         self._player_steamid = player_steamid
 
     def add_weapon(self, basename):
-        """Add an inventory item for `classname` and equip the player with it."""
+        """Add an inventory item for `basename` and equip the player with it."""
         # Get the weapon's data
         weapon_data = weapon_manager[basename]
 
@@ -85,7 +85,7 @@ class PlayerInventory(dict):
         # Get the inventory item
         item = self[weapon_data.tag]
 
-        # Set the inventory item's classname
+        # Set the inventory item's basename
         item.basename = basename
 
         # Equip the player with it
