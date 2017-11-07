@@ -2,6 +2,20 @@
 
 """Provides convenience classes for delay management."""
 
+# =============================================================================
+# >> IMPORTS
+# =============================================================================
+# Python Imports
+#   Contextlib
+import contextlib
+
+# Source.Python Imports
+#   Listeners
+from listeners import OnClientDisconnect
+from listeners import OnLevelEnd
+#   Players
+from players.helpers import userid_from_index
+
 
 # =============================================================================
 # >> PRIVATE CLASSES
@@ -35,3 +49,26 @@ class _DelayManager(dict):
 
 # Store a global instance of _DelayManager
 delay_manager = _DelayManager()
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnClientDisconnect
+def on_client_disconnect(index):
+    """Cancel all pending delays of the client."""
+    # Note: This is done, because the event 'player_disconnect' somehow does not get fired...
+    with contextlib.suppress(ValueError):
+
+        # Get the userid of the client
+        userid = userid_from_index(index)
+
+        # Cancel the client's pending delays
+        delay_manager.cancel_delays(f"respawn_{userid}")
+        delay_manager.cancel_delays(f"protect_{userid}")
+
+
+@OnLevelEnd
+def on_level_end():
+    """Cancel all pending delays."""
+    delay_manager.cancel_all()

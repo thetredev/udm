@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Contextlib
-import contextlib
-
 # Source.Python Imports
 #   Colors
 from colors import ORANGE
@@ -18,14 +14,10 @@ from commands.typed import TypedSayCommand
 #   Events
 from events import Event
 #   Listeners
-from listeners import OnClientDisconnect
-from listeners import OnLevelEnd
 from listeners import OnLevelInit
 from listeners.tick import Delay
 #   Messages
 from messages import SayText2
-#   Players
-from players.helpers import userid_from_index
 
 # Script Imports
 #   Admin
@@ -114,26 +106,6 @@ def on_hegrenade_detonate(event):
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
-@OnClientDisconnect
-def on_client_disconnect(index):
-    """Cancel all pending delays of the client."""
-    # Note: This is done, because the event 'player_disconnect' somehow does not get fired...
-    with contextlib.suppress(ValueError):
-
-        # Get the userid of the client
-        userid = userid_from_index(index)
-
-        # Cancel the client's pending delays
-        delay_manager.cancel_delays(f"respawn_{userid}")
-        delay_manager.cancel_delays(f"protect_{userid}")
-
-
-@OnLevelEnd
-def on_level_end():
-    """Cancel all pending delays."""
-    delay_manager.cancel_all()
-
-
 @OnLevelInit
 def on_level_init(map_name):
     """Reload spawn points."""
