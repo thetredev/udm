@@ -18,6 +18,8 @@ from core import GAME_NAME
 from engines.server import global_vars
 #   Filters
 from filters.players import PlayerIter
+#   Listeners
+from listeners import OnLevelInit
 #   Mathlib
 from mathlib import QAngle
 from mathlib import Vector
@@ -147,3 +149,13 @@ class _SpawnPoints(list):
 # Store an instance of _SpawnPoints globally & load all vectors for the current map
 spawnpoints = _SpawnPoints()
 spawnpoints.load()
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnLevelInit
+def on_level_init(map_name):
+    """Reload spawn points."""
+    spawnpoints.clear()
+    spawnpoints.load()

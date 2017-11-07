@@ -14,7 +14,6 @@ from commands.typed import TypedSayCommand
 #   Events
 from events import Event
 #   Listeners
-from listeners import OnLevelInit
 from listeners.tick import Delay
 #   Messages
 from messages import SayText2
@@ -38,8 +37,6 @@ from udm.weapons.menus import primary_menu
 from udm.players import PlayerEntity
 from udm.players.inventories import PlayerInventory
 from udm.players.inventories import player_inventories
-#   Spawn Points
-from udm.spawnpoints import spawnpoints
 #   Weapons
 from udm.weapons import weapon_iter
 
@@ -101,16 +98,6 @@ def on_hegrenade_detonate(event):
     """Equip the player with another High Explosive grenade if configured that way."""
     if cvar_equip_hegrenade.get_int() == 2:
         PlayerEntity.from_userid(event.get_int('userid')).give_named_item('hegrenade')
-
-
-# =============================================================================
-# >> LISTENERS
-# =============================================================================
-@OnLevelInit
-def on_level_init(map_name):
-    """Reload spawn points."""
-    spawnpoints.clear()
-    spawnpoints.load()
 
 
 # =============================================================================
