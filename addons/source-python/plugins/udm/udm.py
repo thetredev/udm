@@ -147,7 +147,7 @@ def on_saycommand_guns(command_info, *args):
 
         # Make sure that the player currently owns the inventory's items
         weapons_owned = sorted([weapon.classname for weapon in player.weapons(not_filters=('melee', 'grenade'))])
-        inventory_items = sorted([item.classname for item in player.inventories[inventory_index].values()])
+        inventory_items = sorted([item.data.name for item in player.inventories[inventory_index].values()])
 
         edit = weapons_owned == inventory_items
 

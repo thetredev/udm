@@ -137,7 +137,7 @@ class PlayerEntity(Player):
         with contextlib.suppress(ValueError):
 
             # Only refill for non-melee and non-grenade weapons
-            if weapon_manager[self.active_weapon.classname].tag not in ('melee', 'grenade'):
+            if weapon_manager.by_name(self.active_weapon.classname).tag not in ('melee', 'grenade'):
 
                 # Get the 'next attack' property for the current weapon
                 next_attack = self.active_weapon.get_property_float('m_flNextPrimaryAttack')

@@ -28,7 +28,10 @@ class _WeaponMenu(CloseButtonPagedMenu):
         """Create a menu with weapons of the tag in `tag`."""
         super().__init__(
             close_callback=self._close_callback,
-            data=[PagedRadioOption(weapon_data.display_name, weapon_data.name) for weapon_data in weapon_manager.by_tag(tag)],
+            data=[
+                PagedRadioOption(weapon_data.display_name, weapon_data.basename)
+                for weapon_data in weapon_manager.by_tag(tag)
+            ],
             select_callback=self._select_callback,
             title=title
         )

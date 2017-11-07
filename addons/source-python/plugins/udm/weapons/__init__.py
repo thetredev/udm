@@ -30,7 +30,7 @@ from udm.info import info
 def refill_ammo(weapon):
     """Refill the weapon's ammo."""
     if weapon.owner is not None:
-        weapon.ammo = weapon_manager[weapon.classname].maxammo
+        weapon.ammo = weapon_manager.by_name(weapon.classname).maxammo
 
 
 # =============================================================================
@@ -63,8 +63,11 @@ weapon_iter = _WeaponIter()
 class _WeaponData(object):
     """Class used to store weapon data."""
 
-    def __init__(self, weapon_class, display_name, tag):
+    def __init__(self, basename, weapon_class, display_name, tag):
         """Object initialization."""
+        # Store the weapon's basename
+        self._basename = basename
+
         # Store the weapon's display name
         self._display_name = display_name
 
@@ -76,6 +79,14 @@ class _WeaponData(object):
 
         # Store the weapon's primary tag
         self._tag = tag
+
+        # Store `silenced`
+        self._silenced = basename.endswith('_silenced')
+
+    @property
+    def basename(self):
+        """Return the weapon's basename."""
+        return self._basename
 
     @property
     def display_name(self):
@@ -91,6 +102,11 @@ class _WeaponData(object):
     def name(self):
         """Return the weapon's full name."""
         return self._name
+
+    @property
+    def silenced(self):
+        """Return whether the weapon should be silenced."""
+        return self._silenced
 
     @property
     def tag(self):
@@ -111,10 +127,12 @@ class _WeaponManager(dict):
 
         # Update this dictionary with the weapon data file entries
         for tag, weapon_names in data_file.items():
-            self.update({
-                weapon_class.name: _WeaponData(weapon_class, weapon_names[weapon_class.basename], tag)
-                for weapon_class in [sp_weapon_manager[f'{sp_weapon_manager.prefix}{key}'] for key in weapon_names]
-            })
+            for basename, displayname in weapon_names.items():
+                weapon_class = sp_weapon_manager[f"{sp_weapon_manager.prefix}{basename.replace('_silenced', '')}"]
+
+                self[basename] = _WeaponData(
+                    basename, weapon_class, displayname, tag
+                )
 
         # Store the tags provided by the weapon data file
         self._tags = list(data_file.keys())
@@ -124,6 +142,10 @@ class _WeaponManager(dict):
         for weapon in self.values():
             if weapon.tag == tag:
                 yield weapon
+
+    def by_name(self, name):
+        """Return the `_WeaponData` object for the weapon no matter the weapon prefix."""
+        return self[f"{name.replace(sp_weapon_manager.prefix, '')}"]
 
     @property
     def tags(self):
