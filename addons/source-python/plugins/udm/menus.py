@@ -31,4 +31,4 @@ class CloseButtonPagedMenu(PagedRadioMenu):
             self._close_callback(player_index)
 
         # Continue the base class routine
-        super()._select(player_index, choice_index)
+        return super()._select(player_index, choice_index)
