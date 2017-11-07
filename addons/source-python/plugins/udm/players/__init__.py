@@ -66,14 +66,10 @@ class PlayerEntity(Player):
             for tag in weapons.tags:
                 self.give_named_item(random.choice(list(weapons.by_tag(tag))).name)
 
-    def give_named_item(self, classname):
-        """Make sure to correct the classname before passing it to the base give_named_item() method."""
-        super().give_named_item(classname)
-
     def prepare(self):
         """Prepare the player for battle."""
         # Equip the player with armor
-        super().give_named_item('item_assaultsuit')
+        self.give_named_item('item_assaultsuit')
 
         # Equip the player with a High Explosive grenade if configured that way
         if cvar_equip_hegrenade.get_int() > 0:
