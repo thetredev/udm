@@ -49,10 +49,7 @@ class _Weapon(object):
 
     def __init__(self, weapon_class, display_name, tag):
         """Object initialization."""
-        # Store the weapon's basename
-        self._basename = weapon_class.basename
-
-        # Store the weapon's
+        # Store the weapon's display name
         self._display_name = display_name
 
         # Store the weapon's name
@@ -63,11 +60,6 @@ class _Weapon(object):
 
         # Store the weapon's primary tag
         self._tag = tag
-
-    @property
-    def basename(self):
-        """Return the weapon's basename."""
-        return self._basename
 
     @property
     def display_name(self):
