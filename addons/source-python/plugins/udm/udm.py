@@ -155,19 +155,16 @@ def on_saycommand_guns(command_info, *args):
 
         # Make sure that the player currently owns the inventory's items
         weapons_owned = sorted([weapon.classname for weapon in player.weapons(not_filters=('melee', 'grenade'))])
-        inventory_items = sorted([item.data.name for item in player.inventories[inventory_index].values()])
+        inventory_items = sorted([item.data.name for item in player.inventory.values()])
 
         edit = weapons_owned == inventory_items
 
     # Set the inventory at `inventory_index` as the player's current inventory selection
     player.inventory_selection = inventory_index
 
-    # Get the inventory at `inventory_index`
-    inventory = player.inventories[inventory_index]
-
     # Equip the player if they don't want to edit the inventory and if there are weapons present in the inventory
-    if not edit and inventory:
-        player.equip_inventory(inventory_index=inventory_index)
+    if not edit and player.inventory:
+        player.equip_inventory()
 
         SayText2(
             f'{ORANGE}[{WHITE}UDM{ORANGE}] Equipping inventory {WHITE}{inventory_index + 1}'

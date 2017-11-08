@@ -50,18 +50,11 @@ class PlayerEntity(Player):
         * ammo refill
     """
 
-    def equip_inventory(self, inventory_index=None):
+    def equip_inventory(self):
         """Equip the inventory at `inventory_index`."""
-        # Add a new inventory at `inventory_index` if none is present
-        if inventory_index not in self.inventories:
-            self.inventories[inventory_index] = PlayerInventory(self.uniqueid)
-
-        # Get the inventory at `inventory_index`
-        inventory = self.inventories[inventory_index]
-
-        # Equip all weapons in the inventory
-        if inventory:
-            for item in inventory.values():
+        # Equip all weapons in the current inventory
+        if self.inventory:
+            for item in self.inventory.values():
                 item.equip(self)
 
         # Give random weapons, if the inventory is empty
@@ -99,7 +92,7 @@ class PlayerEntity(Player):
             self.view_angle = spawnpoint.angle
 
         # Equip the current inventory
-        self.equip_inventory(self.inventory_selection)
+        self.equip_inventory()
 
     def enable_damage_protection(self, time_delay=None):
         """Enable damage protection and disable it after `time_delay` if `time_delay` is not None."""
@@ -156,16 +149,23 @@ class PlayerEntity(Player):
         """Return the player's inventories."""
         return player_inventories[self.uniqueid]
 
+    @property
+    def inventory(self):
+        if self.inventory_selection not in self.inventories:
+            self.inventories[self.inventory_selection] = PlayerInventory(self.uniqueid)
+
+        return self.inventories[self.inventory_selection]
+
     def set_inventory_selection(self, inventory_index):
         """Set the player's inventory selection to `inventory_index`."""
         player_inventories.selections[self.userid] = inventory_index
 
     def get_inventory_selection(self):
         """Return the player's current inventory selection - 0 if not present."""
-        if self.userid in player_inventories.selections:
-            return player_inventories.selections[self.userid]
+        if self.userid not in player_inventories.selections:
+            player_inventories.selections[self.userid] = 0
 
-        return 0
+        return player_inventories.selections[self.userid]
 
     # Set the `inventory_selection` property for PlayerEntity
     inventory_selection = property(get_inventory_selection, set_inventory_selection)
