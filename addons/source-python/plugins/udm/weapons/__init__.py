@@ -1,6 +1,6 @@
 # ../udm/weapons/__init__.py
 
-"""Provides helper functions and an interface between the weapon data file and the plugin."""
+"""Provides helper functions and access to the weapon data file."""
 
 # =============================================================================
 # >> IMPORTS
