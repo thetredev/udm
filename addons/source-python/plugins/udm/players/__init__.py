@@ -65,9 +65,9 @@ class PlayerEntity(Player):
         for tag in weapon_manager.tags:
             self.give_named_item(random.choice(list(weapon_manager.by_tag(tag))).name)
 
-    def strip(self, classname=None, keep=None):
-        """Remove all the player's weapons except for those in `keep`."""
-        for weapon in self.weapons(classname=classname, not_filters=keep):
+    def strip(self, is_filters=None, not_filters=('melee', 'grenade')):
+        """Remove the player's weapons in `is_filters` & keep those in `not_filters`."""
+        for weapon in self.weapons(is_filters=is_filters, not_filters=not_filters):
             weapon.remove()
 
     def prepare(self):
@@ -90,8 +90,8 @@ class PlayerEntity(Player):
             self.origin = spawnpoint
             self.view_angle = spawnpoint.angle
 
-        # Strip C4
-        self.strip('weapon_c4')
+        # Strip explosives
+        self.strip(is_filters='explosive')
 
         # Equip the current inventory
         self.equip_inventory()

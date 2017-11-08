@@ -177,7 +177,7 @@ def on_saycommand_guns(command_info, *args):
 
     # Equip the player with random weapons if `inventory_index` is lower than 0 (`zero`)
     if inventory_index < 0:
-        player.strip(keep=('melee', 'grenade'))
+        player.strip()
         player.equip_random_weapons()
 
         return False
@@ -204,7 +204,7 @@ def on_saycommand_guns(command_info, *args):
 
     # Equip the player if they don't want to edit the inventory and if there are weapons present in the inventory
     if not edit and player.inventory:
-        player.strip(keep=('melee', 'grenade'))
+        player.strip()
         player.equip_inventory()
 
         SayText2(
@@ -236,7 +236,7 @@ def on_saycommand_admin(command_info):
     player.enable_damage_protection()
 
     # Strip the player off their weapons
-    player.strip()
+    player.strip(not_filters=None)
 
     # Send the Admin menu to the player
     admin_menu.send(command_info.index)
