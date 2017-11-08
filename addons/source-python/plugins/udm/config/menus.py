@@ -21,7 +21,7 @@ from udm.menus.callbacks import SelectCallback
 # >> CONFIG MANAGER MENU
 # =============================================================================
 config_manager_menu = CloseButtonPagedMenu(
-    data=[PagedRadioOption(key, value) for key, value in config.get_cvars()],
+    data=[PagedRadioOption(key, value) for key, value in config.cvars],
     title='Config Manager'
 )
 
