@@ -41,7 +41,7 @@ class PlayerInventory(defaultdict):
     """Class used to provide a weapon inventory for players."""
 
     def __init__(self):
-        """Make `_InventoryItem` the default value."""
+        """Make `_InventoryItem` the default value type."""
         super().__init__(_InventoryItem)
 
     def equip(self, player, tag=None):
