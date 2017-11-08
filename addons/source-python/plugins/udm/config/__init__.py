@@ -7,7 +7,7 @@
 # =============================================================================
 # Source.Python Imports
 #   Config
-from config.manager import ConfigManager
+from config.manager import ConfigManager as SpConfigManager
 
 # Script Imports
 #   Info
@@ -15,10 +15,24 @@ from udm.info import info
 
 
 # =============================================================================
+# >> CONFIG MANAGER
+# =============================================================================
+class _ConfigManager(SpConfigManager):
+    """Class used to provide global access to the config cvars."""
+
+    @property
+    def cvars(self):
+        """Return a dictionary of the all config cvars."""
+        return {
+            section.name.replace(self.cvar_prefix, ''): section.cvar for section in self._sections
+        }.items()
+
+
+# =============================================================================
 # >> CONFIGURATION CVARS
 # =============================================================================
 # Write the configuration file ../cfg/source-python/udm.cfg
-with ConfigManager(info.name, f'{info.name}_') as config:
+with _ConfigManager(info.name, f'{info.name}_') as config:
 
     # The delay after which the player gets equipped on spawn
     cvar_equip_delay = config.cvar(
