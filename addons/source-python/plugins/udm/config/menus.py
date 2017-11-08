@@ -20,6 +20,7 @@ from udm.menus.callbacks import SelectCallback
 # =============================================================================
 # >> CONFIG MANAGER MENU
 # =============================================================================
+# Store a global instance of the Config Manager menu
 config_manager_menu = CloseButtonPagedMenu(
     data=[PagedRadioOption(key, value) for key, value in config.cvars],
     title='Config Manager'
@@ -31,4 +32,6 @@ config_manager_menu = CloseButtonPagedMenu(
 # =============================================================================
 @SelectCallback(config_manager_menu)
 def on_select_config_option(player, option):
+    """Send the Config Manager menu back to the player."""
+    # Testing purposes...
     config_manager_menu.send(player.index)
