@@ -51,7 +51,7 @@ class PlayerInventory(defaultdict):
             tag = self.keys()
 
         # Make `tag` an iterable
-        if not hasattr(tag, '__iter__'):
+        if isinstance(tag, str):
             tag = (tag, )
 
         # Give each inventory item for the keys in `tag`
