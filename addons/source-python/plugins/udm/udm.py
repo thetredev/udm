@@ -114,7 +114,10 @@ def on_round_end(event):
 @Event('weapon_reload')
 def on_weapon_reload(event):
     """Refill the player's active weapon's ammo after the reload animation has finished."""
-    PlayerEntity.from_userid(event.get_int('userid')).refill_ammo()
+    weapon_data = weapon_manager[event.get_string('weapon')]
+
+    if weapon_data.tag not in ('melee', 'grenade'):
+        PlayerEntity.from_userid(event.get_int('userid')).refill_ammo()
 
 
 @Event('hegrenade_detonate')

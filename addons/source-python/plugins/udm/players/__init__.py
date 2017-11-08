@@ -122,24 +122,19 @@ class PlayerEntity(Player):
 
     def refill_ammo(self):
         """Refill the player's active weapon's ammo after the reload animation has finished."""
-        with contextlib.suppress(ValueError):
+        # Get the 'next attack' property for the current weapon
+        next_attack = self.active_weapon.get_property_float('m_flNextPrimaryAttack')
 
-            # Only refill for non-melee and non-grenade weapons
-            if weapon_manager.by_name(self.active_weapon.classname).tag not in ('melee', 'grenade'):
+        # Add a tolerance value of 1 second to somewhat counter the effects of lags, etc
+        next_attack += 1
 
-                # Get the 'next attack' property for the current weapon
-                next_attack = self.active_weapon.get_property_float('m_flNextPrimaryAttack')
+        # Calculate the amount of time it would take for the reload animation to finish
+        duration = next_attack - global_vars.current_time
 
-                # Add a tolerance value of 1 second to somewhat counter the effects of lags, etc
-                next_attack += 1
-
-                # Calculate the amount of time it would take for the reload animation to finish
-                duration = next_attack - global_vars.current_time
-
-                # Call weapons.refill_ammo() after `duration`
-                delay_manager[f'refill_{self.active_weapon.index}'].append(
-                    Delay(duration, refill_ammo, (self.active_weapon, ))
-                )
+        # Call weapons.refill_ammo() after `duration`
+        delay_manager[f'refill_{self.active_weapon.index}'].append(
+            Delay(duration, refill_ammo, (self.active_weapon, ))
+        )
 
     def spawn(self):
         """Safely respawn the player."""
