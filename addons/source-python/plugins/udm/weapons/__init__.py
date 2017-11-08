@@ -158,7 +158,8 @@ class _WeaponManager(dict):
 
     def silencer_allowed(self, basename):
         """Return whether the weapon of classname `name` is allowed to be silenced."""
-        return basename in self.keys() and basename.replace('_silenced', '') in self.keys()
+        weapon_name = basename.replace('_silenced', '')
+        return weapon_name in self.keys() and f'{weapon_name}_silenced' in self.keys()
 
     @property
     def tags(self):
