@@ -101,6 +101,23 @@ class PlayerInventory(dict):
         player = Player(index_from_steamid(self._player_steamid))
         item.equip(player)
 
+    def remove_weapon(self, tag):
+        """Remove an inventory item for weapon tag `tag`."""
+        if tag in self.keys():
+
+            # Get a Player instance for the player this inventory belongs to
+            player = Player(index_from_steamid(self._player_steamid))
+
+            # Get the currently equipped weapon entity for the weapon tag
+            entity = self[tag].equipped_entity(player)
+
+            # Remove it if it was found
+            if entity is not None:
+                entity.remove()
+
+            # Remove the weapon tag from this inventory
+            del self[tag]
+
     def values(self):
         """Return all inventory items reverse-sorted by their weapon tag."""
         for key in sorted(self.keys(), reverse=True):
