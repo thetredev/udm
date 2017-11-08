@@ -154,7 +154,12 @@ class _WeaponManager(dict):
 
     def by_name(self, name):
         """Return the `_WeaponData` object for the weapon no matter the weapon prefix."""
-        return self[f"{name.replace(sp_weapon_manager.prefix, '')}"]
+        basename = f"{name.replace(sp_weapon_manager.prefix, '')}"
+
+        if basename in self.keys():
+            return self[basename]
+
+        return None
 
     def silencer_allowed(self, basename):
         """Return whether the weapon of classname `name` is allowed to be silenced."""

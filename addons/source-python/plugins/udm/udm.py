@@ -11,12 +11,19 @@ from colors import ORANGE
 from colors import WHITE
 #   Commands
 from commands.typed import TypedSayCommand
+#   Entities
+from entities.hooks import EntityCondition
+from entities.hooks import EntityPreHook
 #   Events
 from events import Event
 #   Listeners
 from listeners.tick import Delay
+#   Memory
+from memory import make_object
 #   Messages
 from messages import SayText2
+#   Weapons
+from weapons.entity import Weapon
 
 # Script Imports
 #   Admin
@@ -115,6 +122,29 @@ def on_hegrenade_detonate(event):
     """Equip the player with another High Explosive grenade if configured that way."""
     if cvar_equip_hegrenade.get_int() == 2:
         PlayerEntity.from_userid(event.get_int('userid')).give_named_item('weapon_hegrenade')
+
+
+# =============================================================================
+# >> ENTITY HOOKS
+# =============================================================================
+@EntityPreHook(EntityCondition.is_player, 'bump_weapon')
+def on_item_pickup(stack_data):
+    """Block picking up the weapon if it's not in the player's inventory."""
+    # Get a Weapon instance for the weapon
+    weapon = make_object(Weapon, stack_data[1])
+
+    # Get the weapon's data
+    weapon_data = weapon_manager.by_name(weapon.classname)
+
+    # Make sure we are not dealing with any melee or grenade weapons
+    if weapon_data is not None and weapon_data.tag not in ('melee', 'grenade'):
+
+        # Get a PlayerEntity instance for the player
+        player = make_object(PlayerEntity, stack_data[0])
+
+        # Block the weapon bump if the player didn't choose it
+        if player.inventory and weapon_data.basename not in [item.basename for item in player.inventory.values()]:
+            return False
 
 
 # =============================================================================
