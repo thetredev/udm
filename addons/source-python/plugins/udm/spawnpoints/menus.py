@@ -41,19 +41,28 @@ class _SpawnPointManagerMenuOptions(IntEnum):
 
     ADD = 0,
     REMOVE = 1
-    LIST = 2
-    SAVE = 3
+    LIST = 3
+    SAVE = 5
+
+    @staticmethod
+    def as_menu_options():
+        members = [e for e in _SpawnPointManagerMenuOptions]
+        menu_options = list()
+
+        for index, member in enumerate(members):
+            diff = member.value - index
+
+            if diff > 0:
+                menu_options.append(' ' * diff)
+            else:
+                menu_options.append(PagedRadioOption(member.name.capitalize(), member))
+
+        return menu_options
+
 
 
 spawnpoints_manager_menu = CloseButtonPagedMenu(
-    data=[
-        PagedRadioOption('Add', _SpawnPointManagerMenuOptions.ADD),
-        PagedRadioOption('Remove', _SpawnPointManagerMenuOptions.REMOVE),
-        ' ',
-        PagedRadioOption('List', _spawnpoints_list_menu),
-        ' ',
-        PagedRadioOption('Save', _SpawnPointManagerMenuOptions.SAVE)
-    ],
+    data=_SpawnPointManagerMenuOptions.as_menu_options(),
     title='Spawn Points Manager'
 )
 
@@ -147,5 +156,5 @@ def on_select_spawnpoints_manager_option(player, option):
         spawnpoints_manager_menu.send(player.index)
 
     # For `List`: Send the _SpawnPointManagerListMenu to the player
-    else:
-        option.value.send(player.index)
+    elif option.value == _SpawnPointManagerMenuOptions.LIST:
+        _spawnpoints_list_menu.send(player.index)
