@@ -137,9 +137,8 @@ class PlayerEntity(Player):
         )
 
     def spawn(self):
-        """Safely respawn the player."""
-        if self.is_connected():
-            super().spawn(True)
+        """Always force spawn the player."""
+        super().spawn(True)
 
     @property
     def inventories(self):
