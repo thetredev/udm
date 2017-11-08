@@ -66,9 +66,9 @@ class PlayerEntity(Player):
         for tag in weapon_manager.tags:
             self.give_named_item(random.choice(list(weapon_manager.by_tag(tag))).name)
 
-    def strip(self, keep=None):
+    def strip(self, classname=None, keep=None):
         """Remove all the player's weapons except for those in `keep`."""
-        for weapon in self.weapons(not_filters=keep):
+        for weapon in self.weapons(classname=classname, not_filters=keep):
             weapon.remove()
 
     def prepare(self):
@@ -90,6 +90,9 @@ class PlayerEntity(Player):
         if spawnpoint is not None:
             self.origin = spawnpoint
             self.view_angle = spawnpoint.angle
+
+        # Strip C4
+        self.strip('weapon_c4')
 
         # Equip the current inventory
         self.equip_inventory()

@@ -137,7 +137,7 @@ def on_saycommand_guns(command_info, *args):
 
     # Equip the player with random weapons if `inventory_index` is lower than 0 (`zero`)
     if inventory_index < 0:
-        player.strip(('melee', 'grenade'))
+        player.strip(keep=('melee', 'grenade'))
         player.equip_random_weapons()
 
         return False
