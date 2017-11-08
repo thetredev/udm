@@ -246,8 +246,5 @@ def on_saycommand_admin(command_info):
 # =============================================================================
 def unload():
     """Clean up."""
-    # Cancel all pending delays
-    delay_manager.cancel_all()
-
     # Enable all specified map functions
     map_functions.enable()

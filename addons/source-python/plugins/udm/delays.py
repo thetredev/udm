@@ -10,6 +10,8 @@
 import contextlib
 
 # Source.Python Imports
+#   Core
+from core import AutoUnload
 #   Listeners
 from listeners import OnClientDisconnect
 from listeners import OnLevelEnd
@@ -20,7 +22,7 @@ from players.helpers import userid_from_index
 # =============================================================================
 # >> DELAY MANAGER
 # =============================================================================
-class _DelayManager(dict):
+class _DelayManager(dict, AutoUnload):
     """Class used to group delays and cancel any such group if needed."""
 
     def __missing__(self, key):
@@ -45,6 +47,10 @@ class _DelayManager(dict):
 
         # Clear the delay list
         delay_list.clear()
+
+    def _unload_instance(self):
+        """Cancel all pending delays on unload."""
+        self.cancel_all()
 
 
 # Store a global instance of `_DelayManager`
