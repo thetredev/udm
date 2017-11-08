@@ -14,7 +14,7 @@ from menus.radio import PagedRadioOption
 from udm.config import config
 #   Menus
 from udm.menus import CloseButtonPagedMenu
-from udm.menus.callbacks import SelectCallback
+from udm.menus.decorators import SelectCallback
 
 
 # =============================================================================

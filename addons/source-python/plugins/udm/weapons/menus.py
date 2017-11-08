@@ -12,8 +12,8 @@ from menus.radio import PagedRadioOption
 # Script Imports
 #   Menus
 from udm.menus import CloseButtonPagedMenu
-from udm.menus.callbacks import CloseCallback
-from udm.menus.callbacks import SelectCallback
+from udm.menus.decorators import CloseCallback
+from udm.menus.decorators import SelectCallback
 #   Weapons
 from udm.weapons import weapon_manager
 

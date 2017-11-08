@@ -22,9 +22,9 @@ from messages import SayText2
 from udm.config import cvar_spawn_point_distance
 #   Menus
 from udm.menus import CloseButtonPagedMenu
-from udm.menus.callbacks import BuildCallback
-from udm.menus.callbacks import CloseCallback
-from udm.menus.callbacks import SelectCallback
+from udm.menus.decorators import BuildCallback
+from udm.menus.decorators import CloseCallback
+from udm.menus.decorators import SelectCallback
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
 from udm.spawnpoints import SpawnPoint
