@@ -1,6 +1,6 @@
 # ../udm/config/menus.py
 
-"""Provides the Config Manager submenu for the Admin menu."""
+"""Provides a submenu for the Admin menu to manage plugin configuration in-game."""
 
 # =============================================================================
 # >> IMPORTS
