@@ -22,7 +22,7 @@ class _ConfigManager(SpConfigManager):
 
     @property
     def cvars(self):
-        """Return a dictionary of the all config cvars."""
+        """Return a dictionary item generator of the all config cvars."""
         return {
             section.name.replace(self.cvar_prefix, ''): section.cvar for section in self._sections
         }.items()
