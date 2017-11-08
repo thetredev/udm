@@ -32,11 +32,10 @@ class _InventoryItem(object):
     def equip(self, player):
         """Equip the player with this inventory item."""
         # Get a list of weapons owned by the player of the same weapon tag as this inventory item
-        equipped = list(player.weapons(is_filters=self.data.tag))
+        entity = self.equipped_entity(player)
 
         # Remove the weapon the player currently owns before equipping this one
-        if equipped:
-            entity = equipped[0]
+        if entity is not None:
 
             # Only equip if this item is not the same the player currently owns
             if entity.classname != self.data.name:
@@ -52,6 +51,16 @@ class _InventoryItem(object):
         # Set silencer on for weapons which are supposed to be silenced
         if weapon_manager.silencer_allowed(self.basename):
             weapon.set_property_bool('m_bSilencerOn', self.data.silenced)
+
+    def equipped_entity(self, player):
+        """Return the currently equipped entity for this inventory item."""
+        equipped = list(player.weapons(is_filters=self.data.tag))
+
+        if equipped:
+            return equipped[0]
+
+        # Return None if the player currently doesn't carry the weapon
+        return None
 
     @property
     def data(self):
