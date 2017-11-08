@@ -28,7 +28,7 @@ class _InventoryItem(object):
 
     def __init__(self):
         """Object initialization."""
-        # Make it possible to store the weapon's data in the future
+        # Make it possible to store the weapon's basename in the future
         self.basename = None
 
     @property
