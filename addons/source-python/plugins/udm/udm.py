@@ -20,8 +20,6 @@ from events import Event
 from listeners.tick import Delay
 #   Memory
 from memory import make_object
-#   Messages
-from messages import SayText2
 #   Weapons
 from weapons.entity import Weapon
 
