@@ -79,7 +79,7 @@ class PlayerEntity(Player):
         if cvar_equip_hegrenade.get_int() > 0:
             self.give_named_item('weapon_hegrenade')
 
-        # Enable damage protect
+        # Enable damage protection
         self.enable_damage_protection(cvar_spawn_protection_delay.get_int())
 
         # Choose a random spawn point
