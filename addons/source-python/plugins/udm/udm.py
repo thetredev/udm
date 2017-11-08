@@ -204,6 +204,7 @@ def on_saycommand_guns(command_info, *args):
 
     # Equip the player if they don't want to edit the inventory and if there are weapons present in the inventory
     if not edit and player.inventory:
+        player.strip(keep=('melee', 'grenade'))
         player.equip_inventory()
 
         SayText2(
