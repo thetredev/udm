@@ -14,12 +14,15 @@ import random
 # Source.Python Imports
 #   Colors
 from colors import Color
+from colors import ORANGE
 from colors import WHITE
 #   Engines
 from engines.server import global_vars
 #   Listeners
 from listeners import OnEntityDeleted
 from listeners.tick import Delay
+#   Messages
+from messages import SayText2
 #   Players
 from players.entity import Player
 
@@ -49,6 +52,10 @@ class PlayerEntity(Player):
         * battle preparation including damage protection
         * ammo refill
     """
+
+    def tell(self, prefix, message):
+        """Tell the player a prefixed chat message."""
+        SayText2(f'{ORANGE}[{WHITE}{prefix}{ORANGE}] {message}').send(self.index)
 
     def equip_inventory(self):
         """Equip the inventory at `inventory_index`."""

@@ -168,10 +168,7 @@ def on_saycommand_guns(command_info, *args):
 
     # Skip if the first argument is not an integer
     elif not args[0].isdigit():
-        SayText2(
-            f'{ORANGE}[{WHITE}UDM{ORANGE}] Inventory {WHITE}{player.inventory_selection} {ORANGE}unchanged.'
-        ).send(command_info.index)
-
+        player.tell('UDM', f'Inventory {WHITE}{player.inventory_selection} {ORANGE}unchanged.')
         return False
 
     # Calculate the selection index
@@ -210,17 +207,15 @@ def on_saycommand_guns(command_info, *args):
         player.strip()
         player.equip_inventory()
 
-        SayText2(
-            f'{ORANGE}[{WHITE}UDM{ORANGE}] Equipping inventory {WHITE}{inventory_index + 1}'
-        ).send(command_info.index)
+        # Tell the player
+        player.tell('UDM', f'Equipping inventory {WHITE}{inventory_index + 1}')
 
     # Otherwise edit the player's current inventory
     else:
-        SayText2(
-            f'{ORANGE}[{WHITE}UDM{ORANGE}] Editing inventory {WHITE}{inventory_index + 1}'
-        ).send(command_info.index)
-
         primary_menu.send(player.index)
+
+        # Tell the player
+        player.tell('UDM', f'Editing inventory {WHITE}{inventory_index + 1}')
 
     # Block the text from appearing in the chat window
     return False

@@ -120,10 +120,9 @@ def on_select_spawnpoints_manager_option(player, option):
             spawnpoints.append(SpawnPoint(player.origin.x, player.origin.y, player.origin.z, player.view_angle))
 
             # Tell the player about the addition
-            SayText2(
-                f'{ORANGE}[{WHITE}Admin Menu{ORANGE}] Spawn Point {WHITE}#{len(spawnpoints)}{ORANGE}'
-                ' has been added.'
-            ).send(player.index)
+            player.tell(
+                spawnpoints_manager_menu.title, f'Spawn Point {WHITE}#{len(spawnpoints)} {ORANGE}has been added.'
+            )
 
         # Send this menu back to the player
         spawnpoints_manager_menu.send(player.index)
@@ -141,10 +140,9 @@ def on_select_spawnpoints_manager_option(player, option):
                 spawnpoints.remove(spawnpoint)
 
                 # Tell the player about the removal
-                SayText2(
-                    f'{ORANGE}[{WHITE}Admin Menu{ORANGE}] Spawn Point {WHITE}#{position} {ORANGE}'
-                    'has been removed.'
-                ).send(player.index)
+                player.tell(
+                    spawnpoints_manager_menu.title, f'Spawn Point {WHITE}#{position} {ORANGE}has been removed.'
+                )
 
                 # Break the loop
                 break
@@ -159,7 +157,9 @@ def on_select_spawnpoints_manager_option(player, option):
         spawnpoints.save()
 
         # Tell the player about it
-        SayText2(f'{ORANGE}[{WHITE}Admin Menu{ORANGE}] Spawn Points have been saved.').send(player.index)
+        player.tell(
+            spawnpoints_manager_menu.title, 'Spawn Points have been saved.'
+        )
 
         # Send this menu back to the player
         spawnpoints_manager_menu.send(player.index)
