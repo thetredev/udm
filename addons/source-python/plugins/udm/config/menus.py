@@ -1,6 +1,6 @@
 # ../udm/config/menus.py
 
-"""Provides cvars for plugin configuration."""
+"""Provides the Config Manager submenu for the Admin menu."""
 
 # =============================================================================
 # >> IMPORTS
