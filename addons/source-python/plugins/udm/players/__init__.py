@@ -154,6 +154,10 @@ class PlayerEntity(Player):
 
     @property
     def inventory(self):
+        """Return the player's current inventory."""
+        if self.inventory_selection not in self.inventories:
+            self.inventories[self.inventory_selection] = PlayerInventory()
+
         return self.inventories[self.inventory_selection]
 
     def set_inventory_selection(self, inventory_index):

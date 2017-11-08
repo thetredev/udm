@@ -115,8 +115,8 @@ class _PlayerInventories(defaultdict):
 
     def __init__(self):
         """Object initialization."""
-        # Make `PlayerInventory` the default value
-        super().__init__(PlayerInventory)
+        # Make `dict` the default value type
+        super().__init__(dict)
 
 
 # Store a global instance of `_PlayerInventories`
