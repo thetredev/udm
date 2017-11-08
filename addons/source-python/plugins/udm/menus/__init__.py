@@ -1,6 +1,6 @@
 # ../udm/menus/__init__.py
 
-"""Provides the `CloseButtonPagedMenu` which calls a callback when a player decides to close the menu."""
+"""Provides a base menu which calls a callback when a player decides to close the menu."""
 
 # =============================================================================
 # >> IMPORTS
