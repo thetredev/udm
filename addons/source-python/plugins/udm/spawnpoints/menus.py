@@ -33,9 +33,6 @@ from udm.spawnpoints import SpawnPoint
 # =============================================================================
 # >> SPAWN POINTS MENUS
 # =============================================================================
-_spawnpoints_list_menu = CloseButtonPagedMenu(title='Spawn Points List')
-
-
 class _SpawnPointManagerMenuOptions(IntEnum):
     """Class used to enumerate options for the Spawn Point Manager menu."""
 
@@ -46,25 +43,37 @@ class _SpawnPointManagerMenuOptions(IntEnum):
 
     @staticmethod
     def as_menu_options():
+        """Return a list of `PagedRadioMenuOption`s for the members of _SpawnPointManagerMenuOptions."""
+        # Get a list of the members of _SpawnPointManagerMenuOptions
         members = [e for e in _SpawnPointManagerMenuOptions]
-        menu_options = list()
 
+        # Generate a list of menu options from the members
+        menu_options = list()
         for index, member in enumerate(members):
+
+            # Get the difference between the member's value and its index in the enum
             diff = member.value - index
 
+            # Extend the options with empty lines if the difference is higher than 0 (`zero`)
             if diff > 0:
-                menu_options.append(' ' * diff)
-            else:
-                menu_options.append(PagedRadioOption(member.name.capitalize(), member))
+                menu_options.extend([' ' for i in range(diff)])
 
+            # Append the actual menu option
+            menu_options.append(PagedRadioOption(member.name.capitalize(), member))
+
+        # Return the list of menu options
         return menu_options
 
 
-
+# Create the Spawn Points Manager menu
 spawnpoints_manager_menu = CloseButtonPagedMenu(
     data=_SpawnPointManagerMenuOptions.as_menu_options(),
     title='Spawn Points Manager'
 )
+
+
+# Create the Spawn Points List menu
+_spawnpoints_list_menu = CloseButtonPagedMenu(title='Spawn Points List')
 
 
 # =============================================================================
