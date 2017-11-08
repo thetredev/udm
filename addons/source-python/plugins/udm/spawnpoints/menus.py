@@ -90,6 +90,7 @@ def on_build_spawnpoints_list_menu(player, menu):
 
 @CloseCallback(_spawnpoints_list_menu)
 def on_close_spawnpoints_list_menu(player):
+    """Send the Spawn Points Manager menu to the player."""
     spawnpoints_manager_menu.send(player.index)
 
 
