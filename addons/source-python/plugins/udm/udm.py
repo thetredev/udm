@@ -239,12 +239,3 @@ def on_saycommand_admin(command_info):
 
     # Block the text from appearing in the chat window
     return False
-
-
-# =============================================================================
-# >> UNLOAD
-# =============================================================================
-def unload():
-    """Clean up."""
-    # Enable all specified map functions
-    map_functions.enable()

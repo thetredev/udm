@@ -6,6 +6,8 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python
+#   Core
+from core import AutoUnload
 #   Filters
 from filters.entities import EntityIter
 
@@ -13,7 +15,7 @@ from filters.entities import EntityIter
 # =============================================================================
 # >> MAP FUNCTIONS
 # =============================================================================
-class _MapFunctions(list):
+class _MapFunctions(list, AutoUnload):
     """Class used to enable and disable map function entities."""
 
     def __call__(self, *args, **kwargs):
@@ -32,6 +34,10 @@ class _MapFunctions(list):
     def enable(self):
         """Call the `Enable` input for all entity iterators in this list."""
         self('Enable')
+
+    def _unload_instance(self):
+        """Enable map functions on unload."""
+        self.enable()
 
 
 # Store a global instance of `_MapFunctions`
