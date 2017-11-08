@@ -22,21 +22,19 @@ from udm.weapons import weapon_manager
 # >> HELPER FUNCTIONS
 # =============================================================================
 def options_for_tag(tag):
-    """Return a list of `PagedRadioOption`s for the weapon tag in `tag`."""
-    return [
-        PagedRadioOption(weapon_data.display_name, weapon_data.basename)
-        for weapon_data in weapon_manager.by_tag(tag)
-    ]
+    """Yield each weapon as a `PagedRadioOption` for `tag`."""
+    for weapon_data in weapon_manager.by_tag(tag):
+        yield PagedRadioOption(weapon_data.display_name, weapon_data.basename)
 
 
 # =============================================================================
 # >> WEAPON MENUS
 # =============================================================================
 # Create the Secondary Weapons menu using no `next_menu`
-secondary_menu = CloseButtonPagedMenu(data=options_for_tag('secondary'), title='Secondary Weapons')
+secondary_menu = CloseButtonPagedMenu(data=list(options_for_tag('secondary')), title='Secondary Weapons')
 
 # Create the Primary Weapons menu using the Secondary Weapons menu as `next_menu`
-primary_menu = CloseButtonPagedMenu(data=options_for_tag('primary'), title='Primary Weapons')
+primary_menu = CloseButtonPagedMenu(data=list(options_for_tag('primary')), title='Primary Weapons')
 
 
 # =============================================================================
