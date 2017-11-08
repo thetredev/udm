@@ -27,6 +27,7 @@ from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
+from udm.config.menus import config_manager_menu
 #   Delays
 from udm.delays import delay_manager
 #   Maps
@@ -37,9 +38,18 @@ from udm.weapons.menus import primary_menu
 from udm.players import PlayerEntity
 from udm.players.inventories import PlayerInventory
 from udm.players.inventories import player_inventories
+#   Spawn Points
+from udm.spawnpoints.menus import spawnpoints_manager_menu
 #   Weapons
 from udm.weapons import weapon_manager
 from udm.weapons import weapon_iter
+
+
+# =============================================================================
+# >> REGISTER ADMIN MENU SUBMENUS
+# =============================================================================
+admin_menu.register_submenu(config_manager_menu)
+admin_menu.register_submenu(spawnpoints_manager_menu)
 
 
 # =============================================================================
