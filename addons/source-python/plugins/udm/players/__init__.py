@@ -54,8 +54,7 @@ class PlayerEntity(Player):
         """Equip the inventory at `inventory_index`."""
         # Equip all weapons in the current inventory
         if self.inventory:
-            for item in self.inventory.values():
-                item.equip(self)
+            self.inventory.equip(self)
 
         # Give random weapons, if the inventory is empty
         else:
@@ -154,21 +153,15 @@ class PlayerEntity(Player):
 
     @property
     def inventory(self):
-        if self.inventory_selection not in self.inventories:
-            self.inventories[self.inventory_selection] = PlayerInventory(self.uniqueid)
-
         return self.inventories[self.inventory_selection]
 
     def set_inventory_selection(self, inventory_index):
         """Set the player's inventory selection to `inventory_index`."""
-        player_inventories.selections[self.userid] = inventory_index
+        player_inventories.selections[self.uniqueid] = inventory_index
 
     def get_inventory_selection(self):
-        """Return the player's current inventory selection - 0 if not present."""
-        if self.userid not in player_inventories.selections:
-            player_inventories.selections[self.userid] = 0
-
-        return player_inventories.selections[self.userid]
+        """Return the player's current inventory selection."""
+        return player_inventories.selections[self.uniqueid]
 
     # Set the `inventory_selection` property for PlayerEntity
     inventory_selection = property(get_inventory_selection, set_inventory_selection)

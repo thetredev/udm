@@ -188,7 +188,7 @@ def on_saycommand_guns(command_info, *args):
 
     # Create an empty inventory at `inventory_index` if none is present
     if inventory_index not in player.inventories:
-        player.inventories[inventory_index] = PlayerInventory(player.uniqueid)
+        player.inventories[inventory_index] = PlayerInventory()
 
     # The player wants to edit the current inventory, if the player is already equipped with it
     if player.userid in player_inventories.selections and player.inventory_selection == inventory_index:
