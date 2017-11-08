@@ -100,7 +100,7 @@ def on_select_spawnpoint(player, option):
     player.origin = option.value
     player.view_angle = option.value.angle
 
-    # Send the Spawn Points Manager menu
+    # Send the Spawn Points Manager menu to the player
     spawnpoints_manager_menu.send(player.index)
 
 
