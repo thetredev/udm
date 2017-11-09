@@ -79,7 +79,7 @@ def on_player_death(event):
 
     # Refill the attacker's active weapon's clip for a headshot
     if event.get_bool('headshot'):
-        attacker.active_weapon.clip = weapon_manager.by_name(attacker.active_weapon.classname).clip
+        attacker.active_weapon.clip = weapon_manager.by_name(attacker.active_weapon.weapon_name).clip
 
     # Get a PlayerEntity instance for the victim
     victim = PlayerEntity.from_userid(event.get_int('userid'))
@@ -133,7 +133,7 @@ def on_bump_weapon(stack_data):
     weapon = make_object(Weapon, stack_data[1])
 
     # Get the weapon's data
-    weapon_data = weapon_manager.by_name(weapon.classname)
+    weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
     # Make sure we are not dealing with any melee or grenade weapons
     if weapon_data is not None and weapon_data.tag not in ('melee', 'grenade'):

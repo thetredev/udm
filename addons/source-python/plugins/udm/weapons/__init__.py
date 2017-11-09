@@ -30,7 +30,7 @@ from udm.info import info
 def refill_ammo(weapon):
     """Refill the weapon's ammo."""
     if weapon.owner is not None:
-        weapon.ammo = weapon_manager.by_name(weapon.classname).maxammo
+        weapon.ammo = weapon_manager.by_name(weapon.weapon_name).maxammo
 
 
 # =============================================================================
