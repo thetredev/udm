@@ -135,7 +135,7 @@ def on_hegrenade_detonate(event):
 # >> ENTITY HOOKS
 # =============================================================================
 @EntityPreHook(EntityCondition.is_player, 'bump_weapon')
-def on_bump_weapon(stack_data):
+def on_pre_bump_weapon(stack_data):
     """Block picking up the weapon if it's not in the player's inventory."""
     # Get a PlayerEntity instance for the player
     player = make_object(PlayerEntity, stack_data[0])
