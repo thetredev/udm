@@ -129,6 +129,10 @@ class PlayerEntity(Player):
 
     def refill_ammo(self):
         """Refill the player's active weapon's ammo after the reload animation has finished."""
+        # Refill only valid weapons
+        if weapon_manager.by_name(self.active_weapon.classname).tag in ('melee', 'grenade'):
+            return
+
         # Get the 'next attack' property for the current weapon
         next_attack = self.active_weapon.get_property_float('m_flNextPrimaryAttack')
 
