@@ -15,6 +15,8 @@ from entities.hooks import EntityCondition
 from entities.hooks import EntityPreHook
 #   Events
 from events import Event
+#   Filters
+from filters.entities import EntityIter
 #   Listeners
 from listeners.tick import Delay
 #   Memory
@@ -52,6 +54,12 @@ from udm.weapons import weapon_iter
 # =============================================================================
 admin_menu.register_submenu(config_manager_menu)
 admin_menu.register_submenu(spawnpoints_manager_menu)
+
+
+# =============================================================================
+# >> HOSTAGE ENTITIES GENERATOR
+# =============================================================================
+hostage_entities = EntityIter('hostage_entity')
 
 
 # =============================================================================
@@ -96,8 +104,11 @@ def on_player_death(event):
 
 @Event('round_start')
 def on_round_start(event):
-    """Disable map function entities."""
+    """Disable map function entities & remove hostage entities."""
     map_functions.disable()
+
+    for entity in hostage_entities:
+        entity.remove()
 
 
 @Event('round_end')
