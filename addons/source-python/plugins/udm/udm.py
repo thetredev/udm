@@ -162,65 +162,61 @@ def on_saycommand_guns(command_info, *args):
     # Get a PlayerEntity instance for the player who entered the chat command
     player = PlayerEntity(command_info.index)
 
-    # Store a variable to decide whether the player wants to edit their current inventory
-    edit = False
+    # Get the selection for the inventory the player wants to equip or edit
+    selection = int(args[0]) if args and args[0].isdigit() else None
 
-    # Figure out the selection index
-    if not args:
-        inventory_index = player.inventory_selection
+    # If no selection was made, send the Primary Weapons menu
+    if selection is None:
+        primary_menu.send(player.index)
 
-    # Skip if the first argument is not an integer
-    elif not args[0].isdigit():
-        player.tell('UDM', f'Inventory {WHITE}{player.inventory_selection} {ORANGE}unchanged.')
+        # Tell the player
+        player.tell('UDM', f'Editing inventory {WHITE}{player.inventory_selection + 1}')
+
+        # Stop here and block the message from appearing in the chat window
         return False
 
-    # Calculate the selection index
-    else:
-        inventory_index = int(args[0]) - 1
-
-    # Equip the player with random weapons if `inventory_index` is lower than 0 (`zero`)
-    if inventory_index < 0:
+    # Give random weapons if the selection is not valid
+    if selection <= 0:
         player.strip()
         player.equip_random_weapons()
 
+        # Stop here and block the message from appearing in the chat window
         return False
 
-    # Fix `inventory_index` if it is too high
-    if inventory_index > len(player.inventories):
-        inventory_index = len(player.inventories)
+    # Make the player's choice their inventory selection
+    player.inventory_selection = selection - 1
 
-    # Create an empty inventory at `inventory_index` if none is present
-    if inventory_index not in player.inventories:
-        player.inventories[inventory_index] = PlayerInventory()
+    # Decide whether the player wants to edit or equip their inventory
+    if player.inventory:
 
-    # The player wants to edit the current inventory, if the player is already equipped with it
-    if player.userid in player_inventories.selections and player.inventory_selection == inventory_index:
-
-        # Make sure that the player currently owns the inventory's items
+        # If the weapons owned and the weapons of the inventory are the same,
+        # the player is allowed to edit their inventory
+        # Otherwise they are going to be equipped with it
         weapons_owned = sorted([weapon.classname for weapon in player.weapons(not_filters=('melee', 'grenade'))])
-        inventory_items = sorted([item.data.name for item in player.inventory.values()])
+        inventory_weapons = sorted([item.data.name for item in player.inventory.values()])
 
-        edit = weapons_owned == inventory_items
+        edit = weapons_owned == inventory_weapons
 
-    # Set the inventory at `inventory_index` as the player's current inventory selection
-    player.inventory_selection = inventory_index
+    # The player is allowed to equip their inventory if no item is present in it
+    else:
+        edit = True
 
-    # Equip the player if they don't want to edit the inventory and if there are weapons present in the inventory
-    if not edit and player.inventory:
+    # Send the Primary Weapons menu if the player is allowed to edit their inventory
+    if edit:
+        primary_menu.send(player.index)
+
+        # Tell the player
+        player.tell('UDM', f'Editing inventory {WHITE}{player.inventory_selection + 1}')
+
+    # Else equip the selected inventory
+    else:
         player.strip()
         player.equip_inventory()
 
         # Tell the player
-        player.tell('UDM', f'Equipping inventory {WHITE}{inventory_index + 1}')
+        player.tell('UDM', f'Equipping inventory {WHITE}{player.inventory_selection + 1}')
 
-    # Otherwise edit the player's current inventory
-    else:
-        primary_menu.send(player.index)
-
-        # Tell the player
-        player.tell('UDM', f'Editing inventory {WHITE}{inventory_index + 1}')
-
-    # Block the text from appearing in the chat window
+    # Stop here and block the message from appearing in the chat window
     return False
 
 
