@@ -28,7 +28,6 @@ from weapons.entity import Weapon
 #   Admin
 from udm.admin import admin_menu
 #   Config
-from udm.config import cvar_equip_delay
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_saycommand_admin
@@ -73,7 +72,7 @@ def on_player_spawn(event):
 
     # Prepare the player if they're alive and on a team
     if player.team > 1 and not player.dead:
-        Delay(abs(cvar_equip_delay.get_float()), player.prepare)
+        prepare_player(player)
 
 
 @Event('player_death')
