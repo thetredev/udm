@@ -6,20 +6,24 @@ Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like 
 ## Game Support
 | Game | Status |
 | ---- | ------ |
-| Counter-Strike: Source | Testing |
-| Counter-Strike: Global Offensive | Untested |
+| Counter-Strike: Source | Fully tested |
+| Counter-Strike: Global Offensive | Testing |
 
 ## Features
 * Weapon Menu - accessible via the chat command **guns**
 * Multiple inventories! See commit [a6dd66e](https://github.com/backraw/udm/commit/a6dd66e61a463d5ddd6c50ad8b49581eb6aa2d86) for details.
 * Each inventory can hold either one or two weapons - easy primary/secondary only handling!
-* Support for auto-silencing weapons (e.g. [*M4A1 Silenced* & *USP Silenced* for Counter-Strike: Source](https://github.com/backraw/udm/blob/master/addons/source-python/data/plugins/udm/weapons/cstrike.ini))
 * Spawn Points
 * Refill ammo after the reload animation has finished
 * Admin Menu
 
 Spawn points are loaded after a map change and on plugin load. The current map is evaluated and the corresponding data file ```../addons/source-python/data/plugins/udm/spawnpoints/<game_name>/<current_map>.json``` is being loaded, if it exists.
 See [the spawnpoints folder for Counter-Strike: Source](https://github.com/backraw/udm/tree/master/addons/source-python/data/plugins/udm/spawnpoints/cstrike) for examples.
+
+### Currently broken (disabled) features
+
+* Support for auto-silencing weapons (e.g. [*M4A1 Silenced* & *USP Silenced* for Counter-Strike: Source](https://github.com/backraw/udm/blob/master/addons/source-python/data/plugins/udm/weapons/cstrike.ini))
+*
 
 ## The Admin Menu
 The Admin menu is accessible to admins via the chat command **!udm** and currently provides the following functionality:
