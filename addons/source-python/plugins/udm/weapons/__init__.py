@@ -179,5 +179,5 @@ weapon_manager = _WeaponManager(ConfigObj(_weapons_ini))
 # =============================================================================
 # >> MELEE WEAPONS
 # =============================================================================
-# Store a global list of melee weapons for the game
-melee_weapons = [weapon.name for weapon in sp_weapon_manager.values() if 'melee' in weapon.tags]
+# Store the melee weapon for the game
+melee_weapon = [weapon.name for weapon in sp_weapon_manager.values() if 'melee' in weapon.tags][0]

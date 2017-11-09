@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Random
-import random
-
 # Source.Python Imports
 #   Menus
 from menus.radio import PagedRadioOption
@@ -19,7 +15,7 @@ from udm.menus import CloseButtonPagedMenu
 from udm.menus.decorators import CloseCallback
 from udm.menus.decorators import SelectCallback
 #   Weapons
-from udm.weapons import melee_weapons
+from udm.weapons import melee_weapon
 
 
 # =============================================================================
@@ -58,7 +54,7 @@ def on_close_admin_menu(player):
     player.disable_damage_protection()
 
     # Give a random melee weapon
-    player.give_named_item(random.choice(melee_weapons))
+    player.give_named_item(melee_weapon)
 
 
 @SelectCallback(admin_menu)
