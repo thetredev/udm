@@ -29,16 +29,11 @@ from players.entity import Player
 #   Colors
 from udm.colors import MESSAGE_COLOR_ORANGE
 from udm.colors import MESSAGE_COLOR_WHITE
-#   Config
-from udm.config import cvar_equip_hegrenade
-from udm.config import cvar_spawn_protection_delay
 #   Delays
 from udm.delays import delay_manager
 #   Players
 from udm.players.inventories import PlayerInventory
 from udm.players.inventories import player_inventories
-#   Spawn Points
-from udm.spawnpoints import spawnpoints
 #   Weapons
 from udm.weapons import refill_ammo
 from udm.weapons import weapon_manager
