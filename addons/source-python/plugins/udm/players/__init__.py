@@ -58,8 +58,7 @@ class PlayerEntity(Player):
         SayText2(f'{ORANGE}[{WHITE}{prefix}{ORANGE}] {message}').send(self.index)
 
     def equip_inventory(self):
-        """Equip the inventory at `inventory_index`."""
-        # Equip all weapons in the current inventory
+        """Equip the player's currently selected inventory."""
         if self.inventory:
             self.inventory.equip(self)
 
