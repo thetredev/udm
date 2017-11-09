@@ -32,6 +32,7 @@ from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
+from udm.config import cvar_spawn_protection_delay
 from udm.config.menus import config_manager_menu
 #   Delays
 from udm.delays import delay_manager
@@ -42,6 +43,7 @@ from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import PlayerEntity
 #   Spawn Points
+from udm.spawnpoints import spawnpoints
 from udm.spawnpoints.menus import spawnpoints_manager_menu
 #   Weapons
 from udm.weapons import weapon_manager
@@ -59,6 +61,37 @@ admin_menu.register_submenu(spawnpoints_manager_menu)
 # >> HOSTAGE ENTITIES GENERATOR
 # =============================================================================
 hostage_entities = EntityIter('hostage_entity')
+
+
+# =============================================================================
+# >> PLAYER PREPARATION
+# =============================================================================
+def prepare_player(player):
+    """Prepare the player for battle."""
+    # Give armor
+    player.give_named_item('item_assaultsuit')
+
+    # Give a High Explosive grenade if configured that way
+    if cvar_equip_hegrenade.get_int() > 0:
+        player.give_named_item('weapon_hegrenade')
+
+    # Enable damage protection
+        player.enable_damage_protection(cvar_spawn_protection_delay.get_int())
+
+    # Choose a random spawn point
+    spawnpoint = spawnpoints.get_random()
+
+    # Spawn the player on the location found
+    if spawnpoint is not None:
+        player.origin = spawnpoint
+        player.view_angle = spawnpoint.angle
+
+    # Strip objective weapons
+    player.strip(is_filters='objective')
+
+    # Equip the current inventory if not currently using the admin menu
+    if player not in admin_menu.users or not admin_menu.users[player.userid]:
+        player.equip_inventory()
 
 
 # =============================================================================

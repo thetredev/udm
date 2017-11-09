@@ -84,32 +84,6 @@ class PlayerEntity(Player):
         for weapon in self.weapons(is_filters=is_filters, not_filters=not_filters):
             weapon.remove()
 
-    def prepare(self):
-        """Prepare the player for battle."""
-        # Give armor
-        self.give_named_item('item_assaultsuit')
-
-        # Give a High Explosive grenade if configured that way
-        if cvar_equip_hegrenade.get_int() > 0:
-            self.give_named_item('weapon_hegrenade')
-
-        # Enable damage protection
-        self.enable_damage_protection(cvar_spawn_protection_delay.get_int())
-
-        # Choose a random spawn point
-        spawnpoint = spawnpoints.get_random()
-
-        # Spawn the player on the location found
-        if spawnpoint is not None:
-            self.origin = spawnpoint
-            self.view_angle = spawnpoint.angle
-
-        # Strip objective weapons
-        self.strip(is_filters='objective')
-
-        # Equip the current inventory
-        self.equip_inventory()
-
     def enable_damage_protection(self, time_delay=None):
         """Enable damage protection and disable it after `time_delay` if `time_delay` is not None."""
         # Enable god mode
