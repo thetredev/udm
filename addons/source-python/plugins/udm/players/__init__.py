@@ -14,7 +14,6 @@ import random
 # Source.Python Imports
 #   Colors
 from colors import Color
-from colors import ORANGE
 from colors import WHITE
 #   Engines
 from engines.server import global_vars
@@ -27,6 +26,9 @@ from messages import SayText2
 from players.entity import Player
 
 # Script Imports
+#   Colors
+from udm.colors import MESSAGE_COLOR_ORANGE
+from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_spawn_protection_delay
@@ -55,7 +57,9 @@ class PlayerEntity(Player):
 
     def tell(self, prefix, message):
         """Tell the player a prefixed chat message."""
-        SayText2(f'{ORANGE}[{WHITE}{prefix}{ORANGE}] {message}').send(self.index)
+        SayText2(
+            f'{MESSAGE_COLOR_ORANGE}[{MESSAGE_COLOR_WHITE}{prefix}{MESSAGE_COLOR_ORANGE}] {message}'
+        ).send(self.index)
 
     def equip_inventory(self):
         """Equip the player's currently selected inventory."""

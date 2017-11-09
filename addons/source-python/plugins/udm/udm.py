@@ -6,8 +6,6 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python Imports
-#   Colors
-from colors import WHITE
 #   Commands
 from commands.typed import TypedSayCommand
 #   Entities
@@ -27,6 +25,8 @@ from weapons.entity import Weapon
 # Script Imports
 #   Admin
 from udm.admin import admin_menu
+#   Colors
+from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_respawn_delay
@@ -172,7 +172,7 @@ def on_saycommand_guns(command_info, *args):
         primary_menu.send(player.index)
 
         # Tell the player
-        player.tell('UDM', f'Editing inventory {WHITE}{player.inventory_selection + 1}')
+        player.tell('UDM', f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
         # Stop here and block the message from appearing in the chat window
         return False
@@ -207,7 +207,7 @@ def on_saycommand_guns(command_info, *args):
         primary_menu.send(player.index)
 
         # Tell the player
-        player.tell('UDM', f'Editing inventory {WHITE}{player.inventory_selection + 1}')
+        player.tell('UDM', f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
     # Else equip the selected inventory
     else:
@@ -215,7 +215,7 @@ def on_saycommand_guns(command_info, *args):
         player.equip_inventory()
 
         # Tell the player
-        player.tell('UDM', f'Equipping inventory {WHITE}{player.inventory_selection + 1}')
+        player.tell('UDM', f'Equipping inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
     # Stop here and block the message from appearing in the chat window
     return False

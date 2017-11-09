@@ -9,15 +9,13 @@
 from enum import IntEnum
 
 # Source.Python Imports
-#   Colors
-from colors import WHITE
-from colors import ORANGE
 #   Menus
 from menus.radio import PagedRadioOption
-#   Messages
-from messages import SayText2
 
 # Script Imports
+#   Colors
+from udm.colors import MESSAGE_COLOR_ORANGE
+from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
 from udm.config import cvar_spawn_point_distance
 #   Menus
@@ -122,7 +120,8 @@ def on_select_spawnpoints_manager_option(player, option):
 
             # Tell the player about the addition
             player.tell(
-                spawnpoints_manager_menu.title, f'Spawn Point {WHITE}#{len(spawnpoints)} {ORANGE}has been added.'
+                spawnpoints_manager_menu.title,
+                f'Spawn Point {MESSAGE_COLOR_WHITE}#{len(spawnpoints)} {MESSAGE_COLOR_ORANGE}has been added.'
             )
 
         # Send this menu back to the player
@@ -142,7 +141,8 @@ def on_select_spawnpoints_manager_option(player, option):
 
                 # Tell the player about the removal
                 player.tell(
-                    spawnpoints_manager_menu.title, f'Spawn Point {WHITE}#{position} {ORANGE}has been removed.'
+                    spawnpoints_manager_menu.title,
+                    f'Spawn Point {MESSAGE_COLOR_WHITE}#{position} {MESSAGE_COLOR_ORANGE}has been removed.'
                 )
 
                 # Break the loop
