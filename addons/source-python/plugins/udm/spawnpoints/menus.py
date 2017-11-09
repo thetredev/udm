@@ -49,12 +49,15 @@ class _SpawnPointsManagerMenuOptions(IntEnum):
         menu_options = list()
         for index, member in enumerate(members):
 
-            # Get the difference between the member's value and its index in the enum
-            diff = member.value - index
+            # New lines only apply from the second index onwards
+            if index > 0:
 
-            # Extend the options with empty lines if the difference is higher than 0 (`zero`)
-            if diff > 0:
-                menu_options.extend([' ' for i in range(diff)])
+                # Get the difference between the member's value and its index in the enum
+                diff = member.value - members[index - 1].value
+
+                # Extend the options with empty lines if the difference is higher than 0 (`zero`)
+                if diff > 1:
+                    menu_options.extend([' ' for i in range(diff - 1)])
 
             # Append the actual menu option
             menu_options.append(PagedRadioOption(member.name.capitalize(), member))
