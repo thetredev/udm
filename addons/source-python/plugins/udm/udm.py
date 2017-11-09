@@ -7,7 +7,6 @@
 # =============================================================================
 # Source.Python Imports
 #   Colors
-from colors import ORANGE
 from colors import WHITE
 #   Commands
 from commands.typed import TypedSayCommand
@@ -41,8 +40,6 @@ from udm.maps import map_functions
 from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import PlayerEntity
-from udm.players.inventories import PlayerInventory
-from udm.players.inventories import player_inventories
 #   Spawn Points
 from udm.spawnpoints.menus import spawnpoints_manager_menu
 #   Weapons
