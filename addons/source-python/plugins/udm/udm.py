@@ -169,7 +169,6 @@ def on_saycommand_guns(command_info, *args):
 
     # Give random weapons if the selection is not valid
     if selection <= 0:
-        player.strip()
         player.equip_random_weapons()
 
         # Stop here and block the message from appearing in the chat window

@@ -69,6 +69,10 @@ class PlayerEntity(Player):
 
     def equip_random_weapons(self):
         """Equip random weapons by weapon tag."""
+        # Strip the player off their weapons
+        self.strip()
+
+        # Equip random weapons
         for tag in weapon_manager.tags:
             self.give_named_item(random.choice(list(weapon_manager.by_tag(tag))).name)
 
