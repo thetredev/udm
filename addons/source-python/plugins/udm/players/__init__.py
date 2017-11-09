@@ -97,8 +97,8 @@ class PlayerEntity(Player):
             self.origin = spawnpoint
             self.view_angle = spawnpoint.angle
 
-        # Strip explosives
-        self.strip(is_filters='explosive')
+        # Strip objective weapons
+        self.strip(is_filters='objective')
 
         # Equip the current inventory
         self.equip_inventory()
