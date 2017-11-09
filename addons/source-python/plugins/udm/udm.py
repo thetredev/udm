@@ -136,9 +136,11 @@ def on_player_death(event):
 
 @Event('round_start')
 def on_round_start(event):
-    """Disable map function entities & remove hostage entities."""
+    """Clean up the map."""
+    # Disable map function entities"""
     map_functions.disable()
 
+    # Remove hostage entities
     for entity in hostage_entities:
         entity.remove()
 
