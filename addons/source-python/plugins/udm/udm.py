@@ -126,21 +126,23 @@ def on_hegrenade_detonate(event):
 @EntityPreHook(EntityCondition.is_player, 'bump_weapon')
 def on_bump_weapon(stack_data):
     """Block picking up the weapon if it's not in the player's inventory."""
+    # Get a PlayerEntity instance for the player
+    player = make_object(PlayerEntity, stack_data[0])
+
+    # Block the weapon bump if the player is using the admin menu
+    if player.userid in admin_menu.users and admin_menu.users[player.userid]:
+        return False
+
     # Get a Weapon instance for the weapon
     weapon = make_object(Weapon, stack_data[1])
 
     # Get the weapon's data
     weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
-    # Make sure we are not dealing with any melee or grenade weapons
-    if weapon_data is not None and weapon_data.tag not in ('melee', 'grenade'):
-
-        # Get a PlayerEntity instance for the player
-        player = make_object(PlayerEntity, stack_data[0])
-
-        # Block the weapon bump if the player didn't choose it
-        if player.inventory and weapon_data.basename not in [item.basename for item in player.inventory.values()]:
-            return False
+    # Block the weapon bump if the player didn't choose it
+    if weapon_data is not None and player.inventory and weapon_data.basename not in\
+            [item.basename for item in player.inventory.values()]:
+        return False
 
 
 # =============================================================================
