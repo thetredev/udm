@@ -226,6 +226,7 @@ def on_saycommand_admin(command_info):
     player.strip(not_filters=None)
 
     # Send the Admin menu to the player
+    admin_menu.users[player.userid] = True
     admin_menu.send(command_info.index)
 
     # Block the text from appearing in the chat window

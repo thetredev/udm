@@ -25,6 +25,9 @@ from udm.weapons import melee_weapon
 class _AdminMenu(CloseButtonPagedMenu):
     """Class used to provide a way to send this menu when a submenu is closed."""
 
+    # Store players who are currently using the Admin menu
+    users = dict()
+
     def register_submenu(self, submenu):
         """Always send this menu when a submenu is closed."""
         # Store `self.send` as the submenu's `close_callback`
@@ -32,6 +35,14 @@ class _AdminMenu(CloseButtonPagedMenu):
 
         # Add the submenu
         self.append(PagedRadioOption(submenu.title, submenu))
+
+    def _unload_instance(self):
+        """Clear the users dict on unload."""
+        # Clear the users dict
+        self.users.clear()
+
+        # Continue base routine
+        super()._unload_instance()
 
 
 # Store a global instance of `_AdminMenu`
@@ -44,6 +55,9 @@ admin_menu = _AdminMenu(title='Admin Menu')
 @CloseCallback(admin_menu)
 def on_close_admin_menu(player):
     """Enable default gameplay for the admin player who just closed the Admin menu."""
+    # Remove the player from the Admin menu users storage
+    admin_menu.users[player.userid] = False
+
     # Equip the player with their inventory & a High Explosive grenade
     player.equip_inventory()
 
