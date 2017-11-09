@@ -107,6 +107,15 @@ class PlayerInventory(defaultdict):
             yield self[key]
 
 
+class _PlayerInventoryMap(defaultdict):
+    """Class used to map inventory selection indexes to `PlayerInventory` items."""
+
+    def __init__(self):
+        """Object initialization."""
+        # Make `PlayerInventory` the default value type
+        super().__init__(PlayerInventory)
+
+
 class _PlayerInventories(defaultdict):
     """Class used to provide multiple inventories and weapon selections for players."""
 
@@ -115,8 +124,8 @@ class _PlayerInventories(defaultdict):
 
     def __init__(self):
         """Object initialization."""
-        # Make `dict` the default value type
-        super().__init__(dict)
+        # Make `_PlayerInventoryMap` the default value type
+        super().__init__(_PlayerInventoryMap)
 
 
 # Store a global instance of `_PlayerInventories`
