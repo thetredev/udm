@@ -122,6 +122,9 @@ class _PlayerInventories(defaultdict):
     # Store weapon selections
     selections = defaultdict(int)
 
+    # Store random weapon selections
+    selections_random = defaultdict(bool)
+
     def __init__(self):
         """Object initialization."""
         # Make `_PlayerInventoryMap` the default value type

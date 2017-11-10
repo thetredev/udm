@@ -66,6 +66,9 @@ class PlayerEntity(Player):
 
     def equip_random_weapons(self):
         """Equip random weapons by weapon tag."""
+        # Enable random mode
+        self.random_mode = True
+
         # Strip the player off their weapons
         self.strip()
 
@@ -146,6 +149,17 @@ class PlayerEntity(Player):
 
     # Set the `inventory_selection` property for PlayerEntity
     inventory_selection = property(get_inventory_selection, set_inventory_selection)
+
+    def set_random_mode(self, value):
+        """Set random mode for the player."""
+        player_inventories.selections_random[self.userid] = value
+
+    def get_random_mode(self):
+        """Return whether the player is currently in random mode."""
+        return player_inventories.selections_random[self.userid]
+
+    # Set the `random_mode` property for PlayerEntity
+    random_mode = property(get_random_mode, set_random_mode)
 
 
 # =============================================================================
