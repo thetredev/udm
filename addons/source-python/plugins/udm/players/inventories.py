@@ -119,7 +119,7 @@ class _PlayerInventoryMap(defaultdict):
 class _PlayerInventories(defaultdict):
     """Class used to provide multiple inventories and weapon selections for players."""
 
-    # Store player weapon selections
+    # Store weapon selections
     selections = defaultdict(int)
 
     def __init__(self):
