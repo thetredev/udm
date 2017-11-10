@@ -32,7 +32,6 @@ from udm.colors import MESSAGE_COLOR_WHITE
 #   Delays
 from udm.delays import delay_manager
 #   Players
-from udm.players.inventories import PlayerInventory
 from udm.players.inventories import player_inventories
 #   Weapons
 from udm.weapons import refill_ammo
