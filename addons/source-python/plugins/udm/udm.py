@@ -79,9 +79,6 @@ def prepare_player(player):
         player.origin = spawnpoint
         player.view_angle = spawnpoint.angle
 
-    # Strip objective weapons
-    player.strip(is_filters='objective')
-
     # Equip the current inventory if not currently using the admin menu
     if player not in admin_menu.users or not admin_menu.users[player.userid]:
         player.equip_inventory()
@@ -188,7 +185,7 @@ def on_pre_bump_weapon(stack_data):
 @OnEntitySpawned
 def on_entity_spawned(base_entity):
     """Remove hostage entities when they have spawned."""
-    if base_entity.classname == 'hostage_entity':
+    if base_entity.classname == 'hostage_entity' or base_entity.classname in weapon_manager.forbidden:
         base_entity.remove()
 
 

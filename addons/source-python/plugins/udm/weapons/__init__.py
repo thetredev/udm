@@ -13,7 +13,8 @@ from configobj import ConfigObj
 #   Core
 from core import GAME_NAME
 #   Filters
-from filters.weapons import WeaponIter as WeaponIter
+from filters.weapons import WeaponClassIter
+from filters.weapons import WeaponIter
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
@@ -143,6 +144,9 @@ class _WeaponManager(dict):
                 # Store the `_WeaponData` object at `basename`
                 self[basename] = _WeaponData(basename, weapon_class, displayname, tag)
 
+        # Store a list of forbidden weapons
+        self._forbidden = [weapon_class.name for weapon_class in WeaponClassIter(is_filters='objective')]
+
         # Store the tags provided by the weapon data file
         self._tags = list(data_file.keys())
 
@@ -165,6 +169,11 @@ class _WeaponManager(dict):
         """Return whether the weapon of classname `name` is allowed to be silenced."""
         weapon_name = basename.replace('_silenced', '')
         return weapon_name in self.keys() and f'{weapon_name}_silenced' in self.keys()
+
+    @property
+    def forbidden(self):
+        """Return the list of forbidden weapons."""
+        return self._forbidden
 
     @property
     def tags(self):
