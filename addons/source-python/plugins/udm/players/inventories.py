@@ -122,8 +122,8 @@ class _PlayerInventories(defaultdict):
     # Store weapon selections
     selections = defaultdict(int)
 
-    # Store random weapon selections
-    selections_random = defaultdict(bool)
+    # Store random weapon selections, defaults to True for every new player
+    selections_random = defaultdict(lambda: True)
 
     def __init__(self):
         """Object initialization."""
