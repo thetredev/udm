@@ -13,9 +13,8 @@ from entities.hooks import EntityCondition
 from entities.hooks import EntityPreHook
 #   Events
 from events import Event
-#   Filters
-from filters.entities import EntityIter
 #   Listeners
+from listeners import OnEntitySpawned
 from listeners.tick import Delay
 #   Memory
 from memory import make_object
@@ -55,12 +54,6 @@ from udm.weapons import weapon_iter
 # =============================================================================
 admin_menu.register_submenu(config_manager_menu)
 admin_menu.register_submenu(spawnpoints_manager_menu)
-
-
-# =============================================================================
-# >> HOSTAGE ENTITIES GENERATOR
-# =============================================================================
-hostage_entities = EntityIter('hostage_entity')
 
 
 # =============================================================================
@@ -140,10 +133,6 @@ def on_round_start(event):
     # Disable map function entities"""
     map_functions.disable()
 
-    # Remove hostage entities
-    for entity in hostage_entities:
-        entity.remove()
-
 
 @Event('round_end')
 def on_round_end(event):
@@ -191,6 +180,16 @@ def on_pre_bump_weapon(stack_data):
         if weapon_data is not None and player.inventory and weapon_data.basename not in\
                 [item.basename for item in player.inventory.values()]:
             return False
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnEntitySpawned
+def on_entity_spawned(base_entity):
+    """Remove hostage entities when they have spawned."""
+    if base_entity.classname == 'hostage_entity':
+        base_entity.remove()
 
 
 # =============================================================================
