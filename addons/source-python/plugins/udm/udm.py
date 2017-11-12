@@ -9,10 +9,13 @@
 #   Commands
 from commands.typed import TypedSayCommand
 #   Entities
+from entities.entity import Entity
 from entities.hooks import EntityCondition
 from entities.hooks import EntityPreHook
 #   Events
 from events import Event
+#   Filters
+from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners import OnEntitySpawned
 from listeners.tick import Delay
@@ -35,8 +38,6 @@ from udm.config import cvar_spawn_protection_delay
 from udm.config.menus import config_manager_menu
 #   Delays
 from udm.delays import delay_manager
-#   Maps
-from udm.maps import map_functions
 #   Menus
 from udm.weapons.menus import primary_menu
 #   Players
@@ -54,6 +55,24 @@ from udm.weapons import weapon_iter
 # =============================================================================
 admin_menu.register_submenu(config_manager_menu)
 admin_menu.register_submenu(spawnpoints_manager_menu)
+
+
+# =============================================================================
+# >> FORBIDDEN ENTITIES
+# =============================================================================
+# Store a list of forbidden entities
+forbidden_entities = [weapon_class.name for weapon_class in WeaponClassIter(is_filters='objective')] + [
+    'hostage_entity'
+]
+
+
+# =============================================================================
+# >> MAP FUNCTIONS
+# =============================================================================
+# Store a list of map functions to disable when they have spawned
+map_functions = [
+    'func_bomb_target', 'func_buyzone', 'func_hostage_rescue'
+]
 
 
 # =============================================================================
@@ -124,13 +143,6 @@ def on_player_death(event):
     delay_list.append(Delay(time_delay, victim.spawn))
 
 
-@Event('round_start')
-def on_round_start(event):
-    """Clean up the map."""
-    # Disable map function entities"""
-    map_functions.disable()
-
-
 @Event('round_end')
 def on_round_end(event):
     """Cancel all pending delays."""
@@ -184,9 +196,14 @@ def on_pre_bump_weapon(stack_data):
 # =============================================================================
 @OnEntitySpawned
 def on_entity_spawned(base_entity):
-    """Remove hostage entities when they have spawned."""
-    if base_entity.classname == 'hostage_entity' or base_entity.classname in weapon_manager.forbidden:
+    """Remove forbidden entities when they have spawned."""
+    if base_entity.classname in forbidden_entities:
         base_entity.remove()
+
+    # Disable map functions as well
+    elif base_entity.classname in map_functions:
+        entity = Entity(base_entity.index)
+        entity.call_input('Disable')
 
 
 # =============================================================================

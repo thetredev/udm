@@ -144,9 +144,6 @@ class _WeaponManager(dict):
                 # Store the `_WeaponData` object at `basename`
                 self[basename] = _WeaponData(basename, weapon_class, displayname, tag)
 
-        # Store a list of forbidden weapons
-        self._forbidden = [weapon_class.name for weapon_class in WeaponClassIter(is_filters='objective')]
-
         # Store the tags provided by the weapon data file
         self._tags = list(data_file.keys())
 
@@ -169,11 +166,6 @@ class _WeaponManager(dict):
         """Return whether the weapon of classname `name` is allowed to be silenced."""
         weapon_name = basename.replace('_silenced', '')
         return weapon_name in self.keys() and f'{weapon_name}_silenced' in self.keys()
-
-    @property
-    def forbidden(self):
-        """Return the list of forbidden weapons."""
-        return self._forbidden
 
     @property
     def tags(self):
