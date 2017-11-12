@@ -69,7 +69,7 @@ def prepare_player(player):
         player.give_named_item('weapon_hegrenade')
 
     # Enable damage protection
-        player.enable_damage_protection(cvar_spawn_protection_delay.get_int())
+    player.enable_damage_protection(cvar_spawn_protection_delay.get_int())
 
     # Choose a random spawn point
     spawnpoint = spawnpoints.get_random()
