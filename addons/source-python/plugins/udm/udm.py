@@ -46,8 +46,8 @@ from udm.players import PlayerEntity
 from udm.spawnpoints import spawnpoints
 from udm.spawnpoints.menus import spawnpoints_manager_menu
 #   Weapons
+from udm.weapons import remove_weapon
 from udm.weapons import weapon_manager
-from udm.weapons import weapon_iter
 
 
 # =============================================================================
@@ -130,17 +130,8 @@ def on_player_death(event):
     # Get a PlayerEntity instance for the victim
     victim = PlayerEntity.from_userid(event.get_int('userid'))
 
-    # Get the respawn time delay
-    time_delay = abs(cvar_respawn_delay.get_float())
-
-    # Get the delay list for `respawn_<victim.userid>`
-    delay_list = delay_manager[f'respawn_{victim.userid}']
-
-    # Remove all idle weapons after `time_delay / 2`
-    delay_list.append(Delay(time_delay / 2, weapon_iter.remove_idle))
-
-    # Respawn the victim after `time_delay`
-    delay_list.append(Delay(time_delay, victim.spawn))
+    # Respawn the victim after the configured respawn delay
+    delay_manager[f'respawn_{victim.userid}'].append(Delay(abs(cvar_respawn_delay.get_float()), victim.spawn))
 
 
 @Event('round_end')
@@ -189,6 +180,19 @@ def on_pre_bump_weapon(stack_data):
         if weapon_data is not None and player.inventory and weapon_data.basename not in\
                 [item.basename for item in player.inventory.values()]:
             return False
+
+
+@EntityPreHook(EntityCondition.is_player, 'drop_weapon')
+def on_post_drop_weapon(stack_data):
+    """Remove the dropped weapon after half the respawn delay."""
+    # Get a PlayerEntity instance for the player
+    player = make_object(PlayerEntity, stack_data[0])
+
+    # Remove the active weapon after half the respawn delay, if the player carries one
+    if player.active_weapon is not None:
+        delay_manager[f'drop_{player.active_weapon.index}'].append(
+            Delay(abs(cvar_respawn_delay.get_float()) / 2, remove_weapon, (player.active_weapon,))
+        )
 
 
 # =============================================================================

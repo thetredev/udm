@@ -167,6 +167,7 @@ class PlayerEntity(Player):
 # =============================================================================
 @OnEntityDeleted
 def on_entity_deleted(entity):
-    """Cancel the refill delay for the deleted entity."""
+    """Cancel the refill & drop delay for the deleted entity."""
     with contextlib.suppress(ValueError):
         delay_manager.cancel_delays(f'refill_{entity.index}')
+        delay_manager.cancel_delays(f'drop_{entity.index}')

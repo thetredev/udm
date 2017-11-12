@@ -34,28 +34,17 @@ def refill_ammo(weapon):
         weapon.ammo = weapon_manager.by_name(weapon.weapon_name).maxammo
 
 
+def remove_weapon(weapon):
+    """Safely remove a weapon entity."""
+    if weapon.owner is None:
+        weapon.remove()
+
+
 # =============================================================================
 # >> PRIVATE GLOBAL VARIABLES
 # =============================================================================
 # Store the path to the weapons data file
 _weapons_ini = PLUGIN_DATA_PATH.joinpath(info.name, 'weapons', f'{GAME_NAME}.ini')
-
-
-# =============================================================================
-# >> WEAPON ITERATOR
-# =============================================================================
-class _WeaponIter(WeaponIter):
-    """Class used to provide a method to remove all idle weapon entities from the server."""
-
-    def remove_idle(self):
-        """Remove all idle weapon entities on the server."""
-        for weapon in self:
-            if weapon.owner is None:
-                weapon.remove()
-
-
-# Store a global instance of `_WeaponIter`
-weapon_iter = _WeaponIter()
 
 
 # =============================================================================
