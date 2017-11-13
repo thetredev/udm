@@ -8,6 +8,8 @@
 # Source.Python Imports
 #   Commands
 from commands.typed import TypedSayCommand
+#   Core
+from core import OutputReturn
 #   Entities
 from entities.entity import Entity
 from entities.hooks import EntityCondition
@@ -18,6 +20,7 @@ from events import Event
 from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners import OnEntitySpawned
+from listeners import OnServerOutput
 from listeners.tick import Delay
 #   Memory
 from memory import make_object
@@ -208,6 +211,15 @@ def on_entity_spawned(base_entity):
     elif base_entity.classname in map_functions:
         entity = Entity(base_entity.index)
         entity.call_input('Disable')
+
+
+@OnServerOutput
+def on_server_output(severity, msg):
+    """Block the warning that any bot has spawned outside of a buy zone."""
+    if 'bot spawned outside of a buy zone' in msg:
+        return OutputReturn.BLOCK
+
+    return OutputReturn.CONTINUE
 
 
 # =============================================================================
