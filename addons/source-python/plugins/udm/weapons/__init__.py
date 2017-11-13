@@ -14,7 +14,6 @@ from configobj import ConfigObj
 from core import GAME_NAME
 #   Filters
 from filters.weapons import WeaponClassIter
-from filters.weapons import WeaponIter
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
