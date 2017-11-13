@@ -22,31 +22,51 @@ from players.helpers import userid_from_index
 # =============================================================================
 # >> DELAY MANAGER
 # =============================================================================
+class _DelayList(list):
+    """Class used to append delays only when delays are enabled."""
+
+    def append(self, delay):
+        """Append the delay only when delays are enabled."""
+        if delay_manager.delays_enabled:
+            super().append(delay)
+
+        # Otherwise, cancel the delay if it is running
+        elif delay.running:
+            delay.cancel()
+
+    def cancel_all(self):
+        """Cancel all delays in this delay list."""
+        for delay in self.copy():
+            if delay.running:
+                delay.cancel()
+
+        self.clear()
+
+
 class _DelayManager(dict, AutoUnload):
     """Class used to group delays and cancel any such group if needed."""
 
+    # Remember whether delays are enabled
+    delays_enabled = True
+
     def __missing__(self, key):
-        """Set and return an empty list as the key's value."""
-        value = self[key] = list()
+        """Set and return an instance of `_DelayList()` as the key's value."""
+        value = self[key] = _DelayList()
         return value
 
     def cancel_all(self):
         """Cancel all pending delays."""
-        for key in self.copy():
-            self.cancel_delays(key)
+        self.delays_enabled = False
+
+        for delay_list in self.values():
+            delay_list.cancel_all()
+
+        self.clear()
 
     def cancel_delays(self, key):
         """Cancel all delays for `key`."""
         # Get the delay list for `key`
-        delay_list = self[key]
-
-        # Cancel all delays in the delay list
-        for delay in delay_list:
-            if delay.running:
-                delay.cancel()
-
-        # Clear the delay list
-        delay_list.clear()
+        self[key].cancel_all()
 
     def _unload_instance(self):
         """Cancel all pending delays on unload."""

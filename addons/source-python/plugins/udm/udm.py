@@ -118,6 +118,12 @@ def on_player_spawn(event):
 
     # Prepare the player if they're alive and on a team
     if player.team > 1 and not player.dead:
+
+        # Enable delays if they have been disabled
+        if not delay_manager.delays_enabled:
+            delay_manager.delays_enabled = True
+
+        # Prepare the player
         prepare_player(player)
 
 
