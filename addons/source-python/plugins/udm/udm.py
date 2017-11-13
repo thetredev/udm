@@ -42,6 +42,8 @@ from udm.config import cvar_spawn_protection_delay
 from udm.config.menus import config_manager_menu
 #   Delays
 from udm.delays import delay_manager
+#   Info
+from udm.info import info
 #   Menus
 from udm.weapons.menus import primary_menu
 #   Players
@@ -249,7 +251,7 @@ def on_saycommand_guns(command_info, *args):
         primary_menu.send(player.index)
 
         # Tell the player
-        player.tell('UDM', f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
+        player.tell(info.verbose_name, f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
         # Stop here and block the message from appearing in the chat window
         return False
@@ -287,7 +289,7 @@ def on_saycommand_guns(command_info, *args):
         primary_menu.send(player.index)
 
         # Tell the player
-        player.tell('UDM', f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
+        player.tell(info.verbose_name, f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
     # Else equip the selected inventory
     else:
@@ -295,13 +297,13 @@ def on_saycommand_guns(command_info, *args):
         player.equip_inventory()
 
         # Tell the player
-        player.tell('UDM', f'Equipping inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
+        player.tell(info.verbose_name, f'Equipping inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
     # Stop here and block the message from appearing in the chat window
     return False
 
 
-@TypedSayCommand(cvar_saycommand_admin.get_string(), permission='udm.admin')
+@TypedSayCommand(cvar_saycommand_admin.get_string(), permission=f'{info.name}.admin')
 def on_saycommand_admin(command_info):
     """Send the Admin menu to the player."""
     # Get a PlayerEntity instance for the player

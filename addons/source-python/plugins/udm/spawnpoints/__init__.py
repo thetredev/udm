@@ -29,6 +29,8 @@ from paths import PLUGIN_DATA_PATH
 # Script Imports
 #   Config
 from udm.config import cvar_spawn_point_distance
+#   Info
+from udm.info import info
 
 
 # =============================================================================
@@ -39,7 +41,7 @@ _playeriter_alive = PlayerIter('alive')
 
 # Store the path to the plugin's spawn points data
 # ../addons/source-python/data/plugins/udm/spawnpoints
-_spawnpoints_path = PLUGIN_DATA_PATH.joinpath('udm', 'spawnpoints', GAME_NAME)
+_spawnpoints_path = PLUGIN_DATA_PATH.joinpath(info.name, 'spawnpoints', GAME_NAME)
 
 # Create the spawn points data path if it does not exist
 if not _spawnpoints_path.exists():

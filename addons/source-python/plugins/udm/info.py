@@ -7,10 +7,10 @@
 # =============================================================================
 # Source.Python Imports
 #   Plugins
-from plugins.info import PluginInfo
+from plugins.manager import plugin_manager
 
 
 # =============================================================================
 # >> PLUGIN INFO
 # =============================================================================
-info = PluginInfo('udm', verbose_name='UDM', author='BackRaw', version='1.0')
+info = plugin_manager.get_plugin_info(__name__)
