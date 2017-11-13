@@ -6,6 +6,8 @@
 # >> IMPORTS
 # =============================================================================
 # Python Imports
+#   Contextlib
+import contextlib
 #   ConfigObj
 from configobj import ConfigObj
 
@@ -14,12 +16,16 @@ from configobj import ConfigObj
 from core import GAME_NAME
 #   Filters
 from filters.weapons import WeaponClassIter
+#   Listeners
+from listeners import OnEntityDeleted
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
 from weapons.manager import weapon_manager as sp_weapon_manager
 
 # Script Imports
+#   Delays
+from udm.delays import delay_manager
 #   Info
 from udm.info import info
 
@@ -170,3 +176,14 @@ weapon_manager = _WeaponManager(ConfigObj(_weapons_ini))
 # =============================================================================
 # Store the melee weapon for the game
 melee_weapon = [weapon_class.name for weapon_class in WeaponClassIter(is_filters='melee')][0]
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnEntityDeleted
+def on_entity_deleted(entity):
+    """Cancel the refill & drop delay for the deleted entity."""
+    with contextlib.suppress(ValueError):
+        delay_manager.cancel_delays(f'refill_{entity.index}')
+        delay_manager.cancel_delays(f'drop_{entity.index}')

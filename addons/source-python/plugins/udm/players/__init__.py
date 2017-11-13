@@ -6,8 +6,6 @@
 # >> IMPORTS
 # =============================================================================
 # Python Imports
-#   Contextlib
-import contextlib
 #   Random
 import random
 
@@ -18,7 +16,6 @@ from colors import WHITE
 #   Engines
 from engines.server import global_vars
 #   Listeners
-from listeners import OnEntityDeleted
 from listeners.tick import Delay
 #   Messages
 from messages import SayText2
@@ -160,14 +157,3 @@ class PlayerEntity(Player):
 
     # Set the `random_mode` property for PlayerEntity
     random_mode = property(get_random_mode, set_random_mode)
-
-
-# =============================================================================
-# >> LISTENERS
-# =============================================================================
-@OnEntityDeleted
-def on_entity_deleted(entity):
-    """Cancel the refill & drop delay for the deleted entity."""
-    with contextlib.suppress(ValueError):
-        delay_manager.cancel_delays(f'refill_{entity.index}')
-        delay_manager.cancel_delays(f'drop_{entity.index}')
