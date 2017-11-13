@@ -14,6 +14,7 @@ from core import OutputReturn
 from entities.entity import Entity
 from entities.hooks import EntityCondition
 from entities.hooks import EntityPreHook
+from entities.hooks import EntityPostHook
 #   Events
 from events import Event
 #   Filters
@@ -185,16 +186,18 @@ def on_pre_bump_weapon(stack_data):
             return False
 
 
-@EntityPreHook(EntityCondition.is_player, 'drop_weapon')
-def on_post_drop_weapon(stack_data):
+@EntityPostHook(EntityCondition.is_player, 'drop_weapon')
+def on_post_drop_weapon(stack_data, nothing):
     """Remove the dropped weapon after half the respawn delay."""
     # Get a PlayerEntity instance for the player
     player = make_object(PlayerEntity, stack_data[0])
 
-    # Remove the active weapon after half the respawn delay, if the player carries one
-    if player.active_weapon is not None:
-        delay_manager[f'drop_{player.active_weapon.index}'].append(
-            Delay(abs(cvar_respawn_delay.get_float()) / 2, remove_weapon, (player.active_weapon,))
+    # Remove the dropped weapon after the delay if this was a valid drop_weapon() call
+    if player.classname == 'player':
+        weapon = make_object(Weapon, stack_data[1])
+
+        delay_manager[f'drop_{weapon.index}'].append(
+            Delay(abs(cvar_respawn_delay.get_float()) / 2, remove_weapon, (weapon, ))
         )
 
 
