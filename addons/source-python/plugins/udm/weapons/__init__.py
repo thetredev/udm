@@ -183,7 +183,7 @@ melee_weapon = list(WeaponClassIter(is_filters='melee'))[0].name
 # =============================================================================
 @OnEntityDeleted
 def on_entity_deleted(entity):
-    """Cancel the refill & drop delay for the deleted entity."""
+    """Cancel the refill & drop delays for the deleted entity."""
     with contextlib.suppress(ValueError):
         delay_manager.cancel(f'refill_{entity.index}')
         delay_manager.cancel(f'drop_{entity.index}')
