@@ -126,12 +126,14 @@ def prepare_player(player):
 # =============================================================================
 @Event('player_spawn')
 def on_player_spawn(event):
-    """Prepare the player for battle if the player is alive and on a team."""
-    # Get a PlayerEntity instance for the player
+    """Prepare the player for battle if they are alive and on a team."""
     player = PlayerEntity.from_userid(event.get_int('userid'))
-
-    # Prepare the player if they're alive and on a team
     if player.team > 1 and not player.dead:
+
+        # Enable delays
+        delay_manager.delays_enabled = True
+
+        # Prepare the player
         prepare_player(player)
 
 
@@ -154,12 +156,6 @@ def on_player_death(event):
 
     # Respawn the victim after the configured respawn delay
     delay_manager(f'respawn_{victim.userid}', abs(cvar_respawn_delay.get_float()), victim.spawn)
-
-
-@Event('round_start')
-def on_round_start(event):
-    """Enable delays."""
-    delay_manager.delays_enabled = True
 
 
 @Event('round_end')
