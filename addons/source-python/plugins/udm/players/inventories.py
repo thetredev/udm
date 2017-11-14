@@ -78,7 +78,7 @@ class PlayerInventory(defaultdict):
             if weapon_manager.silencer_allowed(weapon_data.basename):
                 weapon.set_property_bool('m_bSilencerOn', weapon_data.silenced)
 
-    def add_weapon(self, player, basename):
+    def add_inventory_item(self, player, basename):
         """Add an inventory item for `basename` and equip the player with it."""
         # Get the weapon's data
         weapon_data = weapon_manager[basename]

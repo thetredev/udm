@@ -49,7 +49,7 @@ def on_close_secondary_menu(player):
 @SelectCallback(secondary_menu)
 def on_select_secondary_weapon(player, option):
     """Add the secondary weapon to the player's inventory."""
-    player.inventory.add_weapon(player, option.value)
+    player.inventory.add_inventory_item(player, option.value)
 
 
 # =============================================================================
@@ -67,7 +67,7 @@ def on_close_primary_menu(player):
 @SelectCallback(primary_menu)
 def on_select_primary_weapon(player, option):
     """Add the primary weapon to the player's inventory."""
-    player.inventory.add_weapon(player, option.value)
+    player.inventory.add_inventory_item(player, option.value)
 
     # Send the secondary menu to the player
     secondary_menu.send(player.index)
