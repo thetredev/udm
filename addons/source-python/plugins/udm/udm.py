@@ -208,7 +208,7 @@ def on_pre_bump_weapon(stack_data):
 
         # Block the weapon bump if the player didn't choose it
         if weapon_data is not None and player.inventory and weapon_data.basename not in\
-                [item.basename for item in player.inventory.values()]:
+                [item.basename for item in player.inventory.inventory_items()]:
             return False
 
 
@@ -308,7 +308,7 @@ def on_saycommand_guns(command_info, *args):
         # the player is allowed to edit their inventory
         # Otherwise they are going to be equipped with it
         weapons_owned = sorted([weapon.classname for weapon in player.weapons(not_filters=('melee', 'grenade'))])
-        inventory_weapons = sorted([item.data.name for item in player.inventory.values()])
+        inventory_weapons = sorted([item.data.name for item in player.inventory.inventory_items()])
 
         edit = weapons_owned == inventory_weapons
 
