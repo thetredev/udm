@@ -105,7 +105,7 @@ def prepare_player(player):
 
     # Enable damage protection
     player.enable_damage_protection(
-        None if player.userid in admin_menu.users and admin_menu.users[player.userid]
+        None if player.userid in admin_menu.users
         else cvar_spawn_protection_delay.get_float()
     )
 
@@ -118,7 +118,7 @@ def prepare_player(player):
         player.view_angle = spawnpoint.angle
 
     # Equip the current inventory if not currently using the admin menu
-    if player not in admin_menu.users or not admin_menu.users[player.userid]:
+    if player.userid not in admin_menu.users:
         player.equip_inventory()
 
 
@@ -194,7 +194,7 @@ def on_pre_bump_weapon(stack_data):
     player = make_object(PlayerEntity, stack_data[0])
 
     # Block the weapon bump if the player is using the admin menu
-    if player.userid in admin_menu.users and admin_menu.users[player.userid]:
+    if player.userid in admin_menu.users:
         return False
 
     # Only bump when the weapon is not in random mode
@@ -351,7 +351,7 @@ def on_saycommand_admin(command_info):
     player.strip(not_filters=None)
 
     # Send the Admin menu to the player
-    admin_menu.users[player.userid] = True
+    admin_menu.users.append(player.userid)
     admin_menu.send(command_info.index)
 
     # Block the text from appearing in the chat window

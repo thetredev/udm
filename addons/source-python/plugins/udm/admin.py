@@ -28,7 +28,7 @@ class _AdminMenu(CloseButtonPagedMenu):
     """Class used to provide a way to send this menu when a submenu is closed."""
 
     # Store players who are currently using the Admin menu
-    users = dict()
+    users = list()
 
     def register_submenu(self, submenu):
         """Always send this menu when a submenu is closed."""
@@ -58,7 +58,7 @@ admin_menu = _AdminMenu(title='Admin Menu')
 def on_close_admin_menu(player):
     """Enable default gameplay for the admin player who just closed the Admin menu."""
     # Remove the player from the Admin menu users storage
-    admin_menu.users[player.userid] = False
+    admin_menu.users.remove(player.userid)
 
     # Equip the player with their inventory & a High Explosive grenade
     player.equip_inventory()
