@@ -15,8 +15,6 @@ from colors import Color
 from colors import WHITE
 #   Engines
 from engines.server import global_vars
-#   Listeners
-from listeners.tick import Delay
 #   Messages
 from messages import SayText2
 #   Players
@@ -92,7 +90,7 @@ class PlayerEntity(Player):
 
         # Disable protection after `time_delay`
         if time_delay is not None:
-            delay_manager[f'protect_{self.userid}'].append(Delay(time_delay, self.disable_damage_protection))
+            delay_manager(f'protect_{self.userid}', time_delay, self.disable_damage_protection)
 
     def disable_damage_protection(self):
         """Disable damage protection."""
@@ -118,9 +116,7 @@ class PlayerEntity(Player):
         duration = next_attack - global_vars.current_time
 
         # Call weapons.refill_ammo() after `duration`
-        delay_manager[f'refill_{self.active_weapon.index}'].append(
-            Delay(duration, refill_ammo, (self.active_weapon, ))
-        )
+        delay_manager(f'refill_{self.active_weapon.index}', duration, refill_ammo, (self.active_weapon, ))
 
     def spawn(self):
         """Always force spawn the player."""

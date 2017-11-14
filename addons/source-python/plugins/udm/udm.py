@@ -27,7 +27,6 @@ from filters.weapons import WeaponClassIter
 from listeners import OnClientDisconnect
 from listeners import OnEntitySpawned
 from listeners import OnServerOutput
-from listeners.tick import Delay
 #   Memory
 from memory import make_object
 #   Weapons
@@ -154,7 +153,7 @@ def on_player_death(event):
     victim = PlayerEntity.from_userid(event.get_int('userid'))
 
     # Respawn the victim after the configured respawn delay
-    delay_manager[f'respawn_{victim.userid}'].append(Delay(abs(cvar_respawn_delay.get_float()), victim.spawn))
+    delay_manager(f'respawn_{victim.userid}', abs(cvar_respawn_delay.get_float()), victim.spawn)
 
 
 @Event('round_start')
@@ -221,10 +220,7 @@ def on_post_drop_weapon(stack_data, nothing):
     # Remove the dropped weapon after the delay if this was a valid drop_weapon() call
     if player.classname == 'player':
         weapon = make_object(Weapon, stack_data[1])
-
-        delay_manager[f'drop_{weapon.index}'].append(
-            Delay(abs(cvar_respawn_delay.get_float()) / 2, remove_weapon, (weapon, ))
-        )
+        delay_manager(f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2, remove_weapon, (weapon, ))
 
 
 # =============================================================================

@@ -10,6 +10,7 @@
 from core import AutoUnload
 #   Listeners
 from listeners import OnLevelEnd
+from listeners.tick import Delay
 
 
 # =============================================================================
@@ -41,6 +42,10 @@ class _DelayManager(dict, AutoUnload):
 
     # Remember whether delays are enabled
     delays_enabled = True
+
+    def __call__(self, key, delay_time, callback, args=()):
+        """Append a Delay instance for `key`."""
+        self[key].append(Delay(delay_time, callback, args))
 
     def __missing__(self, key):
         """Set and return an instance of `_DelayList()` as the key's value."""
