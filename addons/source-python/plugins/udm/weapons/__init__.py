@@ -178,7 +178,6 @@ weapon_manager = _WeaponManager(ConfigObj(_weapons_ini))
 melee_weapon = list(WeaponClassIter(is_filters='melee'))[0].name
 
 
-
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
