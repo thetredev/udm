@@ -54,6 +54,11 @@ class _DelayManager(dict, AutoUnload):
         value = self[key] = _DelayList()
         return value
 
+    def cancel(self, key):
+        """Cancel all delays for `key`."""
+        # Get the delay list for `key`
+        self[key].cancel_all()
+
     def cancel_all(self):
         """Cancel all pending delays."""
         self.delays_enabled = False
@@ -62,11 +67,6 @@ class _DelayManager(dict, AutoUnload):
             delay_list.cancel_all()
 
         self.clear()
-
-    def cancel_delays(self, key):
-        """Cancel all delays for `key`."""
-        # Get the delay list for `key`
-        self[key].cancel_all()
 
     def _unload_instance(self):
         """Cancel all pending delays on unload."""
@@ -90,8 +90,8 @@ def on_client_disconnect(index):
         userid = userid_from_index(index)
 
         # Cancel the client's pending delays
-        delay_manager.cancel_delays(f"respawn_{userid}")
-        delay_manager.cancel_delays(f"protect_{userid}")
+        delay_manager.cancel(f"respawn_{userid}")
+        delay_manager.cancel(f"protect_{userid}")
 
 
 @OnLevelEnd
