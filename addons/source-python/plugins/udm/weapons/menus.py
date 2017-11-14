@@ -28,18 +28,12 @@ def options_for_tag(tag):
 
 
 # =============================================================================
-# >> WEAPON MENUS
+# >> SECONDARY WEAPONS MENU
 # =============================================================================
 # Create the Secondary Weapons menu
 secondary_menu = CloseButtonPagedMenu(data=list(options_for_tag('secondary')), title='Secondary Weapons')
 
-# Create the Primary Weapons menu
-primary_menu = CloseButtonPagedMenu(data=list(options_for_tag('primary')), title='Primary Weapons')
 
-
-# =============================================================================
-# >> SECONDARY MENU CALLBACKS
-# =============================================================================
 @CloseCallback(secondary_menu)
 def on_close_secondary_menu(player):
     """Remove the secondary weapon from the player's inventory."""
@@ -53,8 +47,12 @@ def on_select_secondary_weapon(player, option):
 
 
 # =============================================================================
-# >> PRIMARY MENU CALLBACKS
+# >> PRIMARY WEAPONS MENU
 # =============================================================================
+# Create the Primary Weapons menu
+primary_menu = CloseButtonPagedMenu(data=list(options_for_tag('primary')), title='Primary Weapons')
+
+
 @CloseCallback(primary_menu)
 def on_close_primary_menu(player):
     """Remove the primary weapon from the player's inventory."""
