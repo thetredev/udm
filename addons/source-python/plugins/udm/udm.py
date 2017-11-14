@@ -172,15 +172,16 @@ def on_round_end(event):
 @Event('weapon_reload')
 def on_weapon_reload(event):
     """Refill the player's active weapon's ammo after the reload animation has finished."""
-    # Refill the weapon's ammo
-    PlayerEntity.from_userid(event.get_int('userid')).refill_ammo()
+    player = PlayerEntity.from_userid(event.get_int('userid'))
+    player.refill_ammo()
 
 
 @Event('hegrenade_detonate')
 def on_hegrenade_detonate(event):
     """Equip the player with another High Explosive grenade if configured that way."""
     if cvar_equip_hegrenade.get_int() == 3:
-        PlayerEntity.from_userid(event.get_int('userid')).give_named_item('weapon_hegrenade')
+        player = PlayerEntity.from_userid(event.get_int('userid'))
+        player.give_named_item('weapon_hegrenade')
 
 
 # =============================================================================
