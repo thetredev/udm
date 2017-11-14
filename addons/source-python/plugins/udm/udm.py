@@ -146,7 +146,7 @@ def on_player_death(event):
         attacker.active_weapon.clip = weapon_manager.by_name(attacker.active_weapon.weapon_name).clip
 
     # Give a High Explosive grenade, if it was a HE grenade kill
-    if event.get_string('weapon') == 'hegrenade':
+    if cvar_equip_hegrenade.get_int() == 2 and event.get_string('weapon') == 'hegrenade':
         attacker.give_named_item('weapon_hegrenade')
 
     # Get a PlayerEntity instance for the victim
