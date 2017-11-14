@@ -89,7 +89,7 @@ class PlayerInventory(defaultdict):
         # Equip the player with the inventory item
         self.equip(player, weapon_data.tag)
 
-    def remove_weapon(self, player, tag):
+    def remove_inventory_item(self, player, tag):
         """Remove an inventory item for weapon tag `tag`."""
         # Get the currently equipped weapon entity for the weapon tag
         weapon = player.get_weapon(is_filters=tag)

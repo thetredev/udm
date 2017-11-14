@@ -43,7 +43,7 @@ primary_menu = CloseButtonPagedMenu(data=list(options_for_tag('primary')), title
 @CloseCallback(secondary_menu)
 def on_close_secondary_menu(player):
     """Remove the secondary weapon from the player's inventory."""
-    player.inventory.remove_weapon(player, 'secondary')
+    player.inventory.remove_inventory_item(player, 'secondary')
 
 
 @SelectCallback(secondary_menu)
@@ -58,7 +58,7 @@ def on_select_secondary_weapon(player, option):
 @CloseCallback(primary_menu)
 def on_close_primary_menu(player):
     """Remove the primary weapon from the player's inventory."""
-    player.inventory.remove_weapon(player, 'primary')
+    player.inventory.remove_inventory_item(player, 'primary')
 
     # Send the secondary menu to the player
     secondary_menu.send(player.index)
