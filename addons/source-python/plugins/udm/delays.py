@@ -5,18 +5,11 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Contextlib
-import contextlib
-
 # Source.Python Imports
 #   Core
 from core import AutoUnload
 #   Listeners
-from listeners import OnClientDisconnect
 from listeners import OnLevelEnd
-#   Players
-from players.helpers import userid_from_index
 
 
 # =============================================================================
@@ -80,20 +73,6 @@ delay_manager = _DelayManager()
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
-@OnClientDisconnect
-def on_client_disconnect(index):
-    """Cancel all pending delays of the client."""
-    # Note: This is done, because the event 'player_disconnect' somehow does not get fired...
-    with contextlib.suppress(ValueError):
-
-        # Get the userid of the client
-        userid = userid_from_index(index)
-
-        # Cancel the client's pending delays
-        delay_manager.cancel(f"respawn_{userid}")
-        delay_manager.cancel(f"protect_{userid}")
-
-
 @OnLevelEnd
 def on_level_end():
     """Cancel all pending delays."""

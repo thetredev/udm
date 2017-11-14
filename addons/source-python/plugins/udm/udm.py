@@ -5,6 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Contextlib
+import contextlib
+
 # Source.Python Imports
 #   Commands
 from commands.typed import TypedSayCommand
@@ -20,6 +24,7 @@ from events import Event
 #   Filters
 from filters.weapons import WeaponClassIter
 #   Listeners
+from listeners import OnClientDisconnect
 from listeners import OnEntitySpawned
 from listeners import OnServerOutput
 from listeners.tick import Delay
@@ -223,6 +228,20 @@ def on_post_drop_weapon(stack_data, nothing):
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
+@OnClientDisconnect
+def on_client_disconnect(index):
+    """Cancel all pending delays of the client."""
+    # Note: This is done, because the event 'player_disconnect' somehow does not get fired...
+    with contextlib.suppress(ValueError):
+
+        # Get a PlayerEntity instance for the client
+        player = PlayerEntity(index)
+
+        # Cancel the client's pending delays
+        delay_manager.cancel(f"respawn_{player.userid}")
+        delay_manager.cancel(f"protect_{player.userid}")
+
+
 @OnEntitySpawned
 def on_entity_spawned(base_entity):
     """Remove forbidden entities when they have spawned."""
