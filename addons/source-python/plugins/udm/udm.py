@@ -41,6 +41,7 @@ from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
 from udm.config import cvar_enable_noblock
 from udm.config import cvar_equip_hegrenade
+from udm.config import cvar_refill_clip_on_headshot
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
@@ -142,7 +143,7 @@ def on_player_death(event):
     attacker = PlayerEntity.from_userid(event.get_int('attacker'))
 
     # Refill the attacker's active weapon's clip for a headshot
-    if event.get_bool('headshot'):
+    if cvar_refill_clip_on_headshot.get_int() > 0 and event.get_bool('headshot'):
         attacker.active_weapon.clip = weapon_manager.by_name(attacker.active_weapon.weapon_name).clip
 
     # Give a High Explosive grenade, if it was a HE grenade kill

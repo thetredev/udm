@@ -56,6 +56,12 @@ with _ConfigManager(info.name, f'{info.name}_') as config:
         'Enable or disable non-blocking mode for players.'
     )
 
+    # Refill the killer's clip if they killed a player with a headshot
+    cvar_refill_clip_on_headshot = config.cvar(
+        'refill_clip_on_headshot', 1,
+        "Refill the killer's clip if they killed a player with a headshot."
+    )
+
     # The minimum distance players have to have between a spawn point for it to be 'safe'
     cvar_spawn_point_distance = config.cvar(
         'spawn_point_distance', 150,
