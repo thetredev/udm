@@ -44,6 +44,12 @@ with _ConfigManager(info.name, f'{info.name}_') as config:
         'respawn_delay', 2, 'The respawn delay in seconds.'
     )
 
+    # Enable or disable non-blocking mode for players
+    cvar_enable_noblock = config.cvar(
+        'enable_noblock', 1,
+        'Enable or disable non-blocking mode for players.'
+    )
+
     # The minimum distance players have to have between a spawn point for it to be 'safe'
     cvar_spawn_point_distance = config.cvar(
         'spawn_point_distance', 150,

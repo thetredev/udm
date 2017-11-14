@@ -34,6 +34,7 @@ from udm.admin import admin_menu
 #   Colors
 from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
+from udm.config import cvar_enable_noblock
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_saycommand_admin
@@ -92,6 +93,9 @@ def prepare_player(player):
     # Give a High Explosive grenade if configured that way
     if cvar_equip_hegrenade.get_int() > 0:
         player.give_named_item('weapon_hegrenade')
+
+    # Enable or disable non-blocking mode, depending on the configuration
+    player.noblock = cvar_enable_noblock.get_int() > 0
 
     # Enable damage protection
     player.enable_damage_protection(cvar_spawn_protection_delay.get_int())
