@@ -6,6 +6,8 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python Imports
+#   Listeners
+from listeners import OnLevelInit
 #   Menus
 from menus.radio import PagedRadioOption
 
@@ -73,3 +75,12 @@ def on_close_admin_menu(player):
 def on_select_admin_submenu(player, option):
     """Send the submenu chosen to the player."""
     option.value.send(player.index)
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnLevelInit
+def on_level_init(map_name):
+    """Clear the Admin menu users dict."""
+    admin_menu.users.clear()
