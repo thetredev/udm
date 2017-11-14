@@ -6,8 +6,6 @@
 # >> IMPORTS
 # =============================================================================
 # Python Imports
-#   Contextlib
-import contextlib
 #   ConfigObj
 from configobj import ConfigObj
 
@@ -182,8 +180,8 @@ melee_weapon = list(WeaponClassIter(is_filters='melee'))[0].name
 # >> LISTENERS
 # =============================================================================
 @OnEntityDeleted
-def on_entity_deleted(entity):
+def on_entity_deleted(base_entity):
     """Cancel the refill & drop delays for the deleted entity."""
-    with contextlib.suppress(ValueError):
-        delay_manager.cancel(f'refill_{entity.index}')
-        delay_manager.cancel(f'drop_{entity.index}')
+    if base_entity.classname.startswith(sp_weapon_manager.prefix):
+        delay_manager.cancel(f'refill_{base_entity.index}')
+        delay_manager.cancel(f'drop_{base_entity.index}')
