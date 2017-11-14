@@ -40,10 +40,10 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         'spawn_protection_delay', 2, 'The spawn protection delay in seconds.'
     )
 
-    # Refill the killer's clip if they killed a player with a headshot
+    # Refill the killer's clip if they killed an enemy with a headshot
     cvar_refill_clip_on_headshot = config.cvar(
         'refill_clip_on_headshot', 1,
-        "Refill the killer's clip if they killed a player with a headshot."
+        "Refill the killer's clip if they killed an enemy with a headshot."
     )
 
     # The minimum distance players have to have between a spawn point for it to be 'safe'
