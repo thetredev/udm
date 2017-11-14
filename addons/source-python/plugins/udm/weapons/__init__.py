@@ -149,7 +149,7 @@ class _WeaponManager(dict):
 
     def by_name(self, name):
         """Return the `_WeaponData` object for the weapon no matter the weapon prefix."""
-        basename = f"{name.replace(sp_weapon_manager.prefix, '')}"
+        basename = name.replace(sp_weapon_manager.prefix, '')
 
         if basename in self.keys():
             return self[basename]
