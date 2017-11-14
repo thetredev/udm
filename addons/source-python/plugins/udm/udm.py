@@ -127,12 +127,6 @@ def on_player_spawn(event):
 
     # Prepare the player if they're alive and on a team
     if player.team > 1 and not player.dead:
-
-        # Enable delays if they have been disabled
-        if not delay_manager.delays_enabled:
-            delay_manager.delays_enabled = True
-
-        # Prepare the player
         prepare_player(player)
 
 
@@ -155,6 +149,12 @@ def on_player_death(event):
 
     # Respawn the victim after the configured respawn delay
     delay_manager[f'respawn_{victim.userid}'].append(Delay(abs(cvar_respawn_delay.get_float()), victim.spawn))
+
+
+@Event('round_start')
+def on_round_start(event):
+    """Enable delays."""
+    delay_manager.delays_enabled = True
 
 
 @Event('round_end')
