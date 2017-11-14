@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Contextlib
-import contextlib
-
 # Source.Python Imports
 #   Commands
 from commands.typed import TypedSayCommand
@@ -24,7 +20,6 @@ from events import Event
 #   Filters
 from filters.weapons import WeaponClassIter
 #   Listeners
-from listeners import OnClientDisconnect
 from listeners import OnEntitySpawned
 from listeners import OnServerOutput
 #   Memory
@@ -158,6 +153,17 @@ def on_player_death(event):
     delay_manager(f'respawn_{victim.userid}', abs(cvar_respawn_delay.get_float()), victim.spawn)
 
 
+@Event('player_disconnect')
+def on_player_disconnect(event):
+    """Cancel all pending delays for the disconnecting player."""
+    # Get a PlayerEntity instance for the player
+    player = PlayerEntity.from_userid(event.get_int('userid'))
+
+    # Cancel the player's delays
+    delay_manager.cancel(f'respawn_{player.userid}')
+    delay_manager.cancel(f'protect_{player.userid}')
+
+
 @Event('round_end')
 def on_round_end(event):
     """Cancel all pending delays."""
@@ -222,20 +228,6 @@ def on_post_drop_weapon(stack_data, nothing):
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
-@OnClientDisconnect
-def on_client_disconnect(index):
-    """Cancel all pending delays of the client."""
-    # Note: This is done, because the event 'player_disconnect' somehow does not get fired...
-    with contextlib.suppress(ValueError):
-
-        # Get a PlayerEntity instance for the client
-        player = PlayerEntity(index)
-
-        # Cancel the client's pending delays
-        delay_manager.cancel(f"respawn_{player.userid}")
-        delay_manager.cancel(f"protect_{player.userid}")
-
-
 @OnEntitySpawned
 def on_entity_spawned(base_entity):
     """Remove forbidden entities when they have spawned."""
