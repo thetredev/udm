@@ -7,7 +7,7 @@
 # =============================================================================
 # Source.Python Imports
 #   Config
-from config.manager import ConfigManager as SpConfigManager
+from config.manager import ConfigManager
 
 # Script Imports
 #   Info
@@ -15,23 +15,10 @@ from udm.info import info
 
 
 # =============================================================================
-# >> CONFIG MANAGER
-# =============================================================================
-class _ConfigManager(SpConfigManager):
-    """Class used to provide global access to the config cvars."""
-
-    @property
-    def cvars(self):
-        """Return a dictionary item generator of the all config cvars."""
-        for section in self._sections:
-            yield section.cvar
-
-
-# =============================================================================
 # >> CONFIGURATION CVARS
 # =============================================================================
 # Write the configuration file ../cfg/source-python/udm.cfg
-with _ConfigManager(info.name, f'{info.name}_') as config:
+with ConfigManager(info.name, f'{info.name}_') as config:
 
     # High Explosive grenade equipment behaviour
     cvar_equip_hegrenade = config.cvar(
