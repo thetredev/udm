@@ -36,7 +36,7 @@ with _ConfigManager(info.name, f'{info.name}_') as config:
 
     # High Explosive grenade equipment behaviour
     cvar_equip_hegrenade = config.cvar(
-        'equip_hegrenade', 1, 'High Explosive grenade behaviour'
+        'equip_hegrenade', 2, 'High Explosive grenade behaviour'
     )
 
     # Options for cvar_equip_hegrenade
