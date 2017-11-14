@@ -50,7 +50,7 @@ with ConfigManager(info.name, f'{info.name}_') as config:
 
     # The minimum distance players have to have between a spawn point for it to be 'safe'
     cvar_spawn_point_distance = config.cvar(
-        'spawn_point_distance', 150,
+        'spawn_point_distance', 450,
         "The minimum distance players have to have between a spawn point for it to be 'safe'."
     )
 
