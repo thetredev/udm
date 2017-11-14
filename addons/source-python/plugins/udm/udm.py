@@ -98,7 +98,10 @@ def prepare_player(player):
     player.noblock = cvar_enable_noblock.get_int() > 0
 
     # Enable damage protection
-    player.enable_damage_protection(cvar_spawn_protection_delay.get_int())
+    player.enable_damage_protection(
+        None if player.userid in admin_menu.users and admin_menu.users[player.userid]
+        else cvar_spawn_protection_delay.get_float()
+    )
 
     # Choose a random spawn point
     spawnpoint = spawnpoints.get_random()
