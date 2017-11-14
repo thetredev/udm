@@ -30,10 +30,10 @@ def options_for_tag(tag):
 # =============================================================================
 # >> WEAPON MENUS
 # =============================================================================
-# Create the Secondary Weapons menu using no `next_menu`
+# Create the Secondary Weapons menu
 secondary_menu = CloseButtonPagedMenu(data=list(options_for_tag('secondary')), title='Secondary Weapons')
 
-# Create the Primary Weapons menu using the Secondary Weapons menu as `next_menu`
+# Create the Primary Weapons menu
 primary_menu = CloseButtonPagedMenu(data=list(options_for_tag('primary')), title='Primary Weapons')
 
 
