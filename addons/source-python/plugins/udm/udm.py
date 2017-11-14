@@ -143,6 +143,10 @@ def on_player_death(event):
     if event.get_bool('headshot'):
         attacker.active_weapon.clip = weapon_manager.by_name(attacker.active_weapon.weapon_name).clip
 
+    # Give a High Explosive grenade, if it was a HE grenade kill
+    if event.get_string('weapon') == 'hegrenade':
+        attacker.give_named_item('weapon_hegrenade')
+
     # Get a PlayerEntity instance for the victim
     victim = PlayerEntity.from_userid(event.get_int('userid'))
 
@@ -166,7 +170,7 @@ def on_weapon_reload(event):
 @Event('hegrenade_detonate')
 def on_hegrenade_detonate(event):
     """Equip the player with another High Explosive grenade if configured that way."""
-    if cvar_equip_hegrenade.get_int() == 2:
+    if cvar_equip_hegrenade.get_int() == 3:
         PlayerEntity.from_userid(event.get_int('userid')).give_named_item('weapon_hegrenade')
 
 

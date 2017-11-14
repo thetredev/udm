@@ -36,8 +36,14 @@ with _ConfigManager(info.name, f'{info.name}_') as config:
 
     # High Explosive grenade equipment behaviour
     cvar_equip_hegrenade = config.cvar(
-        'equip_hegrenade', 1, '0 = Off; 1 = Equip on spawn; 2 = Equip on spawn and after each detonation'
+        'equip_hegrenade', 1, 'High Explosive grenade behaviour'
     )
+
+    # Options for cvar_equip_hegrenade
+    cvar_equip_hegrenade.Options.append('0 = Off')
+    cvar_equip_hegrenade.Options.append('1 = Equip on spawn')
+    cvar_equip_hegrenade.Options.append('2 = Equip on spawn and on each HE grenade kill')
+    cvar_equip_hegrenade.Options.append('3 = Equip on spawn and after each detonation')
 
     # The respawn delay in seconds
     cvar_respawn_delay = config.cvar(
