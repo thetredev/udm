@@ -37,6 +37,7 @@ from udm.config import cvar_enable_noblock
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_refill_clip_on_headshot
 from udm.config import cvar_respawn_delay
+from udm.config import cvar_restore_health_on_knife_kill
 from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
 from udm.config import cvar_spawn_protection_delay
@@ -143,6 +144,10 @@ def on_player_death(event):
     # Give a High Explosive grenade, if it was a HE grenade kill
     if cvar_equip_hegrenade.get_int() == 2 and event.get_string('weapon') == 'hegrenade':
         attacker.give_named_item('weapon_hegrenade')
+
+    # Restore the attacker's health if it was a knife kill
+    if cvar_restore_health_on_knife_kill.get_int() > 0 and event.get_string('weapon') == 'knife':
+        attacker.health = 100
 
     # Get a PlayerEntity instance for the victim
     victim = PlayerEntity.from_userid(event.get_int('userid'))

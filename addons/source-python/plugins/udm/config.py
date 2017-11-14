@@ -46,6 +46,12 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         "Refill the killer's clip if they killed an enemy with a headshot."
     )
 
+    # Restore the killer's health to 100HP if they killed an enemy with the knife
+    cvar_restore_health_on_knife_kill = config.cvar(
+        'restore_health_on_knife_kill', 1,
+        "Restore the killer's health to 100HP if they killed an enemy with the knife."
+    )
+
     # The minimum distance players have to have between a spawn point for it to be 'safe'
     cvar_spawn_point_distance = config.cvar(
         'spawn_point_distance', 150,
