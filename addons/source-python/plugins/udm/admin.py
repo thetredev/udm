@@ -60,8 +60,6 @@ def on_close_admin_menu(player):
 
     # Equip the player with their inventory & a High Explosive grenade
     player.equip_inventory()
-
-    # TODO: Make this random
     player.give_named_item('weapon_hegrenade')
 
     # Disable damage protection
