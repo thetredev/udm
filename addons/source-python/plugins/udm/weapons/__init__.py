@@ -172,10 +172,11 @@ weapon_manager = _WeaponManager(ConfigObj(_weapons_ini))
 
 
 # =============================================================================
-# >> MELEE WEAPONS
+# >> MELEE WEAPON
 # =============================================================================
 # Store the melee weapon for the game
 melee_weapon = list(WeaponClassIter(is_filters='melee'))[0].name
+
 
 
 # =============================================================================
