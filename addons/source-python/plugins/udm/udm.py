@@ -40,7 +40,6 @@ from udm.config import cvar_respawn_delay
 from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
 from udm.config import cvar_spawn_protection_delay
-from udm.config.menus import config_manager_menu
 #   Delays
 from udm.delays import delay_manager
 #   Info
@@ -60,7 +59,6 @@ from udm.weapons import weapon_manager
 # =============================================================================
 # >> REGISTER ADMIN MENU SUBMENUS
 # =============================================================================
-admin_menu.register_submenu(config_manager_menu)
 admin_menu.register_submenu(spawnpoints_manager_menu)
 
 
