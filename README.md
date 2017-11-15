@@ -20,12 +20,13 @@ Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like 
 * Refill clip after a player killed an enemy with a headshot
 * Noblock (simple implementation for v1)
 * Give back High Explosive grenade (4 options - see the config file below)
+* Restore the killer's health to 100HP if they killed an enemy with the knife (see the config file below)
 
 ### Bugs
 * Enabling auto-silencing weapons causes an issue where the weapon is spawned and the silencer is equipped,
 but the weapon itself is still not silenced (i.e. you can hear the rounds as if the silencer was off).
 If you still want to enable this feature, you can do so by un-commenting the *_silenced weapons in
-[the weapons data file for CS: Source](https://github.com/backraw/udm/blob/master/addons/source-python/data/plugins/udm/weapons/cstrike.ini)).
+[the weapons data file for CS: Source](https://github.com/backraw/udm/commit/2fe1219c6caeabcb23e611a215ef6024525aa9c4)).
 **This feature is not used for CS:GO.**
 
 ## Weapon Menus
@@ -95,8 +96,13 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 
 
 // Default Value: 1
-// Refill the killer's clip if they killed a player with a headshot.
+// Refill the killer's clip if they killed an enemy with a headshot.
    udm_refill_clip_on_headshot 1
+
+
+// Default Value: 1
+// Restore the killer's health to 100HP if they killed an enemy with the knife.
+   udm_restore_health_on_knife_kill 1
 
 
 // Default Value: 150
