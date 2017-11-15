@@ -17,6 +17,7 @@ from entities.hooks import EntityPreHook
 from entities.hooks import EntityPostHook
 #   Events
 from events import Event
+from events.hooks import PreEvent
 #   Filters
 from filters.weapons import WeaponClassIter
 #   Listeners
@@ -113,6 +114,16 @@ def prepare_player(player):
     # Equip the current inventory if not currently using the admin menu
     if player.userid not in admin_menu.users:
         player.equip_inventory()
+
+
+# =============================================================================
+# >> PRE EVENTS
+# =============================================================================
+@PreEvent('round_freeze_end')
+def on_pre_round_freeze_end(event):
+    """Enable damage protection for all players."""
+    for player in PlayerEntity.alive():
+        player.enable_damage_protection(cvar_spawn_protection_delay.get_float())
 
 
 # =============================================================================

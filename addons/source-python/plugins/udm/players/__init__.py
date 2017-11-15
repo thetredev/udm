@@ -92,6 +92,9 @@ class PlayerEntity(Player):
 
     def enable_damage_protection(self, time_delay=None):
         """Enable damage protection and disable it after `time_delay` if `time_delay` is not None."""
+        # Disable all damage protection delays for the player
+        delay_manager.cancel(f'protect_{self.userid}')
+
         # Enable god mode
         self.godmode = True
 
