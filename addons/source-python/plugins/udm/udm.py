@@ -316,7 +316,7 @@ def on_saycommand_guns(command_info, *args):
         # Tell the player
         player.tell(info.verbose_name, f'Equipping inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
-    # Stop here and block the message from appearing in the chat window
+    # Block the message from appearing in the chat window
     return False
 
 
