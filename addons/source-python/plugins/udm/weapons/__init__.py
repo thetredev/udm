@@ -131,7 +131,7 @@ class _WeaponManager(dict):
             for basename, displayname in weapon_names.items():
 
                 # Get the weapon class from Source.Python's `weapon_manager`
-                weapon_class = sp_weapon_manager[f"{sp_weapon_manager.prefix}{basename.replace('_silenced', '')}"]
+                weapon_class = sp_weapon_manager[basename.replace('_silenced', '')]
 
                 # Store the `_WeaponData` object at `basename`
                 self[basename] = _WeaponData(basename, weapon_class, displayname, tag)
