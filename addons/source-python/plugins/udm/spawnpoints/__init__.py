@@ -16,8 +16,6 @@ import random
 from core import GAME_NAME
 #   Engines
 from engines.server import global_vars
-#   Filters
-from filters.players import PlayerIter
 #   Listeners
 from listeners import OnLevelInit
 #   Mathlib
@@ -31,14 +29,13 @@ from paths import PLUGIN_DATA_PATH
 from udm.config import cvar_spawn_point_distance
 #   Info
 from udm.info import info
+#   Players
+from udm.players import PlayerEntity
 
 
 # =============================================================================
 # >> PRIVATE GLOBAL VARIABLES
 # =============================================================================
-# Store an instance of PlayerIter for alive players
-_playeriter_alive = PlayerIter('alive')
-
 # Store the path to the plugin's spawn points data
 # ../addons/source-python/data/plugins/udm/spawnpoints
 _spawnpoints_path = PLUGIN_DATA_PATH.joinpath(info.name, 'spawnpoints', GAME_NAME)
@@ -91,7 +88,7 @@ class _SpawnPoints(list):
         random.shuffle(shuffled)
 
         # Get current origins for alive players
-        player_origins = [player.origin for player in _playeriter_alive]
+        player_origins = [player.origin for player in PlayerEntity.alive()]
 
         # Store possible vectors to spawn on
         possible = list()

@@ -15,6 +15,8 @@ from colors import Color
 from colors import WHITE
 #   Engines
 from engines.server import global_vars
+#   Filters
+from filters.players import PlayerIter
 #   Messages
 from messages import SayText2
 #   Players
@@ -34,6 +36,13 @@ from udm.weapons import weapon_manager
 
 
 # =============================================================================
+# >> ALIVE PLAYERS GENERATOR
+# =============================================================================
+# Store an instance of PlayerIter for alive players
+_playeriter_alive = PlayerIter('alive')
+
+
+# =============================================================================
 # >> PLAYER ENTITY
 # =============================================================================
 class PlayerEntity(Player):
@@ -43,6 +52,11 @@ class PlayerEntity(Player):
         * battle preparation including damage protection
         * ammo refill
     """
+
+    @classmethod
+    def alive(cls):
+        for player in _playeriter_alive:
+            yield cls(player.index)
 
     def tell(self, prefix, message):
         """Tell the player a prefixed chat message."""
