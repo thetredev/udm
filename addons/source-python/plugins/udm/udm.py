@@ -301,23 +301,8 @@ def on_saycommand_guns(command_info, *args):
     # Make the player's choice their inventory selection
     player.inventory_selection = selection - 1
 
-    # Decide whether the player wants to edit or equip their inventory
-    if player.inventory:
-
-        # If the weapons owned and the weapons of the inventory are the same,
-        # the player is allowed to edit their inventory
-        # Otherwise they are going to be equipped with it
-        weapons_owned = sorted([weapon.classname for weapon in player.weapons(not_filters=('melee', 'grenade'))])
-        inventory_weapons = sorted([item.data.name for item in player.inventory.inventory_items()])
-
-        edit = weapons_owned == inventory_weapons
-
-    # The player is allowed to equip their inventory if no item is present in it
-    else:
-        edit = True
-
     # Send the Primary Weapons menu if the player is allowed to edit their inventory
-    if edit:
+    if player.carries_inventory:
         primary_menu.send(player.index)
 
         # Tell the player

@@ -149,6 +149,25 @@ class PlayerEntity(Player):
         """Return the player's current inventory."""
         return self.inventories[self.inventory_selection]
 
+    @property
+    def carries_inventory(self):
+        """Return whether the player is currently carrying the weapons in their selected inventory."""
+        for tag, item in self.inventory.items():
+
+            # Get the equipped weapon for the tag
+            weapon_equipped = self.get_weapon(is_filters=tag)
+
+            # Return False if no weapon is equipped
+            if weapon_equipped is None:
+                return False
+
+            # Return False if the equipped weapon is not the one selected for the tag
+            if item.data.name not in (weapon_equipped.weapon_name, weapon_equipped.classname):
+                return False
+
+        # Return True if the player carries all the weapons in their selected inventory
+        return True
+
     def set_inventory_selection(self, inventory_index):
         """Set the player's inventory selection to `inventory_index`."""
         player_inventories.selections[self.uniqueid] = inventory_index

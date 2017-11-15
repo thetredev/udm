@@ -105,11 +105,6 @@ class PlayerInventory(defaultdict):
         if tag in self.keys():
             del self[tag]
 
-    def inventory_items(self):
-        """Return all inventory items reverse-sorted by their weapon tag."""
-        for key in sorted(self.keys(), reverse=True):
-            yield self[key]
-
 
 class _PlayerInventoryMap(defaultdict):
     """Class used to map inventory selection indexes to `PlayerInventory` items."""
