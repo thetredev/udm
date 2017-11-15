@@ -27,14 +27,6 @@ but the weapon itself is still not silenced (i.e. you can hear the rounds as if 
 If you still want to enable this feature, you can do so by un-commenting the *_silenced weapons in
 [the weapons data file for CS: Source](https://github.com/backraw/udm/blob/master/addons/source-python/data/plugins/udm/weapons/cstrike.ini)).
 **This feature is not used for CS:GO.**
-* For CS:GO the *P2000* will never be equipped when selected from the Secondary Weapons menu. This is due to the fact, that it has the same internal
-name as the *USP-S*, thus UDM handles it as a *USP-S*. I'm looking into this bug, but [for now the *P2000* is disabled](https://github.com/backraw/udm/commit/89d437dcdea79a8999286cdbea92f81d6683bd61).
-Strange thing is, the problem does not occur for the *M4A4* and the *M4A1-S*, even though they share the same internal name as well. However, you must wait until next spawn
-until you get the *M4A4* after switching from *M4A1-S*. I'm also looking into this one!
-* Spawn Protection does not respect the value of the server cvar *mp_freezetime*. This means that whenever a new map has started,
-players will spawn, and damage protection is enabled for them for, say, two seconds and the value of *mp_freezetime* is 5.
-Damage protection will be disabled before the players are allowed to move or shoot. To deal with this bug, set *mp_freezetime* to 0. As long as
-nobody complains, I'll consider this bug a feature! :D
 
 ## Weapon Menus
 Have a look at [the ```guns``` command screenshots](https://github.com/backraw/udm/tree/master/screenshots/guns) for CS: GO. You can have an unlimited amount of
@@ -76,7 +68,7 @@ You are good to go! For more information on managing admins, please refer to the
 
 ## Installation
 1. [Install Source.Python](http://wiki.sourcepython.com/general/installation.html)
-2. Download [the latest UDM release](https://github.com/backraw/udm/releases/tag/v1.0) and unzip its contents to the game server's root folder (i.e.: **cstrike** for Counter-Strike: Source, **csgo** for Counter-Strike: Global Offensive)
+2. Download [the latest UDM release](https://github.com/backraw/udm/releases/tag/v1.1) and unzip its contents to the game server's root folder (i.e.: **cstrike** for Counter-Strike: Source, **csgo** for Counter-Strike: Global Offensive)
 3. Put ```sp plugin load udm``` into your server configuration file (i.e.: **autoexec.cfg**) - this can be any file that gets read **after** a map has changed
 4. Change the map
 
