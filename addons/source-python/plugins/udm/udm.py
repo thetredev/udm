@@ -204,7 +204,7 @@ def on_hegrenade_detonate(event):
 # =============================================================================
 @EntityPreHook(EntityCondition.is_player, 'bump_weapon')
 def on_pre_bump_weapon(stack_data):
-    """Block picking up the weapon if it's not in the player's inventory."""
+    """Block bumping into the weapon if it's not in the player's inventory."""
     # Get a PlayerEntity instance for the player
     player = make_object(PlayerEntity, stack_data[0])
 
@@ -212,7 +212,7 @@ def on_pre_bump_weapon(stack_data):
     if player.userid in admin_menu.users:
         return False
 
-    # Only bump when the weapon is not in random mode
+    # Only block bumping if the weapon is not in random mode
     if not player.random_mode:
 
         # Get a Weapon instance for the weapon
@@ -221,10 +221,12 @@ def on_pre_bump_weapon(stack_data):
         # Get the weapon's data
         weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
-        # Block the weapon bump if the player didn't choose it
-        if weapon_data is not None and player.inventory and weapon_data.basename not in\
-                [item.basename for item in player.inventory.inventory_items()]:
-            return False
+        # Block bumping if the weapon is not listed in the player's inventory
+        if weapon_data is not None and weapon_data.tag in player.inventory:
+            weapon_selected = player.inventory[weapon_data.tag].data.name
+
+            if weapon_selected not in (weapon.weapon_name, weapon.classname):
+                return False
 
 
 @EntityPostHook(EntityCondition.is_player, 'drop_weapon')

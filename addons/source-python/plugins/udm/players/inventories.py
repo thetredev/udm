@@ -64,7 +64,7 @@ class PlayerInventory(defaultdict):
             weapon = player.get_weapon(is_filters=key)
 
             # Remove it if it's not the weapon the player has chosen as their inventory item of the respective tag
-            if weapon is not None and weapon.classname != weapon_data.name:
+            if weapon is not None and weapon.weapon_name != weapon_data.name:
                 weapon.remove()
 
                 # Give their inventory item
@@ -73,6 +73,10 @@ class PlayerInventory(defaultdict):
             # Give their inventory item if the player doesn't carry that weapon
             elif weapon is None:
                 weapon = make_object(Weapon, player.give_named_item(weapon_data.name))
+
+            # Fix silencer issues for *_silenced weapons
+            if '_silencer' in weapon.weapon_name:
+                weapon.set_property_bool('m_bSilencerOn', '_silencer' in weapon_data.name)
 
             # Set silencer on for weapons which are supposed to be silenced
             if weapon_manager.silencer_allowed(weapon_data.basename):
