@@ -9,12 +9,6 @@
 #   Collections
 from collections import defaultdict
 
-# Source.Python Imports
-#   Memory
-from memory import make_object
-#   Weapons
-from weapons.entity import Weapon
-
 # Script Imports
 #   Weapons
 from udm.weapons import weapon_manager
