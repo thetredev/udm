@@ -17,10 +17,14 @@ from colors import WHITE
 from engines.server import global_vars
 #   Filters
 from filters.players import PlayerIter
+#   Memory
+from memory import make_object
 #   Messages
 from messages import SayText2
 #   Players
 from players.entity import Player
+#   Weapons
+from weapons.entity import Weapon
 
 # Script Imports
 #   Colors
@@ -64,6 +68,32 @@ class PlayerEntity(Player):
             f'{MESSAGE_COLOR_ORANGE}[{MESSAGE_COLOR_WHITE}{prefix}{MESSAGE_COLOR_ORANGE}] {message}'
         ).send(self.index)
 
+    def give_weapon(self, name):
+        """Fix for give_named_item() deciding which weapon actually spawns based on the player's loadout."""
+        # Fix taken from GunGame-SP
+        #  see https://github.com/GunGame-Dev-Team/GunGame-SP/commit/bc3e7ab3630a5e3680ff35d726e810370b86a5ea
+        #  and https://forums.sourcepython.com/viewtopic.php?f=31&t=1597
+
+        # Give the player the weapon entity
+        weapon = make_object(Weapon, self.give_named_item(name))
+
+        # Return it if it doesn't share its classname with another weapon
+        if weapon.classname == weapon.weapon_name:
+            return weapon
+
+        # Remove it, if it does
+        weapon.remove()
+
+        # Switch the player's team and give the weapon entity again
+        self.team_index = 5 - self.team
+        weapon = make_object(Weapon, self.give_named_item(name))
+
+        # Reset the player's team
+        self.team_index = 5 - self.team
+
+        # Return the correct weapon entity
+        return weapon
+
     def equip_inventory(self):
         """Equip the player's currently selected inventory."""
         if self.inventory:
@@ -83,7 +113,7 @@ class PlayerEntity(Player):
 
         # Equip random weapons
         for tag in weapon_manager.tags:
-            self.give_named_item(random.choice(list(weapon_manager.by_tag(tag))).name)
+            self.give_weapon(random.choice(list(weapon_manager.by_tag(tag))).name)
 
     def strip(self, is_filters=None, not_filters=('melee', 'grenade')):
         """Remove the player's weapons in `is_filters` & keep those in `not_filters`."""
