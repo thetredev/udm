@@ -62,13 +62,13 @@ def on_close_admin_menu(player):
 
     # Equip the player with their inventory & a High Explosive grenade
     player.equip_inventory()
-    player.give_named_item('weapon_hegrenade')
+    player.give_weapon('weapon_hegrenade')
 
     # Disable damage protection
     player.disable_damage_protection()
 
     # Give a random melee weapon
-    player.give_named_item(melee_weapon)
+    player.give_weapon(melee_weapon)
 
 
 @SelectCallback(admin_menu)

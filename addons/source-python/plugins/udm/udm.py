@@ -92,7 +92,7 @@ def prepare_player(player):
 
     # Give a High Explosive grenade if configured that way
     if cvar_equip_hegrenade.get_int() > 0:
-        player.give_named_item('weapon_hegrenade')
+        player.give_weapon('weapon_hegrenade')
 
     # Enable or disable non-blocking mode, depending on the configuration
     player.noblock = cvar_enable_noblock.get_int() > 0
@@ -154,7 +154,7 @@ def on_player_death(event):
 
     # Give a High Explosive grenade, if it was a HE grenade kill
     if cvar_equip_hegrenade.get_int() == 2 and event.get_string('weapon') == 'hegrenade':
-        attacker.give_named_item('weapon_hegrenade')
+        attacker.give_weapon('weapon_hegrenade')
 
     # Restore the attacker's health if it was a knife kill
     if cvar_restore_health_on_knife_kill.get_int() > 0 and event.get_string('weapon') == 'knife':
@@ -196,7 +196,7 @@ def on_hegrenade_detonate(event):
     """Equip the player with another High Explosive grenade if configured that way."""
     if cvar_equip_hegrenade.get_int() == 3:
         player = PlayerEntity.from_userid(event.get_int('userid'))
-        player.give_named_item('weapon_hegrenade')
+        player.give_weapon('weapon_hegrenade')
 
 
 # =============================================================================
