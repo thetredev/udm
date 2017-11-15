@@ -27,6 +27,8 @@ but the weapon itself is still not silenced (i.e. you can hear the rounds as if 
 If you still want to enable this feature, you can do so by un-commenting the *_silenced weapons in
 [the weapons data file for CS: Source](https://github.com/backraw/udm/blob/master/addons/source-python/data/plugins/udm/weapons/cstrike.ini)).
 **This feature is not used for CS:GO.**
+* I thought I fixed the P2000 bug, but I didn't, at least my workaround doesn't actually give you a P2000, but an unsilenced USP.
+Working on it...
 
 ## Weapon Menus
 Have a look at [the ```guns``` command screenshots](https://github.com/backraw/udm/tree/master/screenshots/guns) for CS: GO. You can have an unlimited amount of
