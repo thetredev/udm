@@ -222,7 +222,10 @@ def on_pre_bump_weapon(stack_data):
         weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
         # Block bumping if the weapon is not listed in the player's inventory
-        if weapon_data is not None and weapon_data.tag in player.inventory:
+        if weapon_data is not None:
+            if weapon_data.tag not in player.inventory:
+                return False
+
             weapon_selected = player.inventory[weapon_data.tag].data.name
 
             if weapon_selected not in (weapon.weapon_name, weapon.classname):
