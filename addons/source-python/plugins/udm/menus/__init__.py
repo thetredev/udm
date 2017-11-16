@@ -6,26 +6,15 @@
 # >> IMPORTS
 # =============================================================================
 # Source.Python Imports
-#   Core
-from core import AutoUnload
-#   Filters
-from filters.players import PlayerIter
 #   Menus
 from menus.radio import BUTTON_CLOSE
 from menus.radio import PagedRadioMenu
 
 
 # =============================================================================
-# >> PRIVATE GLOBAL VARIABLES
-# =============================================================================
-# Store an instance of `PlayerIter` for all players
-_playeriter_all = PlayerIter()
-
-
-# =============================================================================
 # >> CLOSE BUTTON PAGED MENU
 # =============================================================================
-class CloseButtonPagedMenu(PagedRadioMenu, AutoUnload):
+class CloseButtonPagedMenu(PagedRadioMenu):
     """Class used to call a callback when a player decides to close the menu."""
 
     def __init__(self, **kwargs):
@@ -42,7 +31,3 @@ class CloseButtonPagedMenu(PagedRadioMenu, AutoUnload):
 
         # Continue the base class routine
         return super()._select(player_index, choice_index)
-
-    def _unload_instance(self):
-        """ Close the menu for all players on unload."""
-        self.close([player.index for player in _playeriter_all])
