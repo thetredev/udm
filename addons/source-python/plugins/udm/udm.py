@@ -157,7 +157,7 @@ def on_player_death(event):
         attacker.give_weapon('weapon_hegrenade')
 
     # Restore the attacker's health if it was a knife kill
-    if cvar_restore_health_on_knife_kill.get_int() > 0 and event.get_string('weapon') == 'knife':
+    if cvar_restore_health_on_knife_kill.get_int() > 0 and event.get_string('weapon').startswith('knife'):
         attacker.health = 100
 
     # Get a PlayerEntity instance for the victim
