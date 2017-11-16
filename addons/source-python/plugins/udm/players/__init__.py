@@ -59,6 +59,7 @@ class PlayerEntity(Player):
 
     @classmethod
     def alive(cls):
+        """Yield a `PlayerEntity` (subclass) instance for each alive player."""
         for player in _playeriter_alive:
             yield cls(player.index)
 
