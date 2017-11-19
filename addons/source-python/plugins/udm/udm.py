@@ -119,6 +119,12 @@ def prepare_player(player):
 # =============================================================================
 # >> PRE EVENTS
 # =============================================================================
+@PreEvent('round_start')
+def on_pre_round_start(event):
+    """Enable delays right before any players spawn."""
+    delay_manager.delays_enabled = True
+
+
 @PreEvent('round_freeze_end')
 def on_pre_round_freeze_end(event):
     """Enable damage protection for all players."""
@@ -134,9 +140,6 @@ def on_player_spawn(event):
     """Prepare the player for battle if they are alive and on a team."""
     player = PlayerEntity.from_userid(event.get_int('userid'))
     if player.team > 1 and not player.dead:
-
-        # Enable delays
-        delay_manager.delays_enabled = True
 
         # Prepare the player
         prepare_player(player)
