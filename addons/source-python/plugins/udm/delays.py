@@ -12,67 +12,85 @@ from core import AutoUnload
 from listeners import OnLevelEnd
 from listeners.tick import Delay
 
+# Script Imports
+#   Info
+from udm.info import info
+
 
 # =============================================================================
 # >> DELAY MANAGER
 # =============================================================================
-class _DelayList(list):
-    """Class used to append delays only when delays are enabled."""
-
-    def append(self, delay):
-        """Append the delay only when delays are enabled."""
-        if delay_manager.delays_enabled:
-            super().append(delay)
-
-        # Otherwise, cancel the delay if it is running
-        elif delay.running:
-            delay.cancel()
-
-    def cancel_all(self):
-        """Cancel all delays in this delay list."""
-        for delay in self.copy():
-            if delay.running:
-                delay.cancel()
-
-        self.clear()
-
-
 class _DelayManager(dict, AutoUnload):
-    """Class used to group delays and cancel any such group if needed."""
+    """Class used to manage delays."""
 
     # Remember whether delays are enabled
     delays_enabled = True
 
-    def __call__(self, key, delay_time, callback, args=()):
-        """Append a Delay instance for `key`."""
-        self[key].append(Delay(delay_time, callback, args))
+    def __init__(self, prefix):
+        """Object initialization."""
+        # Call dict's constructor
+        super().__init__()
 
-    def __missing__(self, key):
-        """Set and return an instance of `_DelayList()` as the key's value."""
-        value = self[key] = _DelayList()
-        return value
+        # Store the key prefix
+        self._prefix = prefix
+
+    def __call__(self, key, delay, callback, args=()):
+        """Add the delay object and reference it by `key`."""
+        # Format the delay key
+        key = self._format_key(key)
+
+        # Cancel the delay for the key, if it is running
+        self.cancel(key)
+
+        # Add the delay if delays are enabled
+        if self.delays_enabled:
+            self[key] = Delay(delay, callback, args)
 
     def cancel(self, key):
-        """Cancel all delays for `key`."""
-        # Get the delay list for `key`
-        self[key].cancel_all()
+        """Cancel the delay if it is running."""
+        # Format the delay key
+        key = self._format_key(key)
 
-    def cancel_all(self):
+        if key in self:
+
+            # Get the delay object referenced `key`
+            delay = self[key]
+
+            # Cancel it if it is running
+            if delay.running:
+                delay.cancel()
+
+            # Remove `key` from this dict
+            del self[key]
+
+    def clear(self):
         """Cancel all pending delays."""
+        for key in self.copy():
+            self.cancel(key)
+
+        # Disable delays
         self.delays_enabled = False
 
-        for delay_list in self.values():
-            delay_list.cancel_all()
+    @property
+    def prefix(self):
+        """Return the key prefix."""
+        return self._prefix
 
-        self.clear()
+    def _format_key(self, key):
+        """Prepend `key` with the key prefix."""
+        if not key.startswith(self.prefix):
+            return f'{self.prefix}_{key}'
+
+        # Return the key if it is already prepended with the key prefix
+        return key
 
     def _unload_instance(self):
         """Cancel all pending delays on unload."""
-        self.cancel_all()
+        self.clear()
 
 
 # Store a global instance of `_DelayManager`
-delay_manager = _DelayManager()
+delay_manager = _DelayManager(info.name)
 
 
 # =============================================================================
@@ -80,5 +98,5 @@ delay_manager = _DelayManager()
 # =============================================================================
 @OnLevelEnd
 def on_level_end():
-    """Cancel all pending delays."""
-    delay_manager.cancel_all()
+    """Cancel all pending delays on level end."""
+    delay_manager.clear()

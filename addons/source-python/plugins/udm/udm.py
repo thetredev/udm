@@ -181,7 +181,7 @@ def on_player_disconnect(event):
 @Event('round_end')
 def on_round_end(event):
     """Cancel all pending delays."""
-    delay_manager.cancel_all()
+    delay_manager.clear()
 
 
 @Event('weapon_reload')
