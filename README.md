@@ -29,6 +29,10 @@ but the weapon itself is still not silenced (i.e. you can hear the rounds as if 
 If you still want to enable this feature, you can do so by un-commenting the *_silenced weapons in
 [the weapons data file for CS: Source](https://github.com/backraw/udm/commit/2fe1219c6caeabcb23e611a215ef6024525aa9c4)).
 **This feature is not used for CS:GO.**
+* When a weapon's clip is empty and the player automatically reloads the weapon without pressing the reload button,
+the ammo refill doesn't work. [This commit](https://github.com/backraw/udm/commit/f1a949513308998779c8e4375feb7c634267046e)
+quasi-fixes the issue by re-equipping any weapon that has been dropped and its clip and ammo are empty.
+Though, I don't see it as a big issue.
 
 ## Weapon Menus
 Have a look at [the ```guns``` command screenshots](https://github.com/backraw/udm/tree/master/screenshots/guns) for CS: GO. You can have an unlimited amount of
