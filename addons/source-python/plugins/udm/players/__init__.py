@@ -6,6 +6,8 @@
 # >> IMPORTS
 # =============================================================================
 # Python Imports
+#   Collections
+from collections import defaultdict
 #   Random
 import random
 
@@ -17,6 +19,8 @@ from colors import WHITE
 from engines.server import global_vars
 #   Filters
 from filters.players import PlayerIter
+#   Listeners
+from listeners import OnLevelEnd
 #   Memory
 from memory import make_object
 #   Messages
@@ -37,6 +41,13 @@ from udm.players.inventories import player_inventories
 #   Weapons
 from udm.weapons import refill_ammo
 from udm.weapons import weapon_manager
+
+
+# =============================================================================
+# >> TEAM CHANGES
+# =============================================================================
+# Store team changes count for each player
+team_changes = defaultdict(int)
 
 
 # =============================================================================
@@ -189,6 +200,17 @@ class PlayerEntity(Player):
         """Always force spawn the player."""
         super().spawn(True)
 
+    def set_team_changes(self, value):
+        """Store `value` as the team change count for the player."""
+        team_changes[self.uniqueid] = value
+
+    def get_team_changes(self):
+        """Return the team change count for the player."""
+        return team_changes[self.uniqueid]
+
+    # Set the `team_changes` property for PlayerEntity
+    team_changes = property(get_team_changes, set_team_changes)
+
     @property
     def inventories(self):
         """Return the player's inventories."""
@@ -239,3 +261,12 @@ class PlayerEntity(Player):
 
     # Set the `random_mode` property for PlayerEntity
     random_mode = property(get_random_mode, set_random_mode)
+
+
+# =============================================================================
+# >> LISTENERS
+# =============================================================================
+@OnLevelEnd
+def on_level_end():
+    """Clear the team change counts."""
+    team_changes.clear()

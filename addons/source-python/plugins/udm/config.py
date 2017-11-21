@@ -58,6 +58,12 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         "The minimum distance players have to have between a spawn point for it to be 'safe'."
     )
 
+    # The maximum amount of times a players are allowed to change their team per round.
+    cvar_team_changes_per_round = config.cvar(
+        'team_changes_per_round', 2,
+        'The maximum amount of times a players are allowed to change their team per round.'
+    )
+
     config.text('----------------------------------')
     config.text('   * Chat Commands')
     config.text('----------------------------------')

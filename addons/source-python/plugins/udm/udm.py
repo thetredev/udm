@@ -7,6 +7,7 @@
 # =============================================================================
 # Source.Python Imports
 #   Commands
+from commands.client import ClientCommandFilter
 from commands.typed import TypedSayCommand
 #   Core
 from core import OutputReturn
@@ -42,6 +43,7 @@ from udm.config import cvar_restore_health_on_knife_kill
 from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
 from udm.config import cvar_spawn_protection_delay
+from udm.config import cvar_team_changes_per_round
 #   Delays
 from udm.delays import delay_manager
 #   Info
@@ -49,6 +51,7 @@ from udm.info import info
 #   Menus
 from udm.weapons.menus import primary_menu
 #   Players
+from udm.players import team_changes
 from udm.players import PlayerEntity
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
@@ -184,8 +187,9 @@ def on_player_disconnect(event):
 
 @Event('round_end')
 def on_round_end(event):
-    """Cancel all pending delays."""
+    """Cancel all pending delays and team change counts."""
     delay_manager.clear()
+    team_changes.clear()
 
 
 @Event('weapon_reload')
@@ -270,6 +274,43 @@ def on_server_output(severity, msg):
         return OutputReturn.BLOCK
 
     return OutputReturn.CONTINUE
+
+
+# =============================================================================
+# >> CLIENT COMMAND FILTER
+# =============================================================================
+@ClientCommandFilter
+def client_command_filter(command, index):
+    """Spawn the player if the round has already started."""
+    # Allow the client command if it is not `jointeam`
+    if command[0] != 'jointeam':
+        return True
+
+    # Get a PlayerEntity instance for the player
+    player = PlayerEntity(index)
+
+    # Get the team the player wants to join
+    team_index = int(command[1])
+
+    # Allow spectators
+    if team_index < 2:
+        return True
+
+    # Allow the team change, if the player hasn't yet exceeded the maximum team change count
+    if player.team_changes < cvar_team_changes_per_round.get_int() + 1:
+        player.team = team_index
+
+        # Take a note of the team change
+        player.team_changes += 1
+
+        # Respawn the player after the respawn delay
+        delay_manager(f'respawn_{player.userid}', abs(cvar_respawn_delay.get_float()), player.spawn)
+
+        # Allow the client command
+        return True
+
+    # Block the client command, if the player has exceeded the maximum team change count
+    return False
 
 
 # =============================================================================
