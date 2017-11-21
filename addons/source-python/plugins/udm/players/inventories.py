@@ -38,40 +38,6 @@ class PlayerInventory(defaultdict):
         """Make `_InventoryItem` the default value type."""
         super().__init__(_InventoryItem)
 
-    def equip(self, player, tag=None):
-        """Equip the player with the weapon(s) of weapon tag in `tag`."""
-        # Make `tag` all keys of this dictionary if none was provided
-        if tag is None:
-            tag = self.keys()
-
-        # Make `tag` an iterable
-        if isinstance(tag, str):
-            tag = (tag, )
-
-        # Give each inventory item for the keys in `tag`
-        for key in sorted(tag, reverse=True):
-
-            # Get the weapon's data
-            weapon_data = self[key].data
-
-            # Get the weapon of tag in `key` the player is carrying
-            weapon = player.get_weapon(is_filters=key)
-
-            # Remove it if it's not the weapon the player has chosen as their inventory item of the respective tag
-            if weapon is not None and weapon.weapon_name != weapon_data.name:
-                weapon.remove()
-
-                # Give their inventory item
-                weapon = player.give_weapon(weapon_data.name)
-
-            # Give their inventory item if the player doesn't carry that weapon
-            elif weapon is None:
-                weapon = player.give_weapon(weapon_data.name)
-
-            # Set silencer on for weapons which are supposed to be silenced
-            if weapon_manager.silencer_allowed(weapon_data.basename):
-                weapon.set_property_bool('m_bSilencerOn', weapon_data.silenced)
-
     def add_inventory_item(self, player, basename):
         """Add an inventory item for `basename` and equip the player with it."""
         # Get the weapon's data
@@ -80,8 +46,8 @@ class PlayerInventory(defaultdict):
         # Set the inventory item's basename
         self[weapon_data.tag].basename = basename
 
-        # Equip the player with the inventory item
-        self.equip(player, weapon_data.tag)
+        # Equip the inventory item
+        player.equip_inventory_item(weapon_data.tag)
 
     def remove_inventory_item(self, player, tag):
         """Remove an inventory item for weapon tag `tag`."""

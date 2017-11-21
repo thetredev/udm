@@ -98,11 +98,34 @@ class PlayerEntity(Player):
     def equip_inventory(self):
         """Equip the player's currently selected inventory."""
         if self.inventory:
-            self.inventory.equip(self)
+            for tag in self.inventory:
+                self.equip_inventory_item(tag)
 
         # Give random weapons, if the inventory is empty
         else:
             self.equip_random_weapons()
+
+    def equip_inventory_item(self, tag):
+        """Equip the inventory item for `tag`."""
+        # Get the inventory item
+        inventory_item = self.inventory[tag]
+
+        # Get the equipped weapon at `tag`
+        weapon = self.get_weapon(is_filters=tag)
+
+        # Remove the weapon if it should not be equipped
+        if weapon is not None:
+            weapon_data = weapon_manager.by_name(weapon.weapon_name)
+
+            if inventory_item.data.name != weapon_data.name:
+                weapon.remove()
+
+                # Equip the weapon which should be equipped
+                self.give_weapon(inventory_item.data.name)
+
+        # Give the weapon if none was found at `tag`
+        else:
+            self.give_weapon(inventory_item.data.name)
 
     def equip_random_weapons(self):
         """Equip random weapons by weapon tag."""
