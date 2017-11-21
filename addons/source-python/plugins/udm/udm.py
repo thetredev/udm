@@ -128,8 +128,10 @@ def on_pre_round_start(event):
 @PreEvent('round_freeze_end')
 def on_pre_round_freeze_end(event):
     """Enable damage protection for all players."""
+    delay_time = abs(cvar_spawn_protection_delay.get_float())
+
     for player in PlayerEntity.alive():
-        player.enable_damage_protection(cvar_spawn_protection_delay.get_float())
+        player.enable_damage_protection(delay_time)
 
 
 # =============================================================================
