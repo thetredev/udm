@@ -27,6 +27,7 @@ from events.hooks import PreEvent
 from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners import OnEntitySpawned
+from listeners import OnPlayerRunCommand
 from listeners import OnServerOutput
 #   Memory
 from memory import make_object
@@ -252,16 +253,7 @@ def on_post_drop_weapon(stack_data, nothing):
 
     # Remove the dropped weapon after the delay if this was a valid drop_weapon() call
     if player.classname == 'player':
-
-        # Get a Weapon instance for the weapon
         weapon = make_object(Weapon, stack_data[1])
-
-        # Equip the player with the same weapon again, if the clip and ammo are empty
-        with contextlib.suppress(ValueError):
-            if weapon.clip == 0 and weapon.ammo == 0:
-                delay_manager(f'give_dropped_{player.userid}', 0, player.give_weapon, (weapon.weapon_name, ))
-
-        # Remove the weapon after half the delay
         delay_manager(f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2, remove_weapon, (weapon, ))
 
 
@@ -278,6 +270,14 @@ def on_entity_spawned(base_entity):
     elif base_entity.classname in map_functions:
         entity = Entity(base_entity.index)
         entity.call_input('Disable')
+
+
+@OnPlayerRunCommand
+def on_player_run_command(player, cmd):
+    """Refill the player's active weapon's ammo as soon as the player stops shooting a weapon with an empty clip."""
+    with contextlib.suppress(ValueError):
+        if player.active_weapon is not None and player.active_weapon.clip == 0:
+            PlayerEntity(player.index).refill_ammo()
 
 
 @OnServerOutput
