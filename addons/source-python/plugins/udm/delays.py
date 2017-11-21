@@ -34,7 +34,10 @@ class _DelayManager(dict, AutoUnload):
         # Store the key prefix
         self._prefix = prefix
 
-    def __call__(self, key, delay, callback, args=()):
+        # Store a map of cancel callbacks
+        self._cancel_callbacks = dict()
+
+    def __call__(self, key, delay, callback, args=(), cancel_callback=None, cancel_callback_args=()):
         """Add the delay object and reference it by `key`."""
         # Format the delay key
         key = self._format_key(key)
@@ -45,6 +48,10 @@ class _DelayManager(dict, AutoUnload):
         # Add the delay if delays are enabled
         if self.delays_enabled:
             self[key] = Delay(delay, callback, args)
+
+            # Store the cancel callback and arguments
+            if cancel_callback is not None:
+                self._cancel_callbacks[key] = (cancel_callback, cancel_callback_args)
 
     def cancel(self, key):
         """Cancel the delay if it is running."""
@@ -62,6 +69,11 @@ class _DelayManager(dict, AutoUnload):
 
             # Remove `key` from this dict
             del self[key]
+
+        # Call the cancel callback if one is defined for `key`
+        if key in self._cancel_callbacks:
+            cancel_callback, cancel_callback_args = self._cancel_callbacks.pop(key)
+            cancel_callback(*cancel_callback_args)
 
     def clear(self):
         """Cancel all pending delays."""

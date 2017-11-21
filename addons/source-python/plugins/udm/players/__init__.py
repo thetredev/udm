@@ -138,7 +138,10 @@ class PlayerEntity(Player):
 
         # Disable protection after `time_delay`
         if time_delay is not None:
-            delay_manager(f'protect_{self.userid}', time_delay, self.disable_damage_protection)
+            delay_manager(
+                f'protect_{self.userid}', time_delay, self.disable_damage_protection,
+                cancel_callback=self.disable_damage_protection
+            )
 
     def disable_damage_protection(self):
         """Disable damage protection."""
