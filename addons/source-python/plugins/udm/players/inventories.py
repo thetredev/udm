@@ -105,11 +105,6 @@ class _PlayerInventories(defaultdict):
     # Store random weapon selections, defaults to True for every new player
     selections_random = defaultdict(lambda: True)
 
-    def __init__(self):
-        """Object initialization."""
-        # Make `_PlayerInventoryMap` the default value type
-        super().__init__(lambda: defaultdict(PlayerInventory))
-
 
 # Store a global instance of `_PlayerInventories`
-player_inventories = _PlayerInventories()
+player_inventories = _PlayerInventories(lambda: defaultdict(PlayerInventory))
