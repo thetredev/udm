@@ -10,6 +10,7 @@ Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like 
 | Counter-Strike: Global Offensive | Stable |
 
 ### Features
+* [Restrict the amount of times a player can join a different team](https://github.com/backraw/udm/commit/74b9bf689fab6c1e347a38a84715273871b2dfef) (prevent spawn spamming)
 * Weapon Menus - accessible via the chat command ```guns```
 * Multiple inventories! See commit [a6dd66e](https://github.com/backraw/udm/commit/a6dd66e61a463d5ddd6c50ad8b49581eb6aa2d86) for details.
 * Each inventory can hold either one or two weapons - easy primary/secondary only handling!
@@ -109,6 +110,12 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 // The minimum distance players have to have between a spawn point for it to be
 //   'safe'.
    udm_spawn_point_distance 150
+
+
+// Default Value: 2
+// The maximum amount of times a players are allowed to change their team per
+//   round.
+   udm_team_changes_per_round 2
 
 // ----------------------------------
 //    * Chat Commands
