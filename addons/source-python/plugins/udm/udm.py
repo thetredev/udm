@@ -139,9 +139,8 @@ def on_pre_round_freeze_end(event):
 def on_player_spawn(event):
     """Prepare the player for battle if they are alive and on a team."""
     player = PlayerEntity.from_userid(event.get_int('userid'))
-    if player.team > 1 and not player.dead:
 
-        # Prepare the player
+    if player.team > 1 and not player.dead:
         prepare_player(player)
 
 
