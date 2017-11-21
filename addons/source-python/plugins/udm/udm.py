@@ -5,6 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Contextlib
+import contextlib
+
 # Source.Python Imports
 #   Commands
 from commands.client import ClientCommandFilter
@@ -248,7 +252,16 @@ def on_post_drop_weapon(stack_data, nothing):
 
     # Remove the dropped weapon after the delay if this was a valid drop_weapon() call
     if player.classname == 'player':
+
+        # Get a Weapon instance for the weapon
         weapon = make_object(Weapon, stack_data[1])
+
+        # Equip the player with the same weapon again, if the clip and ammo are empty
+        with contextlib.suppress(ValueError):
+            if weapon.clip == 0 and weapon.ammo == 0:
+                delay_manager(f'give_dropped_{player.userid}', 0, player.give_weapon, (weapon.weapon_name, ))
+
+        # Remove the weapon after half the delay
         delay_manager(f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2, remove_weapon, (weapon, ))
 
 
