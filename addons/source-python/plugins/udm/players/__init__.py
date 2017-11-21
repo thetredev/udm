@@ -153,11 +153,7 @@ class PlayerEntity(Player):
         self.godmode = True
 
         # Set protection color
-        self.color = Color(
-            210 if self.team == 2 else 0,
-            0,
-            210 if self.team == 3 else 0
-        )
+        self.color = Color(100, 70, 0)
 
         # Disable protection after `time_delay`
         if time_delay is not None:
