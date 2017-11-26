@@ -34,6 +34,7 @@ from weapons.entity import Weapon
 #   Admin
 from udm.admin import admin_menu
 #   Colors
+from udm.colors import MESSAGE_COLOR_ORANGE
 from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
 from udm.config import cvar_enable_noblock
@@ -323,9 +324,14 @@ def client_command_filter(command, index):
         # Reset the player's team change count after the team change reset delay if the maximum team change count
         # has been reached
         if player.team_changes == cvar_team_changes_per_round.get_int() + 1:
-            delay_manager(
-                f'reset_team_changes_{player.userid}', abs(cvar_team_changes_reset_delay.get_float()) * 60.0,
-                player.set_team_changes, 0
+            delay_time = abs(cvar_team_changes_reset_delay.get_float())
+
+            delay_manager(f'reset_team_changes_{player.userid}', delay_time * 60.0, player.set_team_changes, (0, ))
+
+            # Tell the player
+            player.tell(
+                'UDM',  f'{MESSAGE_COLOR_WHITE}You will have to wait {MESSAGE_COLOR_ORANGE}%.1f {MESSAGE_COLOR_WHITE}'
+                'minutes to join any other team from now on.' % delay_time
             )
 
         # Respawn the player after the respawn delay
