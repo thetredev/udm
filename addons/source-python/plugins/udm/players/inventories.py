@@ -38,6 +38,10 @@ class PlayerInventory(defaultdict):
         """Make `_InventoryItem` the default value type."""
         super().__init__(_InventoryItem)
 
+    def keys(self):
+        """Override keys to reverse its order."""
+        yield from sorted(self, reverse=True)
+
     def add_inventory_item(self, player, basename):
         """Add an inventory item for `basename` and equip the player with it."""
         # Get the weapon's data

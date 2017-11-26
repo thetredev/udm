@@ -109,7 +109,7 @@ class PlayerEntity(Player):
     def equip_inventory(self):
         """Equip the player's currently selected inventory."""
         if self.inventory:
-            for tag in self.inventory:
+            for tag in self.inventory.keys():
                 self.equip_inventory_item(tag)
 
         # Give random weapons, if the inventory is empty
