@@ -156,7 +156,7 @@ def on_player_spawn(event):
 
 @Event('player_death')
 def on_player_death(event):
-    """Refill the attacker's active weapon's clip for a headshot & respawn the victim."""
+    """Handle attacker rewards & respawn the victim."""
     # Get a PlayerEntity instance for the attacker
     attacker = PlayerEntity.from_userid(event.get_int('attacker'))
 
