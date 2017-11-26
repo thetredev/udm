@@ -249,7 +249,8 @@ def on_pre_bump_weapon(stack_data):
                 return False
 
 
-@EntityPostHook(EntityCondition.is_player, 'drop_weapon')
+@EntityPostHook(EntityCondition.is_human_player, 'drop_weapon')
+@EntityPostHook(EntityCondition.is_bot_player, 'drop_weapon')
 def on_post_drop_weapon(stack_data, nothing):
     """Remove the dropped weapon after half the respawn delay."""
     # Get a PlayerEntity instance for the player
