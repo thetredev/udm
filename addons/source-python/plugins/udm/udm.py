@@ -45,6 +45,7 @@ from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
 from udm.config import cvar_spawn_protection_delay
 from udm.config import cvar_team_changes_per_round
+from udm.config import cvar_team_changes_reset_delay
 #   Delays
 from udm.delays import delay_manager
 #   Info
@@ -318,6 +319,14 @@ def client_command_filter(command, index):
 
         # Take a note of the team change
         player.team_changes += 1
+
+        # Reset the player's team change count after the team change reset delay if the maximum team change count
+        # has been reached
+        if player.team_changes == cvar_team_changes_per_round.get_int() + 1:
+            delay_manager(
+                f'reset_team_changes_{player.userid}', abs(cvar_team_changes_reset_delay.get_float()) * 60.0,
+                player.set_team_changes, 0
+            )
 
         # Respawn the player after the respawn delay
         delay_manager(f'respawn_{player.userid}', abs(cvar_respawn_delay.get_float()), player.spawn)

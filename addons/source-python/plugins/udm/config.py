@@ -64,6 +64,14 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         'The maximum amount of times a players are allowed to change their team per round.'
     )
 
+    # The time in minutes a player who exceeded the maximum team change count has to wait until they can choose a
+    # team again
+    cvar_team_changes_reset_delay = config.cvar(
+        'team_changes_reset_delay', 1.5,
+        'The time in minutes a player who exceeded the maximum team change count has to wait until they can choose a'
+        'team again.'
+    )
+
     config.text('----------------------------------')
     config.text('   * Chat Commands')
     config.text('----------------------------------')
