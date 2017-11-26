@@ -156,4 +156,24 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 
 Be sure to reload the plugin via ```sp plugin reload udm``` after you have done any changes to that configuration file.
 
+## Enable or disable weapons for players to choose
+Open [the weapon data file for the game](https://github.com/backraw/udm/tree/master/addons/source-python/data/plugins/udm/weapons).
+You can disable weapons by commenting them:
+```
+...
+glock = "Glock 18"
+usp_silencer = "USP-S"
+# deagle = "Desert Eagle"
+...
+```
+This would disable the weapon Desert Eagle. To re-enable it remove the comment:
+```
+...
+glock = "Glock 18"
+usp_silencer = "USP-S"
+deagle = "Desert Eagle"
+...
+```
+Be sure to reload the plugin via ```sp plugin reload udm``` after you have done any changes to the INI file.
+
 ## Enjoy!
