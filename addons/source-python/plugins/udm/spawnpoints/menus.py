@@ -112,7 +112,7 @@ def on_select_spawnpoint(player, option):
 def on_select_spawnpoints_manager_option(player, option):
     """Handle the selected option."""
     # Handle the option `Add`
-    if option.value == _SpawnPointsManagerMenuOptions.ADD:
+    if option.value is _SpawnPointsManagerMenuOptions.ADD:
 
         # Get a list of the distance of all spawn points to the player's current location
         distances = [spawnpoint.get_distance(player.origin) for spawnpoint in spawnpoints]
@@ -131,7 +131,7 @@ def on_select_spawnpoints_manager_option(player, option):
         spawnpoints_manager_menu.send(player.index)
 
     # Handle the option `Remove`
-    elif option.value == _SpawnPointsManagerMenuOptions.REMOVE:
+    elif option.value is _SpawnPointsManagerMenuOptions.REMOVE:
 
         # Find the spawn point closest to the player's current location
         for spawnpoint in spawnpoints.copy():
@@ -155,7 +155,7 @@ def on_select_spawnpoints_manager_option(player, option):
         spawnpoints_manager_menu.send(player.index)
 
     # Handle the option `Save`
-    elif option.value == _SpawnPointsManagerMenuOptions.SAVE:
+    elif option.value is _SpawnPointsManagerMenuOptions.SAVE:
 
         # Save the spawn points list to file
         spawnpoints.save()
@@ -169,5 +169,5 @@ def on_select_spawnpoints_manager_option(player, option):
         spawnpoints_manager_menu.send(player.index)
 
     # For `List`: Send the _SpawnPointManagerListMenu to the player
-    elif option.value == _SpawnPointsManagerMenuOptions.LIST:
+    elif option.value is _SpawnPointsManagerMenuOptions.LIST:
         _spawnpoints_list_menu.send(player.index)
