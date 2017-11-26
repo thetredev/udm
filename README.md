@@ -127,6 +127,12 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 //   round.
    udm_team_changes_per_round 2
 
+
+// Default Value: 1.5
+// The time in minutes a player who exceeded the maximum team change count has
+//   to wait until they can choose ateam again.
+   udm_team_changes_reset_delay 1.5
+
 // ----------------------------------
 //    * Chat Commands
 // ----------------------------------
