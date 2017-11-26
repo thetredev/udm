@@ -19,7 +19,7 @@ Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like 
 * Damage Protection (timed on spawn, but indefinitely when using the Admin menu)
 * Refill ammo after the reload animation has finished - even if [the reload button has not been pressed](https://github.com/backraw/udm/commit/19ea391fb6900a3d6497e7ea7b091bf1fea9ea76)
 * Refill clip after a player killed an enemy with a headshot
-* Noblock (simple implementation for v1)
+* Noblock (see the config file below)
 * Give back High Explosive grenade (4 options - see the config file below)
 * Restore the killer's health to 100HP if they killed an enemy with the knife (see the config file below)
 
@@ -161,6 +161,11 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 ```
 
 Be sure to reload the plugin via ```sp plugin reload udm``` after you have done any changes to that configuration file.
+
+**Note:** To completely enable player collision, do the following steps:
+* Change ```mp_solid_teammates``` to ```0``` in your game server config file
+* Change ```udm_enable_noblock``` to ```0``` in the plugin's config file
+* Change the map
 
 ## Enable or disable weapons for players to choose
 Open [the weapon data file for the game](https://github.com/backraw/udm/tree/master/addons/source-python/data/plugins/udm/weapons).
