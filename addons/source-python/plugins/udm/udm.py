@@ -218,7 +218,8 @@ def on_hegrenade_detonate(event):
 # =============================================================================
 # >> ENTITY HOOKS
 # =============================================================================
-@EntityPreHook(EntityCondition.is_player, 'bump_weapon')
+@EntityPreHook(EntityCondition.is_human_player, 'bump_weapon')
+@EntityPreHook(EntityCondition.is_bot_player, 'bump_weapon')
 def on_pre_bump_weapon(stack_data):
     """Block bumping into the weapon if it's not in the player's inventory."""
     # Get a PlayerEntity instance for the player
@@ -237,7 +238,7 @@ def on_pre_bump_weapon(stack_data):
         # Get the weapon's data
         weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
-        # Block bumping if the weapon is not listed in the player's inventory
+        # Block the weapon bump if the weapon is not listed in the player's inventory
         if weapon_data is not None:
             if weapon_data.tag not in player.inventory:
                 return False
