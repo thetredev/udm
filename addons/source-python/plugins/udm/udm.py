@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-#   Contextlib
-import contextlib
-
 # Source.Python Imports
 #   Commands
 from commands.client import ClientCommandFilter
@@ -280,8 +276,10 @@ def on_entity_spawned(base_entity):
 @OnPlayerRunCommand
 def on_player_run_command(player, cmd):
     """Refill the player's active weapon's ammo as soon as the player stops shooting a weapon with an empty clip."""
-    with contextlib.suppress(ValueError):
-        if player.active_weapon is not None and player.active_weapon.clip == 0:
+    if player.active_weapon is not None:
+        weapon_data = weapon_manager.by_name(player.active_weapon.weapon_name)
+
+        if weapon_data is not None and player.active_weapon.clip == 0:
             PlayerEntity(player.index).refill_ammo()
 
 
