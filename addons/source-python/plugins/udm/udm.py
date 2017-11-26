@@ -183,10 +183,8 @@ def on_player_death(event):
 @Event('player_disconnect')
 def on_player_disconnect(event):
     """Cancel all pending delays for the disconnecting player."""
-    # Get a PlayerEntity instance for the player
     player = PlayerEntity.from_userid(event.get_int('userid'))
 
-    # Cancel the player's delays
     delay_manager.cancel(f'respawn_{player.userid}')
     delay_manager.cancel(f'protect_{player.userid}')
 
