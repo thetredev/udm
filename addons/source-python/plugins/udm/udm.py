@@ -162,7 +162,10 @@ def on_player_death(event):
 
     # Refill the attacker's active weapon's clip for a headshot
     if cvar_refill_clip_on_headshot.get_int() > 0 and event.get_bool('headshot'):
-        attacker.active_weapon.clip = weapon_manager.by_name(attacker.active_weapon.weapon_name).clip
+        delay_manager(
+            f'refill_clip_{attacker.active_weapon.index}', 0.1,
+            attacker.active_weapon.set_clip, (weapon_manager.by_name(attacker.active_weapon.weapon_name).clip, )
+        )
 
     # Give a High Explosive grenade, if it was a HE grenade kill
     if cvar_equip_hegrenade.get_int() == 2 and event.get_string('weapon') == 'hegrenade':
