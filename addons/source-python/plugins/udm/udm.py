@@ -77,7 +77,7 @@ admin_menu.register_submenu(spawnpoints_manager_menu)
 # =============================================================================
 # Store a list of forbidden entities
 forbidden_entities = [weapon_class.name for weapon_class in WeaponClassIter(is_filters='objective')] + [
-    'hostage_entity'
+    'hostage_entity', 'item_defuser'
 ]
 
 
