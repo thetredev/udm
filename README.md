@@ -38,8 +38,18 @@ inventories and switch between them:
 # Edit or equip the first inventory
 guns 1
 
+# The first inventory is now selected and the player will spawn with those weapons.
+# The command guns without any argument will now default to inventory 1.
+
+# Edit the first inventory
+guns
+
+
 # Edit or equip the second inventory
 guns 2
+
+# The command guns without any argument will now default to inventory 2.
+guns
 
 # ...
 ```
