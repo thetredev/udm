@@ -328,8 +328,8 @@ def client_command_filter(command, index):
 
             # Tell the player
             player.tell(
-                'UDM',  f'{MESSAGE_COLOR_WHITE}You will have to wait {MESSAGE_COLOR_ORANGE}%.1f {MESSAGE_COLOR_WHITE}'
-                'minutes to join any other team from now on.' % delay_time
+                info.verbose_name,  f'{MESSAGE_COLOR_WHITE}You will have to wait {MESSAGE_COLOR_ORANGE}%.1f'
+                '{MESSAGE_COLOR_WHITE} minutes to join any other team from now on.' % delay_time
             )
 
         # Respawn the player after the respawn delay
