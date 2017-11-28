@@ -11,6 +11,8 @@ from commands.client import ClientCommandFilter
 from commands.typed import TypedSayCommand
 #   Core
 from core import OutputReturn
+#   Cvars
+from cvars import cvar
 #   Entities
 from entities.entity import Entity
 from entities.hooks import EntityCondition
@@ -68,6 +70,13 @@ from udm.weapons import weapon_manager
 # >> REGISTER ADMIN MENU SUBMENUS
 # =============================================================================
 admin_menu.register_submenu(spawnpoints_manager_menu)
+
+
+# =============================================================================
+# >> SOLID TEAM MATES
+# =============================================================================
+mp_solid_teammates = cvar.find_var('mp_solid_teammates')
+mp_solid_teammates_default = mp_solid_teammates.get_int() if mp_solid_teammates is not None else None
 
 
 # =============================================================================
@@ -418,3 +427,18 @@ def on_saycommand_admin(command_info):
 
     # Block the text from appearing in the chat window
     return False
+
+
+# =============================================================================
+# >> LOAD & UNLOAD
+# =============================================================================
+def load():
+    """Disable solid team mates if noblock is disabled."""
+    if mp_solid_teammates is not None and mp_solid_teammates.get_int() < 1 > cvar_enable_noblock.get_int():
+        mp_solid_teammates.set_int(1)
+
+
+def unload():
+    """Enable solid team mates if it has been changed."""
+    if mp_solid_teammates is not None:
+        mp_solid_teammates.set_int(mp_solid_teammates_default)
