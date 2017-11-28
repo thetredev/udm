@@ -162,11 +162,6 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 
 Be sure to reload the plugin via ```sp plugin reload udm``` after you have done any changes to that configuration file.
 
-**Note:** To completely enable player collision, do the following steps:
-* Change ```mp_solid_teammates``` to ```0``` in your game server config file
-* Change ```udm_enable_noblock``` to ```0``` in the plugin's config file
-* Change the map
-
 ## Enable or disable weapons for players to choose
 Open [the weapon data file for the game](https://github.com/backraw/udm/tree/master/addons/source-python/data/plugins/udm/weapons).
 You can disable weapons by commenting them:
