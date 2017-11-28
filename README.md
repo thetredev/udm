@@ -79,7 +79,7 @@ Adding admins is quite simple using the following syntax: ```sp auth permission 
 You are good to go! For more information on managing admins, please refer to the [Source.Python Auth Configuration](http://wiki.sourcepython.com/general/config-auth.html) wiki page.
 
 ## Installation
-1. [Install Source.Python](http://wiki.sourcepython.com/general/installation.html)
+1. [Install Source.Python](http://wiki.sourcepython.com/general/installation.html): Build #620 is required for this plugin
 2. Download [the latest UDM release](https://github.com/backraw/udm/releases/tag/v1.4) and unzip its contents to the game server's root folder (i.e.: **cstrike** for Counter-Strike: Source, **csgo** for Counter-Strike: Global Offensive)
 3. Put ```sp plugin load udm``` into your server configuration file (i.e.: **autoexec.cfg**) - this can be any file that gets read **after** a map has changed
 4. Change the map
