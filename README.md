@@ -12,6 +12,7 @@ Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like 
 ### Features
 * [Restrict the amount of times a player can join a different team](https://github.com/backraw/udm/commit/74b9bf689fab6c1e347a38a84715273871b2dfef) (prevent spawn spamming)
 * Weapon Menus - accessible via the chat command ```guns```
+* Buy anywhere for CS:GO - Open up the buy menu anywhere on the map, like in standard CS:GO Deathmatch mode
 * Multiple inventories! See commit [a6dd66e](https://github.com/backraw/udm/commit/a6dd66e61a463d5ddd6c50ad8b49581eb6aa2d86) for details.
 * Each inventory can hold either one or two weapons - easy primary/secondary only handling!
 * Admin Menu - accessible via the chat command ```!udm```
@@ -80,7 +81,7 @@ You are good to go! For more information on managing admins, please refer to the
 
 ## Installation
 1. [Install Source.Python](http://wiki.sourcepython.com/general/installation.html): Build #620 is required for this plugin
-2. Download [the latest UDM release](https://github.com/backraw/udm/releases/tag/v1.5) and unzip its contents to the game server's root folder (i.e.: **cstrike** for Counter-Strike: Source, **csgo** for Counter-Strike: Global Offensive)
+2. Download [the latest UDM release](https://github.com/backraw/udm/releases/tag/v1.5.1) and unzip its contents to the game server's root folder (i.e.: **cstrike** for Counter-Strike: Source, **csgo** for Counter-Strike: Global Offensive)
 3. Put ```sp plugin load udm``` into your server configuration file (i.e.: **autoexec.cfg**) - this can be any file that gets read **after** a map has changed
 4. Change the map
 
