@@ -24,6 +24,8 @@ Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like 
 * Give back High Explosive grenade (4 options - see the config file below)
 * Restore the killer's health to 100HP if they killed an enemy with the knife (see the config file below)
 
+Check out the tech demo: https://www.youtube.com/watch?v=srTt0N0AakQ
+
 ### Bugs
 * Enabling auto-silencing weapons causes an issue where the weapon is spawned and the silencer is equipped,
 but the weapon itself is still not silenced (i.e. you can hear the rounds as if the silencer was off).
