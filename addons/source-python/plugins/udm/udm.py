@@ -100,6 +100,12 @@ mp_startmoney_default = mp_startmoney.get_int()
 
 
 # =============================================================================
+# >> RESTART GAME
+# =============================================================================
+mp_restartgame = cvar.find_var('mp_restartgame')
+
+
+# =============================================================================
 # >> FORBIDDEN ENTITIES
 # =============================================================================
 # Store a list of forbidden entities
@@ -483,6 +489,9 @@ def load():
     mp_buytime.set_int(60 * 60)
     mp_startmoney.set_int(10000)
 
+    # Restart the game after 3 seconds
+    mp_restartgame.set_int(3)
+
 
 def unload():
     """Reset default cvar values for solid team mates & buy anywhere."""
@@ -494,3 +503,6 @@ def unload():
 
     mp_buytime.set_int(mp_buytime_default)
     mp_startmoney.set_int(mp_startmoney_default)
+
+    # Restart the game after 1 second
+    mp_restartgame.set_int(1)
