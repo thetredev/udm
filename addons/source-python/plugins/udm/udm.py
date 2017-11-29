@@ -80,6 +80,26 @@ mp_solid_teammates_default = mp_solid_teammates.get_int() if mp_solid_teammates 
 
 
 # =============================================================================
+# >> BUY ANYWHERE
+# =============================================================================
+mp_buy_anywhere = cvar.find_var('mp_buy_anywhere')
+mp_buy_anywhere_default = mp_buy_anywhere.get_int() if mp_buy_anywhere is not None else None
+
+# =============================================================================
+# >> BUY TIME
+# =============================================================================
+mp_buytime = cvar.find_var('mp_buytime')
+mp_buytime_default = mp_buytime.get_int()
+
+
+# =============================================================================
+# >> START MONEY
+# =============================================================================
+mp_startmoney = cvar.find_var('mp_startmoney')
+mp_startmoney_default = mp_startmoney.get_int()
+
+
+# =============================================================================
 # >> FORBIDDEN ENTITIES
 # =============================================================================
 # Store a list of forbidden entities
@@ -310,13 +330,29 @@ def on_server_output(severity, msg):
 # =============================================================================
 @ClientCommandFilter
 def client_command_filter(command, index):
-    """Spawn the player if the round has already started."""
-    # Allow the client command if it is not `jointeam`
-    if command[0] != 'jointeam':
-        return True
-
+    """Handle buy anywhere & spwaning in the middle of the round."""
     # Get a PlayerEntity instance for the player
     player = PlayerEntity(index)
+
+    # Get the client command
+    client_command = command[0]
+
+    # Handle client command `buy`
+    if client_command == 'buy':
+
+        # Get the weapon the player is trying to buy
+        weapon = command[1]
+
+        # Add the weapon to the player's selected inventory if it is valid for UDM
+        if weapon in weapon_manager:
+            player.inventory.add_inventory_item(player, weapon)
+
+        # Block any further command handling
+        return False
+
+    # Allow any client command besides `jointeam`
+    if client_command != 'jointeam':
+        return True
 
     # Get the team the player wants to join
     team_index = int(command[1])
@@ -351,7 +387,7 @@ def client_command_filter(command, index):
         # Allow the client command
         return True
 
-    # Block the client command, if the player has exceeded the maximum team change count
+    # Block any further command handling
     return False
 
 
@@ -437,12 +473,24 @@ def on_saycommand_admin(command_info):
 # >> LOAD & UNLOAD
 # =============================================================================
 def load():
-    """Disable solid team mates if noblock is disabled."""
+    """Handle solid team mates & buy anywhere cvars."""
     if mp_solid_teammates is not None and mp_solid_teammates.get_int() < 1 > cvar_enable_noblock.get_int():
         mp_solid_teammates.set_int(1)
 
+    if mp_buy_anywhere is not None:
+        mp_buy_anywhere.set_int(1)
+
+    mp_buytime.set_int(60 * 60)
+    mp_startmoney.set_int(10000)
+
 
 def unload():
-    """Enable solid team mates if it has been changed."""
+    """Reset default cvar values for solid team mates & buy anywhere."""
     if mp_solid_teammates is not None:
         mp_solid_teammates.set_int(mp_solid_teammates_default)
+
+    if mp_buy_anywhere is not None:
+        mp_buy_anywhere.set_int(mp_buy_anywhere_default)
+
+    mp_buytime.set_int(mp_buytime_default)
+    mp_startmoney.set_int(mp_startmoney_default)
