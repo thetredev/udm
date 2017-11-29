@@ -26,6 +26,7 @@ from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners import OnEntitySpawned
 from listeners import OnPlayerRunCommand
+from listeners import OnServerActivate
 from listeners import OnServerOutput
 #   Memory
 from memory import make_object
@@ -121,6 +122,21 @@ forbidden_entities = [weapon_data.name for weapon_data in WeaponClassIter(is_fil
 map_functions = [
     'func_bomb_target', 'func_buyzone', 'func_hostage_rescue'
 ]
+
+
+# =============================================================================
+# >> HELPER FUNCTIONS
+# =============================================================================
+def prepare_cvars():
+    """Handle solid team mates & buy anywhere cvars."""
+    if mp_solid_teammates is not None and mp_solid_teammates.get_int() < 1 > cvar_enable_noblock.get_int():
+        mp_solid_teammates.set_int(1)
+
+    if mp_buy_anywhere is not None:
+        mp_buy_anywhere.set_int(1)
+
+    mp_buytime.set_int(60 * 60)
+    mp_startmoney.set_int(10000)
 
 
 # =============================================================================
@@ -322,6 +338,12 @@ def on_player_run_command(player, cmd):
             PlayerEntity(player.index).refill_ammo()
 
 
+@OnServerActivate
+def on_server_activate(edicts, edict_count, max_clients):
+    """Prepare cvars."""
+    prepare_cvars()
+
+
 @OnServerOutput
 def on_server_output(severity, msg):
     """Block the warning that any bot has spawned outside of a buy zone."""
@@ -479,17 +501,8 @@ def on_saycommand_admin(command_info):
 # >> LOAD & UNLOAD
 # =============================================================================
 def load():
-    """Handle solid team mates & buy anywhere cvars."""
-    if mp_solid_teammates is not None and mp_solid_teammates.get_int() < 1 > cvar_enable_noblock.get_int():
-        mp_solid_teammates.set_int(1)
-
-    if mp_buy_anywhere is not None:
-        mp_buy_anywhere.set_int(1)
-
-    mp_buytime.set_int(60 * 60)
-    mp_startmoney.set_int(10000)
-
-    # Restart the game after 3 seconds
+    """Prepare cvars & restart the round after 3 seconds."""
+    prepare_cvars()
     mp_restartgame.set_int(3)
 
 
