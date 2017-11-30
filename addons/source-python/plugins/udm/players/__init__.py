@@ -210,6 +210,28 @@ class PlayerEntity(Player):
     # Set the `team_changes` property for PlayerEntity
     team_changes = property(get_team_changes, set_team_changes)
 
+    def set_inventory_selection(self, inventory_index):
+        """Set the player's inventory selection to `inventory_index`."""
+        player_inventories.selections[self.uniqueid] = inventory_index
+
+    def get_inventory_selection(self):
+        """Return the player's current inventory selection."""
+        return player_inventories.selections[self.uniqueid]
+
+    # Set the `inventory_selection` property for PlayerEntity
+    inventory_selection = property(get_inventory_selection, set_inventory_selection)
+
+    def set_random_mode(self, value):
+        """Set random mode for the player."""
+        player_inventories.selections_random[self.userid] = value
+
+    def get_random_mode(self):
+        """Return whether the player is currently in random mode."""
+        return player_inventories.selections_random[self.userid]
+
+    # Set the `random_mode` property for PlayerEntity
+    random_mode = property(get_random_mode, set_random_mode)
+
     @property
     def inventories(self):
         """Return the player's inventories."""
@@ -238,28 +260,6 @@ class PlayerEntity(Player):
 
         # Return True if the player carries all the weapons in their selected inventory
         return True
-
-    def set_inventory_selection(self, inventory_index):
-        """Set the player's inventory selection to `inventory_index`."""
-        player_inventories.selections[self.uniqueid] = inventory_index
-
-    def get_inventory_selection(self):
-        """Return the player's current inventory selection."""
-        return player_inventories.selections[self.uniqueid]
-
-    # Set the `inventory_selection` property for PlayerEntity
-    inventory_selection = property(get_inventory_selection, set_inventory_selection)
-
-    def set_random_mode(self, value):
-        """Set random mode for the player."""
-        player_inventories.selections_random[self.userid] = value
-
-    def get_random_mode(self):
-        """Return whether the player is currently in random mode."""
-        return player_inventories.selections_random[self.userid]
-
-    # Set the `random_mode` property for PlayerEntity
-    random_mode = property(get_random_mode, set_random_mode)
 
 
 # =============================================================================
