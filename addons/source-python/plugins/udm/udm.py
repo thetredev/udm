@@ -480,9 +480,6 @@ def on_saycommand_admin(command_info):
     # Get a PlayerEntity instance for the player
     player = PlayerEntity(command_info.index)
 
-    # Cancel the damage protect delay so we can ensure that the next call to `player.protect()` is unaffected by it
-    delay_manager.cancel(f'protect_{player.userid}')
-
     # Protect the player indefinitely
     player.enable_damage_protection()
 
