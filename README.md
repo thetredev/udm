@@ -2,6 +2,7 @@
 Ultimate Deathmatch is a [Source.Python](https://github.com/Source-Python-Dev-Team/Source.Python) plugin.
 
 Its goal is to provide an enriched [CSSDM](http://www.bailopan.net/cssdm/)-like experience, but written in [Python](https://www.python.org/) rather than [SourcePawn](https://wiki.alliedmods.net/Introduction_to_SourcePawn).
+See it as the version of CSSDM I always wanted.
 
 ### Game Support
 | Game | Status |
