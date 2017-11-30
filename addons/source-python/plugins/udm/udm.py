@@ -177,13 +177,13 @@ def prepare_player(player):
 # >> PRE EVENTS
 # =============================================================================
 @PreEvent('round_start')
-def on_pre_round_start(event):
+def on_pre_round_start(game_event):
     """Enable delays right before any players spawn."""
     delay_manager.delays_enabled = True
 
 
 @PreEvent('round_freeze_end')
-def on_pre_round_freeze_end(event):
+def on_pre_round_freeze_end(game_event):
     """Enable damage protection for all players."""
     delay_time = abs(cvar_spawn_protection_delay.get_float())
 
@@ -195,74 +195,74 @@ def on_pre_round_freeze_end(event):
 # >> EVENTS
 # =============================================================================
 @Event('player_spawn')
-def on_player_spawn(event):
+def on_player_spawn(game_event):
     """Prepare the player for battle if they are alive and on a team."""
-    player = PlayerEntity.from_userid(event.get_int('userid'))
+    player = PlayerEntity.from_userid(game_event['userid'])
 
     if player.team > 1 and not player.dead:
         prepare_player(player)
 
 
 @Event('player_death')
-def on_player_death(event):
+def on_player_death(game_event):
     """Handle attacker rewards & respawn the victim."""
     # Get the attacker's userid
-    userid_attacker = event.get_int('attacker')
+    userid_attacker = game_event['attacker']
 
     # Handle attacker rewards, if the attacker's userid is valid
     if userid_attacker:
         attacker = PlayerEntity.from_userid(userid_attacker)
 
         # Refill the attacker's active weapon's clip for a headshot
-        if cvar_refill_clip_on_headshot.get_int() > 0 and event.get_bool('headshot'):
+        if cvar_refill_clip_on_headshot.get_int() > 0 and game_event['headshot']:
             delay_manager(
                 f'refill_clip_{attacker.active_weapon.index}', 0.1,
                 attacker.active_weapon.set_clip, (weapon_manager.by_name(attacker.active_weapon.weapon_name).clip, )
             )
 
         # Give a High Explosive grenade, if it was a HE grenade kill
-        if cvar_equip_hegrenade.get_int() == 2 and event.get_string('weapon') == 'hegrenade':
+        if cvar_equip_hegrenade.get_int() == 2 and game_event['weapon'] == 'hegrenade':
             attacker.give_weapon('weapon_hegrenade')
 
         # Restore the attacker's health if it was a knife kill
-        if cvar_restore_health_on_knife_kill.get_int() > 0 and event.get_string('weapon').startswith('knife'):
+        if cvar_restore_health_on_knife_kill.get_int() > 0 and game_event['weapon'].startswith('knife'):
             attacker.health = 100
 
     # Get a PlayerEntity instance for the victim
-    victim = PlayerEntity.from_userid(event.get_int('userid'))
+    victim = PlayerEntity.from_userid(game_event['userid'])
 
     # Respawn the victim after the configured respawn delay
     delay_manager(f'respawn_{victim.userid}', abs(cvar_respawn_delay.get_float()), victim.spawn)
 
 
 @Event('player_disconnect')
-def on_player_disconnect(event):
+def on_player_disconnect(game_event):
     """Cancel all pending delays for the disconnecting player."""
-    player = PlayerEntity.from_userid(event.get_int('userid'))
+    player = PlayerEntity.from_userid(game_event['userid'])
 
     delay_manager.cancel(f'respawn_{player.userid}')
     delay_manager.cancel(f'protect_{player.userid}')
 
 
 @Event('round_end')
-def on_round_end(event):
+def on_round_end(game_event):
     """Cancel all pending delays and team change counts."""
     delay_manager.clear()
     team_changes.clear()
 
 
 @Event('weapon_reload')
-def on_weapon_reload(event):
+def on_weapon_reload(game_event):
     """Refill the player's active weapon's ammo after the reload animation has finished."""
-    player = PlayerEntity.from_userid(event.get_int('userid'))
+    player = PlayerEntity.from_userid(game_event['userid'])
     player.refill_ammo()
 
 
 @Event('hegrenade_detonate')
-def on_hegrenade_detonate(event):
+def on_hegrenade_detonate(game_event):
     """Equip the player with another High Explosive grenade if configured that way."""
     if cvar_equip_hegrenade.get_int() == 3:
-        player = PlayerEntity.from_userid(event.get_int('userid'))
+        player = PlayerEntity.from_userid(game_event['userid'])
         player.give_weapon('weapon_hegrenade')
 
 
