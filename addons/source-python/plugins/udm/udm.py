@@ -74,34 +74,34 @@ admin_menu.register_submenu(spawnpoints_manager_menu)
 
 
 # =============================================================================
-# >> SOLID TEAM MATES
+# >> SOLID TEAM MATES CONVAR
 # =============================================================================
 mp_solid_teammates = cvar.find_var('mp_solid_teammates')
 mp_solid_teammates_default = mp_solid_teammates.get_int() if mp_solid_teammates is not None else None
 
 
 # =============================================================================
-# >> BUY ANYWHERE
+# >> BUY ANYWHERE CONVAR
 # =============================================================================
 mp_buy_anywhere = cvar.find_var('mp_buy_anywhere')
 mp_buy_anywhere_default = mp_buy_anywhere.get_int() if mp_buy_anywhere is not None else None
 
 # =============================================================================
-# >> BUY TIME
+# >> BUY TIME CONVAR
 # =============================================================================
 mp_buytime = cvar.find_var('mp_buytime')
 mp_buytime_default = mp_buytime.get_int()
 
 
 # =============================================================================
-# >> START MONEY
+# >> START MONEY CONVAR
 # =============================================================================
 mp_startmoney = cvar.find_var('mp_startmoney')
 mp_startmoney_default = mp_startmoney.get_int()
 
 
 # =============================================================================
-# >> RESTART GAME
+# >> RESTART GAME CONVAR
 # =============================================================================
 mp_restartgame = cvar.find_var('mp_restartgame')
 
@@ -125,7 +125,7 @@ map_functions = [
 
 
 # =============================================================================
-# >> HELPER FUNCTIONS
+# >> CONVAR PREPARATION
 # =============================================================================
 def prepare_cvars():
     """Handle solid team mates & buy anywhere cvars."""
