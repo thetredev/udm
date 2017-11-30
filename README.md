@@ -32,6 +32,8 @@ but the weapon itself is still not silenced (i.e. you can hear the rounds as if 
 If you still want to enable this feature, you can do so by un-commenting the *_silenced weapons in
 [the weapons data file for CS: Source](https://github.com/backraw/udm/commit/2fe1219c6caeabcb23e611a215ef6024525aa9c4)).
 **This feature is not used for CS:GO.**
+* If you have no weapons selected and use the buy menu to buy only a primary weapons, you will still respawn with your
+standard pistol (CS:GO). This does not affect the ```guns``` command, though. It is not yet clear to me why that is exactly.
 
 ## Weapon Menus
 Have a look at [the ```guns``` command screenshots](https://github.com/backraw/udm/tree/master/screenshots/guns) for CS: GO. You can have an unlimited amount of
