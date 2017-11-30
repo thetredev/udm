@@ -39,6 +39,10 @@ def on_close_secondary_menu(player):
     """Remove the secondary weapon from the player's inventory."""
     player.inventory.remove_inventory_item(player, 'secondary')
 
+    # Equip random weapons if the player's inventory is empty
+    if not player.inventory:
+        player.equip_random_weapons()
+
 
 @SelectCallback(secondary_menu)
 def on_select_secondary_weapon(player, option):
