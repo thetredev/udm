@@ -109,6 +109,15 @@ class PlayerEntity(Player):
     def equip_inventory(self):
         """Equip the player's currently selected inventory."""
         if self.inventory:
+
+            # Remove weapons not belonging into the player's inventory
+            for weapon in self.weapons(not_filters=('melee', 'grenade')):
+                weapon_data = weapon_manager.by_name(weapon.weapon_name)
+
+                if weapon_data.tag not in self.inventory:
+                    weapon.remove()
+
+            # Equip inventory items
             for tag in self.inventory.keys():
                 self.equip_inventory_item(tag)
 
