@@ -533,5 +533,8 @@ def unload():
     mp_buytime.set_int(mp_buytime_default)
     mp_startmoney.set_int(mp_startmoney_default)
 
+    # Clear player team change counts
+    team_changes.clear()
+
     # Restart the game after 1 second
     mp_restartgame.set_int(1)
