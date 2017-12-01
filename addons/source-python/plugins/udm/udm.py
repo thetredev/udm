@@ -30,6 +30,8 @@ from listeners import OnServerActivate
 from listeners import OnServerOutput
 #   Memory
 from memory import make_object
+#   Players
+from players.constants import PlayerButtons
 #   Weapons
 from weapons.entity import Weapon
 
@@ -330,12 +332,29 @@ def on_entity_spawned(base_entity):
 
 @OnPlayerRunCommand
 def on_player_run_command(player, cmd):
-    """Refill the player's active weapon's ammo as soon as the player stops shooting a weapon with an empty clip."""
+    """Handle player buttons ATTACK (left click) and ATTACK2 (right click)."""
     if player.active_weapon is not None:
+
+        # Get the weapon data for the player's active weapon
         weapon_data = weapon_manager.by_name(player.active_weapon.weapon_name)
 
-        if weapon_data is not None and player.active_weapon.clip == 0:
-            PlayerEntity(player.index).refill_ammo()
+        # Handle only valid weapons
+        if weapon_data is not None:
+
+            # Get a PlayerEntity instance for the player
+            player = PlayerEntity(player.index)
+
+            # Refill the weapon's ammo after the reload animation has finished, if the player shoots an empty clip
+            if player.active_weapon.clip == 0:
+                player.refill_ammo()
+
+            # Handle auto-silencing for the weapon, if the player is attaching or detaching the silencer
+            elif cmd.buttons & PlayerButtons.ATTACK2 and weapon_data.can_silence:
+
+                for inventory_item in player.inventory.values():
+                    if inventory_item.basename == weapon_data.basename:
+                        inventory_item.silencer_option = not player.active_weapon.get_property_bool('m_bSilencerOn')
+                        break
 
 
 @OnServerActivate

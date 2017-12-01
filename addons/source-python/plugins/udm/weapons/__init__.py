@@ -76,13 +76,24 @@ class _WeaponData(object):
         # Store the weapon's primary tag
         self._tag = tag
 
-        # Store whether the weapon should be silenced
-        self._silenced = basename.endswith('_silenced')
-
     @property
     def basename(self):
         """Return the weapon's basename."""
         return self._basename
+
+    @property
+    def can_silence(self):
+        """Return whether the weapon can be silenced."""
+        if 'usp' in self.basename:
+            return True
+
+        if self.basename == 'm4a1_silencer':
+            return True
+
+        if GAME_NAME == 'cstrike' and self.basename == 'm4a1':
+            return True
+
+        return False
 
     @property
     def clip(self):
@@ -103,11 +114,6 @@ class _WeaponData(object):
     def name(self):
         """Return the weapon's full name."""
         return self._name
-
-    @property
-    def silenced(self):
-        """Return whether the weapon should be silenced."""
-        return self._silenced
 
     @property
     def tag(self):
@@ -153,11 +159,6 @@ class _WeaponManager(dict):
             return self[basename]
 
         return None
-
-    def silencer_allowed(self, basename):
-        """Return whether the weapon of classname `name` is allowed to be silenced."""
-        weapon_name = basename.replace('_silenced', '')
-        return weapon_name in self.keys() and f'{weapon_name}_silenced' in self.keys()
 
     @property
     def tags(self):

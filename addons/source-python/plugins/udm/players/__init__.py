@@ -15,6 +15,8 @@ import random
 #   Colors
 from colors import Color
 from colors import WHITE
+#   Core
+from core import GAME_NAME
 #   Engines
 from engines.server import global_vars
 #   Filters
@@ -141,11 +143,42 @@ class PlayerEntity(Player):
                 weapon.remove()
 
                 # Equip the weapon which should be equipped
-                self.give_weapon(inventory_item.data.name)
+                weapon = self.give_weapon(inventory_item.data.name)
 
         # Give the weapon if none was found at `tag`
         else:
-            self.give_weapon(inventory_item.data.name)
+            weapon = self.give_weapon(inventory_item.data.name)
+
+        # Get the weapon data for the weapon
+        weapon_data = weapon_manager.by_name(weapon.weapon_name)
+
+        # Set default silencer option if the weapon can be silenced
+        if weapon_data.can_silence and inventory_item.silencer_option is None:
+            inventory_item.silencer_option = GAME_NAME == 'csgo'
+
+        # Attach or detach the silencer of the weapon
+        elif inventory_item.silencer_option is not None:
+            weapon.set_property_bool('m_bSilencerOn', inventory_item.silencer_option)
+
+            # Cycle through the player's weapons in the right order to fix the issue with the silencer
+            # not "physically" being attached
+            if len(self.inventory) > 1:
+                for tag in self.inventory.keys():
+                    weapon = self.get_weapon(is_filters=tag)
+
+                    if weapon is None:
+                        continue
+
+                    self.client_command(f'use {weapon.classname}', True)
+
+            # Cycle to the grenade or knife and back, if the player only has one inventory item
+            else:
+                if self.get_weapon(classname='weapon_hegrenade') is not None:
+                    self.client_command('use weapon_hegrenade', True)
+                else:
+                    self.client_command('use weapon_knife', True)
+
+                self.client_command(f'use {weapon.classname}', True)
 
     def equip_random_weapons(self):
         """Equip random weapons by weapon tag."""
@@ -265,6 +298,11 @@ class PlayerEntity(Player):
 
             # Return False if the equipped weapon is not the one selected for the tag
             if item.data.name not in (weapon_equipped.weapon_name, weapon_equipped.classname):
+                return False
+
+            # Return False if the weapon is in a different silencer state than it's supposed to be
+            if item.silencer_option is not None and item.silencer_option !=\
+                    weapon_equipped.get_property_bool('m_bSilencerOn'):
                 return False
 
         # Return True if the player carries all the weapons in their selected inventory

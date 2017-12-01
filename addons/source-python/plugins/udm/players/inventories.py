@@ -25,6 +25,9 @@ class _InventoryItem(object):
         # Make it possible to store the weapon's basename in the future
         self.basename = None
 
+        # Store the silencer option for this inventory item
+        self.silencer_option = None
+
     @property
     def data(self):
         """Return the weapon's data."""
