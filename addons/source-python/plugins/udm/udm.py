@@ -52,6 +52,9 @@ from udm.config import cvar_saycommand_guns
 from udm.config import cvar_spawn_protection_delay
 from udm.config import cvar_team_changes_per_round
 from udm.config import cvar_team_changes_reset_delay
+#   Cvars
+from udm.cvars import ManipulatedIntConVar
+from udm.cvars import manipulated_int_convars
 #   Delays
 from udm.delays import delay_manager
 #   Info
@@ -76,31 +79,18 @@ admin_menu.register_submenu(spawnpoints_manager_menu)
 
 
 # =============================================================================
-# >> SOLID TEAM MATES CONVAR
+# >> REGISTER MANIPULATED INTEGER CONVARS
 # =============================================================================
-mp_solid_teammates = cvar.find_var('mp_solid_teammates')
-mp_solid_teammates_default = mp_solid_teammates.get_int() if mp_solid_teammates is not None else None
+# Buy Time, Start Money & Buy Anywhere
+manipulated_int_convars.append(ManipulatedIntConVar('mp_buytime', 60 * 60))
+manipulated_int_convars.append(ManipulatedIntConVar('mp_startmoney', 10_000))
+manipulated_int_convars.append(ManipulatedIntConVar('mp_buy_anywhere', 1))
 
+# Solid Teammates
+manipulated_int_convars.append(ManipulatedIntConVar('mp_solid_teammates', int(not cvar_enable_noblock.get_int())))
 
-# =============================================================================
-# >> BUY ANYWHERE CONVAR
-# =============================================================================
-mp_buy_anywhere = cvar.find_var('mp_buy_anywhere')
-mp_buy_anywhere_default = mp_buy_anywhere.get_int() if mp_buy_anywhere is not None else None
-
-
-# =============================================================================
-# >> BUY TIME CONVAR
-# =============================================================================
-mp_buytime = cvar.find_var('mp_buytime')
-mp_buytime_default = mp_buytime.get_int()
-
-
-# =============================================================================
-# >> START MONEY CONVAR
-# =============================================================================
-mp_startmoney = cvar.find_var('mp_startmoney')
-mp_startmoney_default = mp_startmoney.get_int()
+# Set plugin values
+manipulated_int_convars.manipulate_values()
 
 
 # =============================================================================
@@ -125,21 +115,6 @@ forbidden_entities = [weapon_data.name for weapon_data in WeaponClassIter(is_fil
 map_functions = [
     'func_bomb_target', 'func_buyzone', 'func_hostage_rescue'
 ]
-
-
-# =============================================================================
-# >> CONVAR PREPARATION
-# =============================================================================
-def prepare_cvars():
-    """Handle solid team mates & buy anywhere cvars."""
-    if mp_solid_teammates is not None and mp_solid_teammates.get_int() < 1 > cvar_enable_noblock.get_int():
-        mp_solid_teammates.set_int(1)
-
-    if mp_buy_anywhere is not None:
-        mp_buy_anywhere.set_int(1)
-
-    mp_buytime.set_int(60 * 60)
-    mp_startmoney.set_int(10000)
 
 
 # =============================================================================
@@ -360,8 +335,8 @@ def on_player_run_command(player, cmd):
 
 @OnServerActivate
 def on_server_activate(edicts, edict_count, max_clients):
-    """Prepare cvars."""
-    prepare_cvars()
+    """Set plugin values for defaultable integer convars."""
+    manipulated_int_convars.manipulate_values()
 
 
 @OnServerOutput
@@ -519,21 +494,11 @@ def on_saycommand_admin(command_info):
 # =============================================================================
 def load():
     """Prepare cvars & restart the round after 3 seconds."""
-    prepare_cvars()
     mp_restartgame.set_int(3)
 
 
 def unload():
     """Reset default cvar values for solid team mates & buy anywhere."""
-    if mp_solid_teammates is not None:
-        mp_solid_teammates.set_int(mp_solid_teammates_default)
-
-    if mp_buy_anywhere is not None:
-        mp_buy_anywhere.set_int(mp_buy_anywhere_default)
-
-    mp_buytime.set_int(mp_buytime_default)
-    mp_startmoney.set_int(mp_startmoney_default)
-
     # Clear player team change counts
     team_changes.clear()
 
