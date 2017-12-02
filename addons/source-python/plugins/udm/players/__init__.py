@@ -160,6 +160,10 @@ class PlayerEntity(Player):
         elif inventory_item.silencer_option is not None:
             weapon.set_property_bool('m_bSilencerOn', inventory_item.silencer_option)
 
+            # It's not enough to set m_bSilencerOn (for CS:S at least)
+            # See https://forums.alliedmods.net/showthread.php?t=167616
+            weapon.set_property_bool('m_weaponMode', inventory_item.silencer_option)
+
             # Cycle through the player's weapons in the right order to fix the issue with the silencer
             # not "physically" being attached
             if len(self.inventory) > 1:
