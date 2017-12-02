@@ -25,13 +25,10 @@ from events.hooks import PreEvent
 from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners import OnEntitySpawned
-from listeners import OnPlayerRunCommand
 from listeners import OnServerActivate
 from listeners import OnServerOutput
 #   Memory
 from memory import make_object
-#   Players
-from players.constants import PlayerButtons
 #   Weapons
 from weapons.entity import Weapon
 
@@ -68,6 +65,8 @@ from udm.players import PlayerEntity
 from udm.spawnpoints import spawnpoints
 from udm.spawnpoints.menus import spawnpoints_manager_menu
 #   Weapons
+from udm.weapons import is_silencer_option_primary
+from udm.weapons import is_silencer_option_secondary
 from udm.weapons import remove_weapon
 from udm.weapons import weapon_manager
 
@@ -88,6 +87,21 @@ manipulated_int_convars.append(ManipulatedIntConVar('mp_buy_anywhere', 1))
 
 # Solid Teammates
 manipulated_int_convars.append(ManipulatedIntConVar('mp_solid_teammates', int(not cvar_enable_noblock.get_int())))
+
+# Max Ammo for all weapon types except utilities: 999
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_338mag_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_min_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_p250_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_small_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_45acp_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_50AE_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_box_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_small_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_57mm_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_762mm_max', -2))
+manipulated_int_convars.append(ManipulatedIntConVar('ammo_9mm_max', -2))
 
 # Set plugin values
 manipulated_int_convars.manipulate_values()
@@ -229,13 +243,6 @@ def on_round_end(game_event):
     team_changes.clear()
 
 
-@Event('weapon_reload')
-def on_weapon_reload(game_event):
-    """Refill the player's active weapon's ammo after the reload animation has finished."""
-    player = PlayerEntity.from_userid(game_event['userid'])
-    player.refill_ammo()
-
-
 @Event('hegrenade_detonate')
 def on_hegrenade_detonate(game_event):
     """Equip the player with another High Explosive grenade if configured that way."""
@@ -291,6 +298,32 @@ def on_post_drop_weapon(stack_data, nothing):
         delay_manager(f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2, remove_weapon, (weapon, ))
 
 
+@EntityPreHook(is_silencer_option_primary, 'secondary_attack')
+@EntityPreHook(is_silencer_option_secondary, 'secondary_attack')
+def on_pre_secondary_fire(stack_data):
+    """Store the silencer option when the player attaches or detaches the silencer."""
+    # Get a Weapon instance for the weapon
+    weapon = make_object(Weapon, stack_data[0])
+
+    # Make sure the weapon's owner is valid
+    if weapon.owner is not None and weapon.owner.is_player():
+
+        # Get the weapon's data
+        weapon_data = weapon_manager.by_name(weapon.weapon_name)
+
+        # Store the silencer option if the weapon can be silenced
+        if weapon_data.can_silence:
+
+            # Get a PlayerEntity instance for the player
+            player = PlayerEntity(weapon.owner.index)
+
+            # Set the silencer option for the player's inventory item
+            for inventory_item in player.inventory.values():
+                if inventory_item.data.name == weapon.weapon_name:
+                    inventory_item.silencer_option = not weapon.get_property_bool('m_bSilencerOn')
+                    break
+
+
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
@@ -304,33 +337,6 @@ def on_entity_spawned(base_entity):
     elif base_entity.classname in map_functions:
         entity = Entity(base_entity.index)
         entity.call_input('Disable')
-
-
-@OnPlayerRunCommand
-def on_player_run_command(player, cmd):
-    """Handle player buttons ATTACK (left click) and ATTACK2 (right click)."""
-    if player.active_weapon is not None:
-
-        # Get the weapon data for the player's active weapon
-        weapon_data = weapon_manager.by_name(player.active_weapon.weapon_name)
-
-        # Handle only valid weapons
-        if weapon_data is not None:
-
-            # Get a PlayerEntity instance for the player
-            player = PlayerEntity(player.index)
-
-            # Refill the weapon's ammo after the reload animation has finished, if the player shoots an empty clip
-            if player.active_weapon.clip == 0:
-                player.refill_ammo()
-
-            # Handle auto-silencing for the weapon, if the player is attaching or detaching the silencer
-            elif cmd.buttons & PlayerButtons.ATTACK2 and weapon_data.can_silence:
-
-                for inventory_item in player.inventory.values():
-                    if inventory_item.basename == weapon_data.basename:
-                        inventory_item.silencer_option = not player.active_weapon.get_property_bool('m_bSilencerOn')
-                        break
 
 
 @OnServerActivate

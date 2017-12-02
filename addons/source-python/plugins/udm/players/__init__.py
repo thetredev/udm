@@ -17,8 +17,6 @@ from colors import Color
 from colors import WHITE
 #   Core
 from core import GAME_NAME
-#   Engines
-from engines.server import global_vars
 #   Filters
 from filters.players import PlayerIter
 #   Listeners
@@ -41,7 +39,6 @@ from udm.delays import delay_manager
 #   Players
 from udm.players.inventories import player_inventories
 #   Weapons
-from udm.weapons import refill_ammo
 from udm.weapons import weapon_manager
 
 
@@ -221,26 +218,6 @@ class PlayerEntity(Player):
 
         # Reset the color
         self.color = WHITE
-
-    def refill_ammo(self):
-        """Refill the player's active weapon's ammo after the reload animation has finished."""
-        # Refill only valid weapons
-        weapon_data = weapon_manager.by_name(self.active_weapon.weapon_name)
-
-        if weapon_data is None or weapon_data.tag in ('melee', 'grenade'):
-            return
-
-        # Get the 'next attack' property for the current weapon
-        next_attack = self.active_weapon.get_property_float('m_flNextPrimaryAttack')
-
-        # Add a tolerance value of 1 second to somewhat counter the effects of lags, etc
-        next_attack += 1
-
-        # Calculate the amount of time it would take for the reload animation to finish
-        duration = next_attack - global_vars.current_time
-
-        # Call weapons.refill_ammo() after `duration`
-        delay_manager(f'refill_{self.active_weapon.index}', duration, refill_ammo, (self.active_weapon, ))
 
     def spawn(self):
         """Always force spawn the player."""

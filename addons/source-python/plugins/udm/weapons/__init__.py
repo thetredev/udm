@@ -12,6 +12,8 @@ from configobj import ConfigObj
 # Source.Python Imports
 #   Core
 from core import GAME_NAME
+#   Entities
+from entities.hooks import EntityCondition
 #   Filters
 from filters.weapons import WeaponClassIter
 #   Listeners
@@ -29,14 +31,20 @@ from udm.info import info
 
 
 # =============================================================================
+# >> SILENCER OPTION ENTITIES
+# =============================================================================
+# Store an entity condition for the primary silencer option
+is_silencer_option_primary = EntityCondition.equals_entity_classname('weapon_m4a1')
+
+# Store an entity condition for the secondary silencer option
+is_silencer_option_secondary = EntityCondition.equals_entity_classname(
+    'weapon_hkp2000' if GAME_NAME == 'csgo' else 'weapon_usp'
+)
+
+
+# =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
-def refill_ammo(weapon):
-    """Refill the weapon's ammo."""
-    if weapon.owner is not None:
-        weapon.ammo = weapon_manager.by_name(weapon.weapon_name).maxammo
-
-
 def remove_weapon(weapon):
     """Safely remove a weapon entity."""
     if weapon.owner is None:
@@ -184,5 +192,4 @@ melee_weapon = list(WeaponClassIter(is_filters='melee'))[0].name
 def on_entity_deleted(base_entity):
     """Cancel the refill & drop delays for the deleted entity."""
     if base_entity.classname.startswith(sp_weapon_manager.prefix):
-        delay_manager.cancel(f'refill_{base_entity.index}')
         delay_manager.cancel(f'drop_{base_entity.index}')
