@@ -88,6 +88,7 @@ mp_solid_teammates_default = mp_solid_teammates.get_int() if mp_solid_teammates 
 mp_buy_anywhere = cvar.find_var('mp_buy_anywhere')
 mp_buy_anywhere_default = mp_buy_anywhere.get_int() if mp_buy_anywhere is not None else None
 
+
 # =============================================================================
 # >> BUY TIME CONVAR
 # =============================================================================
