@@ -21,8 +21,8 @@ See the [issues list](https://github.com/backraw/udm/issues) for current bugs.
 * Admin Menu - accessible via the chat command ```!udm```
 * [Spawn Points](https://github.com/backraw/udm/tree/master/addons/source-python/data/plugins/udm/spawnpoints) - manageable in game via the Admin menu
 * Damage Protection (timed on spawn, but indefinitely when using the Admin menu)
-* Refill ammo after the reload animation has finished - even if [the reload button has not been pressed](https://github.com/backraw/udm/commit/19ea391fb6900a3d6497e7ea7b091bf1fea9ea76)
 * Automatically attach or detach the silencer for weapons that can be silenced
+* Infinite ammo
 * Refill clip after a player killed an enemy with a headshot
 * Noblock (see the config file below)
 * Give back High Explosive grenade (4 options - see the config file below)
