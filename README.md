@@ -30,7 +30,7 @@ See the [issues list](https://github.com/backraw/udm/issues) for current bugs.
 
 Check out the tech demo: https://www.youtube.com/watch?v=srTt0N0AakQ
 
-## Weapon Menus
+## Weapon Menus and Inventories
 Have a look at [the ```guns``` command screenshots](https://github.com/backraw/udm/tree/master/screenshots/guns) for CS: GO. You can have an unlimited amount of
 inventories and switch between them:
 
@@ -54,15 +54,9 @@ guns
 # ...
 ```
 
-### Inventories
-As mentioned earlier, you can decide whether you only want one weapon in an inventory.
-
-For CS: Source you will want to select ```0``` and for CS: GO ```9``` as the primary or secondary option.
-If you choose no weapons at all, random weapons will be activated for you as long as you have not
-chosen any weapons for your current inventory.
-
-You can always enable random weapons via ```guns 0```. This will **not** remove any of your inventories.
-Disable them by choosing an inventory via ```guns``` or ```guns <inventory>```.
+If you have selected an inventory and drop a weapon on purpose, e.g. pressing the ```G``` button on your
+keyboard, the weapon will be removed from your inventory. Dropping all weapons will enable random weapons
+until you select an inventory item via ```guns [<inventory>]```.
 
 ## Admin Menu
 Have a look at [the ```!udm``` command screenshots](https://github.com/backraw/udm/tree/master/screenshots/admin) for CS: GO. As soon as you open up the Admin menu, you will lose all your current weapons, but *godmode* will be enabled for you
@@ -91,6 +85,11 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 //    * General
 // ----------------------------------
 
+// Default Value: 1
+// Enable infinite ammo?
+   udm_enable_infinite_ammo 1
+
+
 // Default Value: 2
 // The respawn delay in seconds.
    udm_respawn_delay 2
@@ -106,6 +105,15 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
    udm_spawn_protection_delay 2
 
 
+// Default Value: 150
+// The minimum distance players have to have between a spawn point for it to be
+//   'safe'.
+   udm_spawn_point_distance 150
+
+// ----------------------------------
+//    * Kill Rewards
+// ----------------------------------
+
 // Default Value: 1
 // Refill the killer's clip if they killed an enemy with a headshot.
    udm_refill_clip_on_headshot 1
@@ -115,12 +123,22 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 // Restore the killer's health to 100HP if they killed an enemy with the knife.
    udm_restore_health_on_knife_kill 1
 
+// ----------------------------------
+//    * High Explosive Grenade
+// ----------------------------------
 
-// Default Value: 150
-// The minimum distance players have to have between a spawn point for it to be
-//   'safe'.
-   udm_spawn_point_distance 150
+// Options
+//   * 0 = Off
+//   * 1 = Equip on spawn
+//   * 2 = Equip on spawn and on each HE grenade kill
+//   * 3 = Equip on spawn and after each detonation
+// Default Value: 2
+// High Explosive grenade behaviour
+   udm_equip_hegrenade 2
 
+// ----------------------------------
+//    * Team Changes Per Round
+// ----------------------------------
 
 // Default Value: 2
 // The maximum amount of times a players are allowed to change their team per
@@ -130,7 +148,7 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 
 // Default Value: 1.5
 // The time in minutes a player who exceeded the maximum team change count has
-//   to wait until they can choose ateam again.
+//   to wait until they can choose a team again.
    udm_team_changes_reset_delay 1.5
 
 // ----------------------------------
@@ -145,19 +163,6 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 // Default Value: "guns"
 // The chat command used to open the weapons menu.
    udm_saycommand_guns "guns"
-
-// ----------------------------------
-//    * High Explosive Grenade
-// ----------------------------------
-
-// Options
-//   * 0 = Off
-//   * 1 = Equip on spawn
-//   * 2 = Equip on spawn and on each HE grenade kill
-//   * 3 = Equip on spawn and after each detonation
-// Default Value: 2
-// High Explosive grenade behaviour
-   udm_equip_hegrenade 2
 ```
 
 Be sure to reload the plugin via ```sp plugin reload udm``` after you have done any changes to that configuration file.
