@@ -5,9 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python Imports
-from enum import IntEnum
-
 # Source.Python Imports
 #   Menus
 from menus import PagedMenu
