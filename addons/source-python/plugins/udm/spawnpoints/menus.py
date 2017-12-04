@@ -29,50 +29,31 @@ from udm.spawnpoints import SpawnPoint
 
 
 # =============================================================================
-# >> SPAWN POINTS MENUS
+# >> SPAWN POINTS MANAGER MENU
 # =============================================================================
-class _SpawnPointsManagerMenuOptions(IntEnum):
-    """Class used to enumerate options for the Spawn Points Manager menu."""
-
-    ADD = 0,
-    REMOVE = 1
-    LIST = 3
-    SAVE = 5
-
-    @staticmethod
-    def as_menu_options():
-        """Return a list of `PagedRadioMenuOption`s for the members of _SpawnPointsManagerMenuOptions."""
-        # Get a list of the members of _SpawnPointsManagerMenuOptions
-        members = [e for e in _SpawnPointsManagerMenuOptions]
-
-        # Generate a list of menu options from the members
-        menu_options = list()
-        for index, member in enumerate(members):
-
-            # New lines only apply from the second index onwards
-            if index > 0:
-
-                # Get the difference between the member's value and its index in the enum
-                diff = member.value - members[index - 1].value
-
-                # Extend the options with empty lines if the difference is higher than 0 (`zero`)
-                if diff > 1:
-                    menu_options.extend([' ' for i in range(diff - 1)])
-
-            # Append the actual menu option
-            menu_options.append(PagedOption(member.name.capitalize(), member))
-
-        # Return the list of menu options
-        return menu_options
+# Store menu options
+SPAWNPOINTS_MANAGER_ADD = 0
+SPAWNPOINTS_MANAGER_REMOVE = 1
+SPAWNPOINTS_MANAGER_LIST = 2
+SPAWNPOINTS_MANAGER_SAVE = 3
 
 
 # Create the Spawn Points Manager menu
 spawnpoints_manager_menu = PagedMenu(
-    data=_SpawnPointsManagerMenuOptions.as_menu_options(),
-    title='Spawn Points Manager'
+    [
+        PagedOption('Add', SPAWNPOINTS_MANAGER_ADD),
+        PagedOption('Remove', SPAWNPOINTS_MANAGER_REMOVE),
+        ' ',
+        PagedOption('List', SPAWNPOINTS_MANAGER_LIST),
+        ' ',
+        PagedOption('Save', SPAWNPOINTS_MANAGER_SAVE)
+    ], title='Spawn Points Manager'
 )
 
 
+# =============================================================================
+# >> SPAWN POINTS LIST MENU
+# =============================================================================
 # Create the Spawn Points List menu
 _spawnpoints_list_menu = PagedMenu(title='Spawn Points List')
 
@@ -125,7 +106,7 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
     player = PlayerEntity(player_index)
 
     # Handle the option `Add`
-    if option.value is _SpawnPointsManagerMenuOptions.ADD:
+    if option.value == SPAWNPOINTS_MANAGER_ADD:
 
         # Get a list of the distance of all spawn points to the player's current location
         distances = [spawnpoint.get_distance(player.origin) for spawnpoint in spawnpoints]
@@ -144,7 +125,7 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
         spawnpoints_manager_menu.send(player.index)
 
     # Handle the option `Remove`
-    elif option.value is _SpawnPointsManagerMenuOptions.REMOVE:
+    elif option.value == SPAWNPOINTS_MANAGER_REMOVE:
 
         # Find the spawn point closest to the player's current location
         for spawnpoint in spawnpoints.copy():
@@ -167,8 +148,12 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
         # Send this menu back to the player
         spawnpoints_manager_menu.send(player.index)
 
+    # For `List`: Send the _SpawnPointManagerListMenu to the player
+    elif option.value == SPAWNPOINTS_MANAGER_LIST:
+        _spawnpoints_list_menu.send(player.index)
+
     # Handle the option `Save`
-    elif option.value is _SpawnPointsManagerMenuOptions.SAVE:
+    elif option.value == SPAWNPOINTS_MANAGER_SAVE:
 
         # Save the spawn points list to file
         spawnpoints.save()
@@ -180,7 +165,3 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
 
         # Send this menu back to the player
         spawnpoints_manager_menu.send(player.index)
-
-    # For `List`: Send the _SpawnPointManagerListMenu to the player
-    elif option.value is _SpawnPointsManagerMenuOptions.LIST:
-        _spawnpoints_list_menu.send(player.index)
