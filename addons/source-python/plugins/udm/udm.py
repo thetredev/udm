@@ -5,10 +5,6 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
-# Python
-#   Random
-import random
-
 # Source.Python Imports
 #   Commands
 from commands.client import ClientCommandFilter
@@ -66,8 +62,9 @@ from udm.info import info
 #   Menus
 from udm.weapons.menus import primary_menu
 #   Players
-from udm.players import player_team_changes
+from udm.players import player_random_weapons
 from udm.players import player_spawnpoints
+from udm.players import player_team_changes
 from udm.players import PlayerEntity
 #   Spawn Points
 from udm.spawnpoints.menus import spawnpoints_manager_menu
@@ -422,7 +419,7 @@ def client_command_filter(command, index):
                     player.drop_weapon(player.active_weapon)
 
                     # Equip the player with a random weapon
-                    weapon = player.give_weapon(random.choice(list(weapon_manager.by_tag(weapon_data.tag))).name)
+                    weapon = player.give_weapon(player.get_random_weapon(weapon_data.tag))
 
                     # Make the player use the weapon
                     player.client_command(f'use {weapon.weapon_name}', True)
@@ -573,6 +570,9 @@ def unload():
     """Unregister the teamonly noblock listener & restart the game after 1 second."""
     if GAME_NAME == 'cstrike' and cvar_enable_noblock.get_int() == 1:
         on_tick_listener_manager.unregister_listener(on_tick_teamonly_noblock)
+
+    # Clear the list of player personal random weapons
+    player_random_weapons.clear()
 
     # Clear the list of player personal spawn points
     player_spawnpoints.clear()

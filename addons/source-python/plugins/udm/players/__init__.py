@@ -58,6 +58,9 @@ player_team_changes = defaultdict(int)
 # Store personal player spawn points
 player_spawnpoints = defaultdict(list)
 
+# Store personal player random weapons
+player_random_weapons = defaultdict(lambda: {tag: list() for tag in weapon_manager.tags})
+
 
 # =============================================================================
 # >> ALIVE PLAYERS GENERATOR
@@ -212,8 +215,8 @@ class PlayerEntity(Player):
         self.strip()
 
         # Equip random weapons
-        for tag in weapon_manager.tags:
-            self.give_weapon(random.choice(list(weapon_manager.by_tag(tag))).name)
+        for tag in self.random_weapons.keys():
+            self.give_weapon(self.get_random_weapon(tag))
 
     def strip(self, is_filters=None, not_filters=('melee', 'grenade')):
         """Remove the player's weapons in `is_filters` & keep those in `not_filters`."""
@@ -243,6 +246,10 @@ class PlayerEntity(Player):
         # Reset the color
         self.color = WHITE
 
+    def get_random_weapon(self, tag):
+        """Return a random weapon for the given weapon tag."""
+        return self.random_weapons[tag].pop()
+
     def get_random_spawnpoint(self):
         """Return a random spawn point for the player."""
         # Get a list of current player origins
@@ -269,6 +276,19 @@ class PlayerEntity(Player):
 
         # Return None if no spawn point has been found
         return None
+
+    @property
+    def random_weapons(self):
+        """Return personal random weapons for the player."""
+        # Add weapon names to each weapon tag if the list for the respective tag is empty
+        for tag, weapon_list in player_random_weapons[self.userid].items():
+
+            if not weapon_list:
+                weapon_list.extend([weapon_data.name for weapon_data in weapon_manager.by_tag(tag)])
+                random.shuffle(weapon_list)
+
+        # Return the player's random weapons
+        return player_random_weapons[self.userid]
 
     @property
     def spawnpoints(self):
@@ -354,7 +374,8 @@ class PlayerEntity(Player):
 # =============================================================================
 @OnLevelInit
 def on_level_init(map_name):
-    """Clear the player spawn points list."""
+    """Clear the player spawn points & random weapons list."""
+    player_random_weapons.clear()
     player_spawnpoints.clear()
 
 
