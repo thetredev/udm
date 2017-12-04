@@ -316,7 +316,7 @@ def on_pre_secondary_fire(stack_data):
         weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
         # Store the silencer option if the weapon can be silenced
-        if weapon_data.can_silence:
+        if weapon_data is not None and weapon_data.can_silence:
 
             # Get a PlayerEntity instance for the player
             player = PlayerEntity(weapon.owner.index)
