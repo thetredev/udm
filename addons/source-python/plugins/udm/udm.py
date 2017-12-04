@@ -107,7 +107,7 @@ manipulated_int_convars.append(ManipulatedIntConVar('ammo_57mm_max', -2))
 manipulated_int_convars.append(ManipulatedIntConVar('ammo_762mm_max', -2))
 manipulated_int_convars.append(ManipulatedIntConVar('ammo_9mm_max', -2))
 
-# Set plugin values
+# Manipulate plugin values
 manipulated_int_convars.manipulate_values()
 
 
