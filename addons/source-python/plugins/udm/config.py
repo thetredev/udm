@@ -69,7 +69,7 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     cvar_team_changes_reset_delay = config.cvar(
         'team_changes_reset_delay', 1.5,
         'The time in minutes a player who exceeded the maximum team change count has to wait until they can choose a'
-        'team again.'
+        ' team again.'
     )
 
     config.text('----------------------------------')
