@@ -73,6 +73,11 @@ class PlayerEntity(Player):
         for player in _playeriter_alive:
             yield cls(player.index)
 
+    @classmethod
+    def by_team(cls, team_index):
+        for player in PlayerIter(('alive', 't' if team_index == 2 else 'ct')):
+            yield cls(player.index)
+
     def tell(self, prefix, message):
         """Tell the player a prefixed chat message."""
         SayText2(
