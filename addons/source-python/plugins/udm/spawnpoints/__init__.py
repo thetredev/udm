@@ -8,8 +8,6 @@
 # Python Imports
 #   JSON
 import json
-#   Random
-import random
 
 # Source.Python Imports
 #   Core
@@ -25,12 +23,8 @@ from mathlib import Vector
 from paths import PLUGIN_DATA_PATH
 
 # Script Imports
-#   Config
-from udm.config import cvar_spawn_point_distance
 #   Info
 from udm.info import info
-#   Players
-from udm.players import PlayerEntity
 
 
 # =============================================================================
@@ -80,35 +74,6 @@ class _SpawnPoints(list):
         * save spawn points to a JSON file
         * get a random spawn point
     """
-
-    def get_random(self):
-        """Calculate distances between all alive player locations and spawn points and return a random possible one."""
-        # Get a shuffled copy of this spawn point list
-        shuffled = self.copy()
-        random.shuffle(shuffled)
-
-        # Get current origins for alive players
-        player_origins = [player.origin for player in PlayerEntity.alive()]
-
-        # Store possible vectors to spawn on
-        possible = list()
-
-        # Loop through the shuffled spawn points list
-        for spawnpoint in shuffled:
-
-            # Calculate the distances between this spawn point and player origins
-            distances = [origin.get_distance(spawnpoint) for origin in player_origins]
-
-            # Append the spawn point to the possible list, if it is safe to spawn on
-            if min(distances) >= cvar_spawn_point_distance.get_float():
-                possible.append(spawnpoint)
-
-        # Return a random spawn point
-        if possible:
-            return random.choice(possible)
-
-        # Or return None if `possible` is empty
-        return None
 
     def load(self):
         """Load spawn points from the spawn points data file for the current map."""

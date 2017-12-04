@@ -21,6 +21,7 @@ from core import GAME_NAME
 from filters.players import PlayerIter
 #   Listeners
 from listeners import OnLevelEnd
+from listeners import OnLevelInit
 #   Memory
 from memory import make_object
 #   Messages
@@ -34,10 +35,14 @@ from weapons.entity import Weapon
 #   Colors
 from udm.colors import MESSAGE_COLOR_ORANGE
 from udm.colors import MESSAGE_COLOR_WHITE
+#   Config
+from udm.config import cvar_spawn_point_distance
 #   Delays
 from udm.delays import delay_manager
 #   Players
 from udm.players.inventories import player_inventories
+#   Spawn Points
+from udm.spawnpoints import spawnpoints
 #   Weapons
 from udm.weapons import weapon_manager
 
@@ -47,6 +52,9 @@ from udm.weapons import weapon_manager
 # =============================================================================
 # Store team changes count for each player
 team_changes = defaultdict(int)
+
+# Store personal player spawn points
+player_spawnpoints = defaultdict(list)
 
 
 # =============================================================================
@@ -231,6 +239,44 @@ class PlayerEntity(Player):
         """Always force spawn the player."""
         super().spawn(True)
 
+    def get_random_spawnpoint(self):
+        """Return a random spawn point for the player."""
+        # Get a list of current player origins
+        player_origins = [player.origin for player in PlayerEntity.alive() if player.userid != self.userid]
+
+        # Return None if nobody else is on the server
+        if not player_origins:
+            return None
+
+        # Loop through all the player's spawn points
+        for spawnpoint in self.spawnpoints.copy():
+
+            # Calculate the distances between the spawn point and all player origins
+            distances = [origin.get_distance(spawnpoint) for origin in player_origins]
+
+            # Continue if there is enough space around the spawn point
+            if min(distances) >= cvar_spawn_point_distance.get_float():
+
+                # Remove the spawn point from the player's spawn points list
+                self.spawnpoints.remove(spawnpoint)
+
+                # Return the spawn point found
+                return spawnpoint
+
+        # Return None if no spawn point has been found
+        return None
+
+    @property
+    def spawnpoints(self):
+        """Return personal spawn points for the player."""
+        # Add a shuffled copy of the spawn points list for the map, if the player's spawn points list is empty
+        if not player_spawnpoints[self.userid]:
+            player_spawnpoints[self.userid].extend(spawnpoints)
+            random.shuffle(player_spawnpoints[self.userid])
+
+        # Return the player's spawn points
+        return player_spawnpoints[self.userid]
+
     def set_team_changes(self, value):
         """Store `value` as the team change count for the player."""
         team_changes[self.uniqueid] = value
@@ -302,6 +348,12 @@ class PlayerEntity(Player):
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
+@OnLevelInit
+def on_level_init(map_name):
+    """Clear the player spawn points list."""
+    player_spawnpoints.clear()
+
+
 @OnLevelEnd
 def on_level_end():
     """Clear the team change counts."""

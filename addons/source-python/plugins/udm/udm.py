@@ -67,9 +67,9 @@ from udm.info import info
 from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import team_changes
+from udm.players import player_spawnpoints
 from udm.players import PlayerEntity
 #   Spawn Points
-from udm.spawnpoints import spawnpoints
 from udm.spawnpoints.menus import spawnpoints_manager_menu
 #   Weapons
 from udm.weapons import is_silencer_option_primary
@@ -161,7 +161,7 @@ def prepare_player(player):
     )
 
     # Choose a random spawn point
-    spawnpoint = spawnpoints.get_random()
+    spawnpoint = player.get_random_spawnpoint()
 
     # Spawn the player on the location found
     if spawnpoint is not None:
@@ -565,6 +565,9 @@ def unload():
     """Unregister the teamonly noblock listener & restart the game after 1 second."""
     if GAME_NAME == 'cstrike' and cvar_enable_noblock.get_int() == 1:
         on_tick_listener_manager.unregister_listener(on_tick_teamonly_noblock)
+
+    # Clear the list of player personal spawn points
+    player_spawnpoints.clear()
 
     # Clear player team change counts
     team_changes.clear()
