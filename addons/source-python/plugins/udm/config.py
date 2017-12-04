@@ -40,6 +40,16 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         'spawn_protection_delay', 2, 'The spawn protection delay in seconds.'
     )
 
+    # The minimum distance players have to have between a spawn point for it to be 'safe'
+    cvar_spawn_point_distance = config.cvar(
+        'spawn_point_distance', 150,
+        "The minimum distance players have to have between a spawn point for it to be 'safe'."
+    )
+
+    config.text('----------------------------------')
+    config.text('   * Kill Rewards')
+    config.text('----------------------------------')
+
     # Refill the killer's clip if they killed an enemy with a headshot
     cvar_refill_clip_on_headshot = config.cvar(
         'refill_clip_on_headshot', 1,
@@ -52,11 +62,24 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         "Restore the killer's health to 100HP if they killed an enemy with the knife."
     )
 
-    # The minimum distance players have to have between a spawn point for it to be 'safe'
-    cvar_spawn_point_distance = config.cvar(
-        'spawn_point_distance', 150,
-        "The minimum distance players have to have between a spawn point for it to be 'safe'."
+    config.text('----------------------------------')
+    config.text('   * High Explosive Grenade')
+    config.text('----------------------------------')
+
+    # High Explosive grenade equipment behaviour
+    cvar_equip_hegrenade = config.cvar(
+        'equip_hegrenade', 2, 'High Explosive grenade behaviour'
     )
+
+    # Options for cvar_equip_hegrenade
+    cvar_equip_hegrenade.Options.append('0 = Off')
+    cvar_equip_hegrenade.Options.append('1 = Equip on spawn')
+    cvar_equip_hegrenade.Options.append('2 = Equip on spawn and on each HE grenade kill')
+    cvar_equip_hegrenade.Options.append('3 = Equip on spawn and after each detonation')
+
+    config.text('----------------------------------')
+    config.text('   * Team Changes Per Round')
+    config.text('----------------------------------')
 
     # The maximum amount of times a players are allowed to change their team per round.
     cvar_team_changes_per_round = config.cvar(
@@ -85,18 +108,3 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     cvar_saycommand_guns = config.cvar(
         'saycommand_guns', 'guns', 'The chat command used to open the weapons menu.'
     )
-
-    config.text('----------------------------------')
-    config.text('   * High Explosive Grenade')
-    config.text('----------------------------------')
-
-    # High Explosive grenade equipment behaviour
-    cvar_equip_hegrenade = config.cvar(
-        'equip_hegrenade', 2, 'High Explosive grenade behaviour'
-    )
-
-    # Options for cvar_equip_hegrenade
-    cvar_equip_hegrenade.Options.append('0 = Off')
-    cvar_equip_hegrenade.Options.append('1 = Equip on spawn')
-    cvar_equip_hegrenade.Options.append('2 = Equip on spawn and on each HE grenade kill')
-    cvar_equip_hegrenade.Options.append('3 = Equip on spawn and after each detonation')
