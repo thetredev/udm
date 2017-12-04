@@ -8,6 +8,8 @@
 # Python Imports
 #   Collections
 from collections import defaultdict
+#   Contextlib
+import contextlib
 #   Random
 import random
 
@@ -85,6 +87,12 @@ class PlayerEntity(Player):
     def by_team(cls, team_index):
         for player in PlayerIter(('alive', 't' if team_index == 2 else 'ct')):
             yield cls(player.index)
+
+    @classmethod
+    def respawn(cls, index):
+        """Respawn a player if they are still connected."""
+        with contextlib.suppress(ValueError):
+            cls(index).spawn(True)
 
     def tell(self, prefix, message):
         """Tell the player a prefixed chat message."""
@@ -234,10 +242,6 @@ class PlayerEntity(Player):
 
         # Reset the color
         self.color = WHITE
-
-    def spawn(self):
-        """Always force spawn the player."""
-        super().spawn(True)
 
     def get_random_spawnpoint(self):
         """Return a random spawn point for the player."""

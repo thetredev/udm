@@ -249,7 +249,9 @@ def on_player_death(game_event):
     victim = PlayerEntity.from_userid(game_event['userid'])
 
     # Respawn the victim after the configured respawn delay
-    delay_manager(f'respawn_{victim.userid}', abs(cvar_respawn_delay.get_float()), victim.spawn)
+    delay_manager(
+        f'respawn_{victim.userid}', abs(cvar_respawn_delay.get_float()), PlayerEntity.respawn, (victim.index, )
+    )
 
 
 @Event('player_disconnect')
@@ -463,7 +465,9 @@ def client_command_filter(command, index):
             )
 
         # Respawn the player after the respawn delay
-        delay_manager(f'respawn_{player.userid}', abs(cvar_respawn_delay.get_float()), player.spawn)
+        delay_manager(
+            f'respawn_{player.userid}', abs(cvar_respawn_delay.get_float()), PlayerEntity.respawn, player.index
+        )
 
         # Allow the client command
         return True
