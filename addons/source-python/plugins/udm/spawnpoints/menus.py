@@ -10,19 +10,19 @@ from enum import IntEnum
 
 # Source.Python Imports
 #   Menus
-from menus.radio import PagedRadioOption
+from menus import PagedMenu
+from menus import PagedOption
 
 # Script Imports
+#   Admin
+from udm.admin import admin_menu
 #   Colors
 from udm.colors import MESSAGE_COLOR_ORANGE
 from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
 from udm.config import cvar_spawn_point_distance
-#   Menus
-from udm.menus import CloseButtonPagedMenu
-from udm.menus.decorators import BuildCallback
-from udm.menus.decorators import CloseCallback
-from udm.menus.decorators import SelectCallback
+#   Players
+from udm.players import PlayerEntity
 #   Spawn Points
 from udm.spawnpoints import spawnpoints
 from udm.spawnpoints import SpawnPoint
@@ -60,44 +60,48 @@ class _SpawnPointsManagerMenuOptions(IntEnum):
                     menu_options.extend([' ' for i in range(diff - 1)])
 
             # Append the actual menu option
-            menu_options.append(PagedRadioOption(member.name.capitalize(), member))
+            menu_options.append(PagedOption(member.name.capitalize(), member))
 
         # Return the list of menu options
         return menu_options
 
 
 # Create the Spawn Points Manager menu
-spawnpoints_manager_menu = CloseButtonPagedMenu(
+spawnpoints_manager_menu = PagedMenu(
     data=_SpawnPointsManagerMenuOptions.as_menu_options(),
     title='Spawn Points Manager'
 )
 
 
 # Create the Spawn Points List menu
-_spawnpoints_list_menu = CloseButtonPagedMenu(title='Spawn Points List')
+_spawnpoints_list_menu = PagedMenu(title='Spawn Points List')
 
 
 # =============================================================================
 # >> SPAWN POINTS LIST MENU CALLBACKS
 # =============================================================================
-@BuildCallback(_spawnpoints_list_menu)
-def on_build_spawnpoints_list_menu(player, menu):
+@_spawnpoints_list_menu.register_build_callback
+def on_build_spawnpoints_list_menu(menu, player_index):
     """Reload the menu with all available spawn points."""
     menu.clear()
     menu.extend(
-        [PagedRadioOption(f'#{index + 1}', spawnpoint) for index, spawnpoint in enumerate(spawnpoints)]
+        [PagedOption(f'#{index + 1}', spawnpoint) for index, spawnpoint in enumerate(spawnpoints)]
     )
 
 
-@CloseCallback(_spawnpoints_list_menu)
-def on_close_spawnpoints_list_menu(player):
+@_spawnpoints_list_menu.register_close_callback
+def on_close_spawnpoints_list_menu(menu, player_index):
     """Send the Spawn Points Manager menu to the player."""
-    spawnpoints_manager_menu.send(player.index)
+    spawnpoints_manager_menu.send(player_index)
 
 
-@SelectCallback(_spawnpoints_list_menu)
-def on_select_spawnpoint(player, option):
+@_spawnpoints_list_menu.register_select_callback
+def on_select_spawnpoint(menu, player_index, option):
     """Spawn the player at the selected location."""
+    # Get a PlayerEntity instance for the player
+    player = PlayerEntity(player_index)
+
+    # Set their origin and view angle
     player.origin = option.value
     player.view_angle = option.value.angle
 
@@ -108,9 +112,18 @@ def on_select_spawnpoint(player, option):
 # =============================================================================
 # >> SPAWN POINTS MANAGER MENU CALLBACKS
 # =============================================================================
-@SelectCallback(spawnpoints_manager_menu)
-def on_select_spawnpoints_manager_option(player, option):
+@spawnpoints_manager_menu.register_close_callback
+def on_close_spawnpoints_manager_menu(menu, player_index):
+    """Send the Admin Menu when the player closes the Spawn Points Manager menu."""
+    admin_menu.send(player_index)
+
+
+@spawnpoints_manager_menu.register_select_callback
+def on_select_spawnpoints_manager_option(menu, player_index, option):
     """Handle the selected option."""
+    # Get a PlayerEntity instance for the player
+    player = PlayerEntity(player_index)
+
     # Handle the option `Add`
     if option.value is _SpawnPointsManagerMenuOptions.ADD:
 

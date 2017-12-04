@@ -9,13 +9,12 @@
 #   Listeners
 from listeners import OnLevelInit
 #   Menus
-from menus.radio import PagedRadioOption
+from menus import PagedMenu
+from menus import PagedOption
 
 # Script Imports
-#   Menus
-from udm.menus import CloseButtonPagedMenu
-from udm.menus.decorators import CloseCallback
-from udm.menus.decorators import SelectCallback
+#   Players
+from udm.players import PlayerEntity
 #   Weapons
 from udm.weapons import melee_weapon
 
@@ -24,7 +23,7 @@ from udm.weapons import melee_weapon
 # >> ADMIN MENU
 # =============================================================================
 # TODO: Use submenu API from SP?
-class _AdminMenu(CloseButtonPagedMenu):
+class _AdminMenu(PagedMenu):
     """Class used to provide a way to send this menu when a submenu is closed."""
 
     # Store players who are currently using the Admin menu
@@ -32,11 +31,8 @@ class _AdminMenu(CloseButtonPagedMenu):
 
     def register_submenu(self, submenu):
         """Always send this menu when a submenu is closed."""
-        # Store `self.send` as the submenu's `close_callback`
-        submenu.close_callback = self.send
-
         # Add the submenu
-        self.append(PagedRadioOption(submenu.title, submenu))
+        self.append(PagedOption(submenu.title, submenu))
 
     def _unload_instance(self):
         """Clear the users dict on unload."""
@@ -54,9 +50,11 @@ admin_menu = _AdminMenu(title='Admin Menu')
 # =============================================================================
 # >> ADMIN MENU CALLBACKS
 # =============================================================================
-@CloseCallback(admin_menu)
-def on_close_admin_menu(player):
+@admin_menu.register_close_callback
+def on_close_admin_menu(menu, player_index):
     """Enable default gameplay for the admin player who just closed the Admin menu."""
+    player = PlayerEntity(player_index)
+
     # Remove the player from the Admin menu users storage
     admin_menu.users.remove(player.userid)
 
@@ -71,10 +69,10 @@ def on_close_admin_menu(player):
     player.give_weapon(melee_weapon)
 
 
-@SelectCallback(admin_menu)
-def on_select_admin_submenu(player, option):
+@admin_menu.register_select_callback
+def on_select_admin_submenu(menu, player_index, option):
     """Send the submenu chosen to the player."""
-    option.value.send(player.index)
+    option.value.send(player_index)
 
 
 # =============================================================================
