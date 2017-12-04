@@ -25,6 +25,7 @@ from listeners import OnEntityDeleted
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
+from weapons.entity import Weapon
 from weapons.manager import weapon_manager as sp_weapon_manager
 
 # Script Imports
@@ -49,10 +50,13 @@ is_silencer_option_secondary = EntityCondition.equals_entity_classname(
 # =============================================================================
 # >> HELPER FUNCTIONS
 # =============================================================================
-def remove_weapon(weapon):
+def remove_weapon(index):
     """Safely remove a weapon entity."""
-    if weapon.owner is None:
-        weapon.remove()
+    with contextlib.suppress(ValueError):
+        weapon = Weapon(index)
+
+        if weapon.owner is None:
+            weapon.remove()
 
 
 # =============================================================================
