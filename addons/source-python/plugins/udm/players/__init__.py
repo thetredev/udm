@@ -51,7 +51,7 @@ from udm.weapons import weapon_manager
 # >> TEAM CHANGES
 # =============================================================================
 # Store team changes count for each player
-team_changes = defaultdict(int)
+player_team_changes = defaultdict(int)
 
 # Store personal player spawn points
 player_spawnpoints = defaultdict(list)
@@ -279,11 +279,11 @@ class PlayerEntity(Player):
 
     def set_team_changes(self, value):
         """Store `value` as the team change count for the player."""
-        team_changes[self.uniqueid] = value
+        player_team_changes[self.uniqueid] = value
 
     def get_team_changes(self):
         """Return the team change count for the player."""
-        return team_changes[self.uniqueid]
+        return player_team_changes[self.uniqueid]
 
     # Set the `team_changes` property for PlayerEntity
     team_changes = property(get_team_changes, set_team_changes)
@@ -357,4 +357,4 @@ def on_level_init(map_name):
 @OnLevelEnd
 def on_level_end():
     """Clear the team change counts."""
-    team_changes.clear()
+    player_team_changes.clear()

@@ -66,7 +66,7 @@ from udm.info import info
 #   Menus
 from udm.weapons.menus import primary_menu
 #   Players
-from udm.players import team_changes
+from udm.players import player_team_changes
 from udm.players import player_spawnpoints
 from udm.players import PlayerEntity
 #   Spawn Points
@@ -265,7 +265,7 @@ def on_player_disconnect(game_event):
 def on_round_end(game_event):
     """Cancel all pending delays and team change counts."""
     delay_manager.clear()
-    team_changes.clear()
+    player_team_changes.clear()
 
 
 @Event('hegrenade_detonate')
@@ -570,7 +570,7 @@ def unload():
     player_spawnpoints.clear()
 
     # Clear player team change counts
-    team_changes.clear()
+    player_team_changes.clear()
 
     # Restart the game after 1 second
     mp_restartgame.set_int(1)
