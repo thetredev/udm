@@ -35,11 +35,9 @@ secondary_menu = PagedMenu(data=list(options_for_tag('secondary')), title='Secon
 
 @secondary_menu.register_close_callback
 def on_close_secondary_menu(menu, player_index):
-    """Remove the secondary weapon from the player's inventory."""
+    """Equip random weapons if the player's inventory is empty."""
     player = PlayerEntity(player_index)
-    player.inventory.remove_inventory_item(player, 'secondary')
 
-    # Equip random weapons if the player's inventory is empty
     if not player.inventory:
         player.equip_random_weapons()
 
@@ -60,12 +58,8 @@ primary_menu = PagedMenu(data=list(options_for_tag('primary')), title='Primary W
 
 @primary_menu.register_close_callback
 def on_close_primary_menu(menu, player_index):
-    """Remove the primary weapon from the player's inventory."""
-    player = PlayerEntity(player_index)
-    player.inventory.remove_inventory_item(player, 'primary')
-
-    # Send the secondary menu to the player
-    secondary_menu.send(player.index)
+    """Send the secondary menu to the player."""
+    secondary_menu.send(player_index)
 
 
 @primary_menu.register_select_callback

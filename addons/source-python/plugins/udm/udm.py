@@ -5,6 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python
+#   Random
+import random
+
 # Source.Python Imports
 #   Commands
 from commands.client import ClientCommandFilter
@@ -379,6 +383,33 @@ def client_command_filter(command, index):
         # Block any further command handling
         return False
 
+    # Handle the client command `drop`
+    if client_command == 'drop':
+
+        # Remove the player's active weapon from their inventory
+        if player.active_weapon is not None:
+            weapon_data = weapon_manager.by_name(player.active_weapon.weapon_name)
+
+            if weapon_data is not None:
+
+                # Equip a random weapon if the player has random mode activated
+                if player.random_mode:
+                    player.active_weapon.remove()
+                    weapon = player.give_weapon(random.choice(list(weapon_manager.by_tag(weapon_data.tag))).name)
+
+                    # Make the player use the weapon
+                    player.client_command(f'use {weapon.weapon_name}', True)
+
+                # Else, equip random weapons of the player's inventory is empty
+                else:
+                    player.inventory.remove_inventory_item(player, weapon_data.tag)
+
+                    if not player.inventory:
+                        player.equip_random_weapons()
+
+        # Block any further command handling
+        return False
+
     # Allow any client command besides `jointeam`
     if client_command != 'jointeam':
         return True
@@ -430,7 +461,7 @@ def on_saycommand_guns(command_info, *args):
     player = PlayerEntity(command_info.index)
 
     # Get the selection for the inventory the player wants to equip or edit
-    selection = int(args[0]) if args and args[0].isdigit() else None
+    selection = args[0] if args else None
 
     # If no selection was made, send the Primary Weapons menu
     if selection is None:
@@ -443,11 +474,14 @@ def on_saycommand_guns(command_info, *args):
         # Stop here and block the message from appearing in the chat window
         return False
 
-    # Give random weapons if the selection is not valid
-    if selection <= 0:
-        player.equip_random_weapons()
+    # Ignore invalid input
+    try:
+        selection = int(selection)
+    except ValueError:
+        return False
 
-        # Stop here and block the message from appearing in the chat window
+    # Stop if the selection isn't valid
+    if selection <= 0:
         return False
 
     # Disable random mode
