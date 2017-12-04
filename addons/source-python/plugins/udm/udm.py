@@ -43,6 +43,7 @@ from udm.admin import admin_menu
 from udm.colors import MESSAGE_COLOR_ORANGE
 from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
+from udm.config import cvar_enable_infinite_ammo
 from udm.config import cvar_enable_noblock
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_refill_clip_on_headshot
@@ -90,24 +91,25 @@ manipulated_int_convars.append(ManipulatedIntConVar('mp_startmoney', 10_000))
 manipulated_int_convars.append(ManipulatedIntConVar('mp_buy_anywhere', 1))
 
 # Solid Teammates
-manipulated_int_convars.append(ManipulatedIntConVar('mp_solid_teammates', int(not cvar_enable_noblock.get_int())))
+manipulated_int_convars.append(ManipulatedIntConVar('mp_solid_teammates', int(cvar_enable_noblock.get_int() == 0)))
 
-# Max Ammo for all weapon types except utilities: 999
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_338mag_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_min_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_p250_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_small_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_45acp_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_50AE_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_box_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_small_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_57mm_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_762mm_max', -2))
-manipulated_int_convars.append(ManipulatedIntConVar('ammo_9mm_max', -2))
+# Enable infinite ammo (999)
+if cvar_enable_infinite_ammo.get_int() > 0:
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_338mag_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_min_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_p250_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_small_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_45acp_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_50AE_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_box_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_small_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_57mm_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_762mm_max', -2))
+    manipulated_int_convars.append(ManipulatedIntConVar('ammo_9mm_max', -2))
 
-# Manipulate plugin values
+# Manipulate convar values
 manipulated_int_convars.manipulate_values()
 
 

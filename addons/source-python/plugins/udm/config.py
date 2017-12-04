@@ -24,6 +24,11 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     config.text('   * General')
     config.text('----------------------------------')
 
+    # Enable infinite ammo?
+    cvar_enable_infinite_ammo = config.cvar(
+        'enable_infinite_ammo', 1, 'Enable infinite ammo?'
+    )
+
     # The respawn delay in seconds
     cvar_respawn_delay = config.cvar(
         'respawn_delay', 2, 'The respawn delay in seconds.'
