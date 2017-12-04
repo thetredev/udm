@@ -97,6 +97,12 @@ class PlayerEntity(Player):
         with contextlib.suppress(ValueError):
             cls(index).spawn(True)
 
+    @classmethod
+    def reset_team_changes(cls, index):
+        """Reset the team change count for the player."""
+        with contextlib.suppress(ValueError):
+            player_team_changes[PlayerEntity(index)] = 0
+
     def tell(self, prefix, message):
         """Tell the player a prefixed chat message."""
         SayText2(

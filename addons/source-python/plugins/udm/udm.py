@@ -457,7 +457,10 @@ def client_command_filter(command, index):
         if player.team_changes == cvar_team_changes_per_round.get_int() + 1:
             delay_time = abs(cvar_team_changes_reset_delay.get_float())
 
-            delay_manager(f'reset_team_changes_{player.userid}', delay_time * 60.0, player.set_team_changes, (0, ))
+            delay_manager(
+                f'reset_team_changes_{player.userid}', delay_time * 60.0,
+                PlayerEntity.reset_team_changes, (player.index, )
+            )
 
             # Tell the player
             player.tell(
@@ -467,7 +470,7 @@ def client_command_filter(command, index):
 
         # Respawn the player after the respawn delay
         delay_manager(
-            f'respawn_{player.userid}', abs(cvar_respawn_delay.get_float()), PlayerEntity.respawn, player.index
+            f'respawn_{player.userid}', abs(cvar_respawn_delay.get_float()), PlayerEntity.respawn, (player.index, )
         )
 
         # Allow the client command
