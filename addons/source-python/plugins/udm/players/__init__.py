@@ -98,6 +98,18 @@ class PlayerEntity(Player):
             cls(index).spawn(True)
 
     @classmethod
+    def disable_damage_protection(cls, index):
+        """Disable damage protection if the player is still connected."""
+        with contextlib.suppress(ValueError):
+            player = cls(index)
+
+            # Disable god mode
+            player.godmode = False
+
+            # Reset the color
+            player.color = WHITE
+
+    @classmethod
     def reset_team_changes(cls, index):
         """Reset the team change count for the player."""
         with contextlib.suppress(ValueError):
@@ -242,15 +254,10 @@ class PlayerEntity(Player):
 
         # Disable protection after `time_delay`
         if time_delay is not None:
-            delay_manager(f'protect_{self.userid}', time_delay, self.disable_damage_protection, call_on_cancel=True)
-
-    def disable_damage_protection(self):
-        """Disable damage protection."""
-        # Disable god mode
-        self.godmode = False
-
-        # Reset the color
-        self.color = WHITE
+            delay_manager(
+                f'protect_{self.userid}', time_delay, PlayerEntity.disable_damage_protection, (self.index, ),
+                call_on_cancel=True
+            )
 
     def get_random_weapon(self, tag):
         """Return a random weapon for the given weapon tag."""
