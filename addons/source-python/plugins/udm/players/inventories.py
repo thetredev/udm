@@ -53,8 +53,9 @@ class PlayerInventory(defaultdict):
         # Set the inventory item's basename
         self[weapon_data.tag].basename = basename
 
-        # Equip the inventory item
-        player.equip_inventory_item(weapon_data.tag)
+        # Equip the inventory item if the player is not dead
+        if player.team_index > 1 and not player.dead:
+            player.equip_inventory_item(weapon_data.tag)
 
     def remove_inventory_item(self, player, tag):
         """Remove an inventory item for weapon tag `tag`."""
