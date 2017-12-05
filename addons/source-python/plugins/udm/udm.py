@@ -23,6 +23,7 @@ from entities.hooks import EntityPostHook
 from events import Event
 from events.hooks import PreEvent
 #   Filters
+from filters.entities import EntityIter
 from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners import on_tick_listener_manager
@@ -562,15 +563,28 @@ def on_saycommand_admin(command_info):
 # >> LOAD & UNLOAD
 # =============================================================================
 def load():
-    """Register the teamonly noblock listener & restart the round after 3 seconds."""
+    """Prepare deathmatch gameplay."""
+    # Remove forbidden entities
+    for forbidden_entity_classname in forbidden_entities:
+        for entity in EntityIter(forbidden_entity_classname):
+            entity.remove()
+
+    # Disable map functions
+    for map_function_entity_classname in map_functions:
+        for entity in EntityIter(map_function_entity_classname):
+            entity.call_input('Disable')
+
+    # Register the teamonly noblock listener for CS:S
     if GAME_NAME == 'cstrike' and cvar_enable_noblock.get_int() == 1:
         on_tick_listener_manager.register_listener(on_tick_teamonly_noblock)
 
+    # Restart the game after 3 seconds
     mp_restartgame.set_int(3)
 
 
 def unload():
-    """Unregister the teamonly noblock listener & restart the game after 1 second."""
+    """Reset deathmatch gameplay."""
+    # Unregister the teamonly noblock listener for CS:S
     if GAME_NAME == 'cstrike' and cvar_enable_noblock.get_int() == 1:
         on_tick_listener_manager.unregister_listener(on_tick_teamonly_noblock)
 
