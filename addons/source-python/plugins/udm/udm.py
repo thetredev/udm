@@ -460,7 +460,7 @@ def client_command_filter(command, index):
 
             delay_manager(
                 f'reset_team_changes_{player.userid}', delay_time * 60.0,
-                PlayerEntity.reset_team_changes, (player.index, )
+                PlayerEntity.reset_team_changes, (player.userid, )
             )
 
             # Tell the player

@@ -109,11 +109,11 @@ class PlayerEntity(Player):
             # Reset the color
             player.color = WHITE
 
-    @classmethod
-    def reset_team_changes(cls, index):
+    @staticmethod
+    def reset_team_changes(userid):
         """Reset the team change count for the player."""
-        with contextlib.suppress(ValueError):
-            player_team_changes[PlayerEntity(index)] = 0
+        if userid in player_team_changes:
+            del player_team_changes[userid]
 
     def tell(self, prefix, message):
         """Tell the player a prefixed chat message."""
