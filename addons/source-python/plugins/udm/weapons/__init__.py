@@ -46,6 +46,12 @@ is_silencer_option_secondary = EntityCondition.equals_entity_classname(
     'weapon_hkp2000' if GAME_NAME == 'csgo' else 'weapon_usp'
 )
 
+# Store a tuple of weapons which can be silenced
+silencer_weapons = (
+    'usp_silencer' if GAME_NAME == 'csgo' else 'usp',
+    'm4a1_silencer' if GAME_NAME == 'csgo' else 'm4a1'
+)
+
 
 # =============================================================================
 # >> HELPER FUNCTIONS
@@ -83,6 +89,9 @@ class _WeaponData(object):
         # Store the weapon's display name
         self._display_name = display_name
 
+        # Store whether the weapon has a silencer
+        self._has_silencer = basename in silencer_weapons
+
         # Store the weapon's name
         self._name = weapon_class.name
 
@@ -98,18 +107,9 @@ class _WeaponData(object):
         return self._basename
 
     @property
-    def can_silence(self):
+    def has_silencer(self):
         """Return whether the weapon can be silenced."""
-        if 'usp' in self.basename:
-            return True
-
-        if self.basename == 'm4a1_silencer':
-            return True
-
-        if GAME_NAME == 'cstrike' and self.basename == 'm4a1':
-            return True
-
-        return False
+        return self._has_silencer
 
     @property
     def clip(self):
