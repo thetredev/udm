@@ -304,10 +304,19 @@ def on_pre_bump_weapon(stack_data):
             if weapon_data.tag not in player.inventory:
                 return False
 
-            weapon_selected = player.inventory[weapon_data.tag].data.name
+            inventory_item = player.inventory[weapon_data.tag]
 
-            if weapon_selected not in (weapon.weapon_name, weapon.classname):
+            if inventory_item.data.name not in (weapon.weapon_name, weapon.classname):
                 return False
+
+            # Handle the inventory item's silencer option
+            if inventory_item.silencer_option is not None:
+                if weapon.get_property_bool('m_bSilencerOn') != inventory_item.silencer_option:
+                    weapon.set_property_bool('m_bSilencerOn', inventory_item.silencer_option)
+
+                    # It's not enough to set m_bSilencerOn (for CS:S at least)
+                    # See https://forums.alliedmods.net/showthread.php?t=167616
+                    weapon.set_property_bool('m_weaponMode', inventory_item.silencer_option)
 
 
 @EntityPostHook(EntityCondition.is_human_player, 'drop_weapon')
@@ -423,10 +432,7 @@ def client_command_filter(command, index):
                     player.drop_weapon(player.active_weapon)
 
                     # Equip the player with a random weapon
-                    weapon = player.give_weapon(player.get_random_weapon(weapon_data.tag))
-
-                    # Make the player use the weapon
-                    player.client_command(f'use {weapon.weapon_name}', True)
+                    player.equip_random_weapon(weapon_data.tag)
 
                 # Else, equip random weapons of the player's inventory is empty
                 else:

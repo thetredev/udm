@@ -17,8 +17,6 @@ import random
 #   Colors
 from colors import Color
 from colors import WHITE
-#   Core
-from core import GAME_NAME
 #   Filters
 from filters.players import PlayerIter
 #   Listeners
@@ -150,15 +148,6 @@ class PlayerEntity(Player):
     def equip_inventory(self):
         """Equip the player's currently selected inventory."""
         if self.inventory:
-
-            # Remove weapons not belonging into the player's inventory
-            for weapon in self.weapons(not_filters=('melee', 'grenade')):
-                weapon_data = weapon_manager.by_name(weapon.weapon_name)
-
-                if weapon_data.tag not in self.inventory:
-                    weapon.remove()
-
-            # Equip inventory items
             for tag in self.inventory.keys():
                 self.equip_inventory_item(tag)
 
@@ -168,61 +157,39 @@ class PlayerEntity(Player):
 
     def equip_inventory_item(self, tag):
         """Equip the inventory item for `tag`."""
-        # Get the inventory item
-        inventory_item = self.inventory[tag]
+        # Remove any weapon not belonging to the player's inventory
+        for weapon in self.weapons(not_filters=('melee', 'grenade')):
+            weapon_data = weapon_manager.by_name(weapon.weapon_name)
+
+            if weapon_data.tag not in self.inventory:
+                weapon.remove()
 
         # Get the equipped weapon at `tag`
         weapon = self.get_weapon(is_filters=tag)
 
-        # Remove the weapon if it should not be equipped
-        if weapon is not None:
+        # Get the inventory item
+        inventory_item = self.inventory[tag]
+
+        # Equip the weapon if the player isn't equipped with it
+        if weapon is None:
+            self.give_weapon(inventory_item.data.name)
+
+        # Remove it, if the player isn't supposed to be equipped with it
+        else:
             weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
-            if inventory_item.data.name != weapon_data.name:
+            if weapon_data.name != inventory_item.data.name:
                 weapon.remove()
 
-                # Equip the weapon which should be equipped
-                weapon = self.give_weapon(inventory_item.data.name)
+                # Equip the correct weapon
+                self.give_weapon(inventory_item.data.name)
 
-        # Give the weapon if none was found at `tag`
-        else:
-            weapon = self.give_weapon(inventory_item.data.name)
+    def equip_random_weapon(self, tag):
+        """Equip the player with a random weapon."""
+        weapon = self.give_weapon(self.get_random_weapon(tag))
 
-        # Get the weapon data for the weapon
-        weapon_data = weapon_manager.by_name(weapon.weapon_name)
-
-        # Set default silencer option if the weapon can be silenced
-        if weapon_data.can_silence and inventory_item.silencer_option is None:
-            inventory_item.silencer_option = GAME_NAME == 'csgo'
-
-        # Attach or detach the silencer of the weapon
-        if inventory_item.silencer_option is not None:
-            if weapon.get_property_bool('m_bSilencerOn') != inventory_item.silencer_option:
-                weapon.set_property_bool('m_bSilencerOn', inventory_item.silencer_option)
-
-                # It's not enough to set m_bSilencerOn (for CS:S at least)
-                # See https://forums.alliedmods.net/showthread.php?t=167616
-                weapon.set_property_bool('m_weaponMode', inventory_item.silencer_option)
-
-                # Cycle through the player's weapons in the right order to fix the issue with the silencer
-                # not "physically" being attached
-                if len(self.inventory) > 1:
-                    for tag in self.inventory.keys():
-                        weapon = self.get_weapon(is_filters=tag)
-
-                        if weapon is None:
-                            continue
-
-                        self.client_command(f'use {weapon.classname}', True)
-
-                # Cycle to the grenade or knife and back, if the player only has one inventory item
-                else:
-                    if self.get_weapon(classname='weapon_hegrenade') is not None:
-                        self.client_command('use weapon_hegrenade', True)
-                    else:
-                        self.client_command('use weapon_knife', True)
-
-                    self.client_command(f'use {weapon.classname}', True)
+        # Make sure that the player switches to that weapon afterwards
+        self.client_command(f'use {weapon.classname}', True)
 
     def equip_random_weapons(self):
         """Equip random weapons by weapon tag."""
@@ -234,7 +201,7 @@ class PlayerEntity(Player):
 
         # Equip random weapons
         for tag in self.random_weapons.keys():
-            self.give_weapon(self.get_random_weapon(tag))
+            self.equip_random_weapon(tag)
 
     def strip(self, is_filters=None, not_filters=('melee', 'grenade')):
         """Remove the player's weapons in `is_filters` & keep those in `not_filters`."""

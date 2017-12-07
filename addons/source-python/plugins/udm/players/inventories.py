@@ -9,6 +9,10 @@
 #   Collections
 from collections import defaultdict
 
+# Source.Python Imports
+#   Core
+from core import GAME_NAME
+
 # Script Imports
 #   Weapons
 from udm.weapons import weapon_manager
@@ -22,11 +26,27 @@ class _InventoryItem(object):
 
     def __init__(self):
         """Object initialization."""
-        # Make it possible to store the weapon's basename in the future
-        self.basename = None
+        # Default the weapon's basename to None
+        self._basename = None
 
         # Store the silencer option for this inventory item
         self.silencer_option = None
+
+    def set_basename(self, value):
+        """Set the basename and silencer option if the weapon can be silenced."""
+        # Set the basename
+        self._basename = value
+
+        # Set the silencer option to True if the game is CS:GO, else False
+        if self.data.has_silencer:
+            self._silencer_option = GAME_NAME == 'csgo'
+
+    def get_basename(self):
+        """Return the basename."""
+        return self._basename
+
+    # Set the "basename" property for `_InventoryItem`
+    basename = property(get_basename, set_basename)
 
     @property
     def data(self):
