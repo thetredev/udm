@@ -394,6 +394,9 @@ def client_command_filter(command, index):
     # Handle client command `buy`
     if client_command == 'buy':
 
+        # Disable random mode for the player
+        player.random_mode = False
+
         # Get the weapon the player is trying to buy
         weapon = command[1]
 
