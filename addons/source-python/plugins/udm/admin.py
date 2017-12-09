@@ -15,8 +15,6 @@ from menus import PagedOption
 # Script Imports
 #   Players
 from udm.players import PlayerEntity
-#   Weapons
-from udm.weapons import melee_weapon
 
 
 # =============================================================================
@@ -63,7 +61,7 @@ def on_close_admin_menu(menu, player_index):
     player.give_weapon('weapon_hegrenade')
 
     # Give a random melee weapon
-    player.give_weapon(melee_weapon)
+    player.give_weapon('weapon_knife')
 
     # Disable damage protection
     PlayerEntity.disable_damage_protection(player_index)

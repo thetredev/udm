@@ -18,8 +18,6 @@ from configobj import ConfigObj
 from core import GAME_NAME
 #   Entities
 from entities.hooks import EntityCondition
-#   Filters
-from filters.weapons import WeaponClassIter
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
@@ -173,6 +171,11 @@ class _WeaponManager(dict):
         return None
 
     @property
+    def prefix(self):
+        """Return the weapon prefix."""
+        return sp_weapon_manager.prefix
+
+    @property
     def tags(self):
         """Return the tags provided by the weapon data file."""
         return self._tags
@@ -180,10 +183,3 @@ class _WeaponManager(dict):
 
 # Store a global instance of `_WeaponManager`
 weapon_manager = _WeaponManager(ConfigObj(_weapons_ini))
-
-
-# =============================================================================
-# >> MELEE WEAPON
-# =============================================================================
-# Store the melee weapon for the game
-melee_weapon = list(WeaponClassIter(is_filters='melee'))[0].name
