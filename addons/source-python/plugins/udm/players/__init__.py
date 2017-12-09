@@ -72,9 +72,11 @@ _playeriter_alive = PlayerIter('alive')
 class PlayerEntity(Player):
     """Class used to provide the following functionality:
 
-        * inventories and inventory selections
-        * battle preparation including damage protection
-        * ammo refill
+        * Respawn
+        * Damage Protection
+        * Interfacing the player's inventory
+        * Player personal random weapons
+        * Player personal spawn points
     """
 
     @classmethod
@@ -85,6 +87,7 @@ class PlayerEntity(Player):
 
     @classmethod
     def by_team(cls, team_index):
+        """Yield a `PlayerEntity` (subclass) instance for each alive player of team `team_index`."""
         for player in PlayerIter(('alive', 't' if team_index == 2 else 'ct')):
             yield cls(player.index)
 
@@ -186,7 +189,7 @@ class PlayerEntity(Player):
         """Equip the player with a random weapon."""
         weapon = self.give_weapon(self.get_random_weapon(tag))
 
-        # Make sure that the player switches to that weapon afterwards
+        # Make the player switch to that weapon afterwards
         self.client_command(f'use {weapon.classname}', True)
 
     def equip_random_weapons(self):
