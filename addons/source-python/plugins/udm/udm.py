@@ -73,7 +73,6 @@ from udm.spawnpoints.menus import spawnpoints_manager_menu
 #   Weapons
 from udm.weapons import is_silencer_option_primary
 from udm.weapons import is_silencer_option_secondary
-from udm.weapons import remove_weapon
 from udm.weapons import weapon_manager
 
 
@@ -327,7 +326,10 @@ def on_post_drop_weapon(stack_data, nothing):
     # Remove the dropped weapon after the delay if this was a valid drop_weapon() call
     if player.classname == 'player':
         weapon = make_object(Weapon, stack_data[1])
-        delay_manager(f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2, remove_weapon, (weapon.index, ))
+        delay_manager(
+            f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2,
+            weapon_manager.remove_weapon, (weapon.index, )
+        )
 
 
 @EntityPreHook(is_silencer_option_primary, 'secondary_attack')

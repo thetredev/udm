@@ -48,18 +48,6 @@ silencer_weapons = (
 
 
 # =============================================================================
-# >> HELPER FUNCTIONS
-# =============================================================================
-def remove_weapon(index):
-    """Safely remove a weapon entity."""
-    with contextlib.suppress(ValueError):
-        weapon = Weapon(index)
-
-        if weapon.owner is None:
-            weapon.remove()
-
-
-# =============================================================================
 # >> PRIVATE GLOBAL VARIABLES
 # =============================================================================
 # Store the path to the weapons data file
@@ -154,6 +142,15 @@ class _WeaponManager(dict):
 
         # Store the tags provided by the weapon data file
         self._tags = list(data_file.keys())
+
+    @staticmethod
+    def remove_weapon(index):
+        """Safely remove a weapon entity."""
+        with contextlib.suppress(ValueError):
+            weapon = Weapon(index)
+
+            if weapon.owner is None:
+                weapon.remove()
 
     def by_tag(self, tag):
         """Return all _Weapon instances categorized by `tag`."""
