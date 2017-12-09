@@ -54,7 +54,7 @@ class _InventoryItem(object):
         return weapon_manager[self.basename]
 
 
-class PlayerInventory(defaultdict):
+class _PlayerInventory(defaultdict):
     """Class used to provide a weapon inventory for players."""
 
     def __init__(self):
@@ -101,4 +101,4 @@ class _PlayerInventories(defaultdict):
 
 
 # Store a global instance of `_PlayerInventories`
-player_inventories = _PlayerInventories(lambda: defaultdict(PlayerInventory))
+player_inventories = _PlayerInventories(lambda: defaultdict(_PlayerInventory))
