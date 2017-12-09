@@ -21,7 +21,6 @@ from colors import WHITE
 from filters.players import PlayerIter
 #   Listeners
 from listeners import OnLevelEnd
-from listeners import OnLevelInit
 #   Memory
 from memory import make_object
 #   Messages
@@ -352,14 +351,9 @@ class PlayerEntity(Player):
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
-@OnLevelInit
-def on_level_init(map_name):
-    """Clear the player spawn points & random weapons list."""
-    player_random_weapons.clear()
-    player_spawnpoints.clear()
-
-
 @OnLevelEnd
 def on_level_end():
-    """Clear the team change counts."""
+    """Clear personal player dictionaries."""
+    player_random_weapons.clear()
+    player_spawnpoints.clear()
     player_team_changes.clear()
