@@ -27,6 +27,7 @@ from filters.entities import EntityIter
 from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners import on_tick_listener_manager
+from listeners import OnEntityDeleted
 from listeners import OnEntitySpawned
 from listeners import OnServerActivate
 from listeners import OnServerOutput
@@ -358,6 +359,13 @@ def on_pre_secondary_fire(stack_data):
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
+@OnEntityDeleted
+def on_entity_deleted(base_entity):
+    """Cancel the refill & drop delays for the deleted entity."""
+    if base_entity.classname.startswith(weapon_manager.prefix):
+        delay_manager.cancel(f'drop_{base_entity.index}')
+
+
 @OnEntitySpawned
 def on_entity_spawned(base_entity):
     """Remove forbidden entities when they have spawned."""

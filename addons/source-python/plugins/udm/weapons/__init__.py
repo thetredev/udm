@@ -20,8 +20,6 @@ from core import GAME_NAME
 from entities.hooks import EntityCondition
 #   Filters
 from filters.weapons import WeaponClassIter
-#   Listeners
-from listeners import OnEntityDeleted
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
@@ -29,8 +27,6 @@ from weapons.entity import Weapon
 from weapons.manager import weapon_manager as sp_weapon_manager
 
 # Script Imports
-#   Delays
-from udm.delays import delay_manager
 #   Info
 from udm.info import info
 
@@ -191,13 +187,3 @@ weapon_manager = _WeaponManager(ConfigObj(_weapons_ini))
 # =============================================================================
 # Store the melee weapon for the game
 melee_weapon = list(WeaponClassIter(is_filters='melee'))[0].name
-
-
-# =============================================================================
-# >> LISTENERS
-# =============================================================================
-@OnEntityDeleted
-def on_entity_deleted(base_entity):
-    """Cancel the refill & drop delays for the deleted entity."""
-    if base_entity.classname.startswith(sp_weapon_manager.prefix):
-        delay_manager.cancel(f'drop_{base_entity.index}')
