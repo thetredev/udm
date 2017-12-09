@@ -72,7 +72,6 @@ class _SpawnPoints(list):
 
         * load spawn points from a JSON file
         * save spawn points to a JSON file
-        * get a random spawn point
     """
 
     def load(self):
