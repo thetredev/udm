@@ -109,9 +109,6 @@ if cvar_enable_infinite_ammo.get_int() > 0:
     manipulated_int_convars.append(ManipulatedIntConVar('ammo_762mm_max', -2))
     manipulated_int_convars.append(ManipulatedIntConVar('ammo_9mm_max', -2))
 
-# Manipulate convar values
-manipulated_int_convars.manipulate_values()
-
 
 # =============================================================================
 # >> RESTART GAME CONVAR
@@ -573,6 +570,9 @@ def on_saycommand_admin(command_info):
 # =============================================================================
 def load():
     """Prepare deathmatch gameplay."""
+    # Manipulate convar values
+    manipulated_int_convars.manipulate_values()
+
     # Remove forbidden entities
     for forbidden_entity_classname in forbidden_entities:
         for entity in EntityIter(forbidden_entity_classname):
