@@ -146,13 +146,13 @@ class _WeaponManager(dict):
 
         # Update this dictionary with the weapon data file entries
         for tag, weapon_names in data_file.items():
-            for basename, displayname in weapon_names.items():
+            for basename, display_name in weapon_names.items():
 
                 # Get the weapon class from Source.Python's `weapon_manager`
                 weapon_class = sp_weapon_manager[basename.replace('_silenced', '')]
 
                 # Store the `_WeaponData` object at `basename`
-                self[basename] = _WeaponData(basename, weapon_class, displayname, tag)
+                self[basename] = _WeaponData(basename, weapon_class, display_name, tag)
 
         # Store the tags provided by the weapon data file
         self._tags = list(data_file.keys())
