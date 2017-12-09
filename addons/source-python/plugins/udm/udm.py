@@ -605,6 +605,11 @@ def unload():
     if GAME_NAME == 'cstrike' and cvar_enable_noblock.get_int() == 1:
         on_tick_listener_manager.unregister_listener(on_tick_teamonly_noblock)
 
+    # Enable map functions
+    for map_function_entity_classname in map_functions:
+        for entity in EntityIter(map_function_entity_classname):
+            entity.call_input('Enable')
+
     # Clear the list of player personal random weapons
     player_random_weapons.clear()
 
