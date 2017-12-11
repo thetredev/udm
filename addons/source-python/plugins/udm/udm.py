@@ -5,6 +5,10 @@
 # =============================================================================
 # >> IMPORTS
 # =============================================================================
+# Python Imports
+#   Random
+import random
+
 # Source.Python Imports
 #   Commands
 from commands.client import ClientCommandFilter
@@ -288,17 +292,22 @@ def on_pre_bump_weapon(stack_data):
     if player.userid in admin_menu.users:
         return False
 
-    # Only block bumping if the weapon is not in random mode
-    if not player.random_mode:
+    # Get a Weapon instance for the weapon
+    weapon = make_object(Weapon, stack_data[1])
 
-        # Get a Weapon instance for the weapon
-        weapon = make_object(Weapon, stack_data[1])
+    # Get the weapon's data
+    weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
-        # Get the weapon's data
-        weapon_data = weapon_manager.by_name(weapon.weapon_name)
+    # Only block bumping for valid weapons
+    if weapon_data is not None:
 
-        # Block the weapon bump if the weapon is not listed in the player's inventory
-        if weapon_data is not None:
+        if player.random_mode:
+            if weapon_data.has_silencer:
+                WeaponManager.set_silencer(weapon, random.randint(0, 1))
+
+        # If the player is not in random mode,
+        else:
+
             if weapon_data.tag not in player.inventory:
                 return False
 
