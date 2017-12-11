@@ -74,6 +74,7 @@ from udm.spawnpoints.menus import spawnpoints_manager_menu
 from udm.weapons import is_silencer_option_primary
 from udm.weapons import is_silencer_option_secondary
 from udm.weapons import weapon_manager
+from udm.weapons import WeaponManager
 
 
 # =============================================================================
@@ -328,7 +329,7 @@ def on_post_drop_weapon(stack_data, nothing):
         weapon = make_object(Weapon, stack_data[1])
         delay_manager(
             f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2,
-            weapon_manager.remove_weapon, (weapon.index, )
+            WeaponManager.remove_weapon, (weapon.index, )
         )
 
 

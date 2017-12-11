@@ -122,7 +122,7 @@ class _WeaponData(object):
 # =============================================================================
 # >> WEAPON MANAGER
 # =============================================================================
-class _WeaponManager(dict):
+class WeaponManager(dict):
     """Class used to manage weapons listed in the weapons data file."""
 
     def __init__(self, data_file):
@@ -179,4 +179,4 @@ class _WeaponManager(dict):
 
 
 # Store a global instance of `_WeaponManager`
-weapon_manager = _WeaponManager(ConfigObj(_weapons_ini))
+weapon_manager = WeaponManager(ConfigObj(_weapons_ini))
