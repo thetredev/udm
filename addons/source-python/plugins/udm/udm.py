@@ -30,7 +30,6 @@ from events.hooks import PreEvent
 from filters.entities import EntityIter
 from filters.weapons import WeaponClassIter
 #   Listeners
-from listeners import on_tick_listener_manager
 from listeners import OnEntityDeleted
 from listeners import OnEntitySpawned
 from listeners import OnServerActivate
@@ -152,7 +151,7 @@ def prepare_player(player):
         player.give_weapon('weapon_hegrenade')
 
     # Enable or disable non-blocking mode, depending on the configuration
-    player.noblock = cvar_enable_noblock.get_int() == 2
+    player.noblock = cvar_enable_noblock.get_int() > 0
 
     # Enable damage protection
     player.enable_damage_protection(
@@ -171,23 +170,6 @@ def prepare_player(player):
     # Equip the current inventory if not currently using the admin menu
     if player.userid not in admin_menu.users:
         player.equip_inventory()
-
-
-def on_tick_teamonly_noblock():
-    """Handle noblock for teammates (CS:S only - imitates disabling 'mp_solid_teammates' for CS:GO)."""
-    # Loop through all alive players
-    for player in PlayerEntity.alive():
-
-        # Get a list of distances between the player and their teammates
-        teammate_distances = [teammate.origin.get_distance(player.origin)
-                              for teammate in PlayerEntity.by_team(player.team_index)
-                              if player.userid != teammate.userid]
-
-        # Normalize the teammate distances list
-        teammate_distances = [distance for distance in teammate_distances if distance < 60]
-
-        # Enable noblock if the player is close enough to a teammate, disable otherwise
-        player.noblock = bool(teammate_distances)
 
 
 # =============================================================================
@@ -599,20 +581,12 @@ def load():
         for entity in EntityIter(map_function_entity_classname):
             entity.call_input('Disable')
 
-    # Register the teamonly noblock listener for CS:S
-    if GAME_NAME == 'cstrike' and cvar_enable_noblock.get_int() == 1:
-        on_tick_listener_manager.register_listener(on_tick_teamonly_noblock)
-
     # Restart the game after 3 seconds
     mp_restartgame.set_int(3)
 
 
 def unload():
     """Reset deathmatch gameplay."""
-    # Unregister the teamonly noblock listener for CS:S
-    if GAME_NAME == 'cstrike' and cvar_enable_noblock.get_int() == 1:
-        on_tick_listener_manager.unregister_listener(on_tick_teamonly_noblock)
-
     # Enable map functions
     for map_function_entity_classname in map_functions:
         for entity in EntityIter(map_function_entity_classname):

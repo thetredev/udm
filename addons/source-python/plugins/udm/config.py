@@ -40,11 +40,6 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         'Enable or disable non-blocking mode for players.'
     )
 
-    # Noblock options
-    cvar_enable_noblock.Options.append('0 = Off')
-    cvar_enable_noblock.Options.append('1 = Enable for teammates only')
-    cvar_enable_noblock.Options.append('2 = Enable for teammates and enemies')
-
     # The spawn protection duration in seconds
     cvar_spawn_protection_delay = config.cvar(
         'spawn_protection_delay', 2, 'The spawn protection delay in seconds.'
