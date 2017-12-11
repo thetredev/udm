@@ -41,7 +41,7 @@ from udm.delays import delay_manager
 #   Players
 from udm.players.inventories import player_inventories
 #   Spawn Points
-from udm.spawnpoints import spawnpoints
+from udm.spawnpoints import spawnpoint_manager
 #   Weapons
 from udm.weapons import weapon_manager
 
@@ -276,7 +276,7 @@ class PlayerEntity(Player):
         """Return personal spawn points for the player."""
         # Add a shuffled copy of the spawn points list for the map, if the player's spawn points list is empty
         if not player_spawnpoints[self.userid]:
-            player_spawnpoints[self.userid].extend(spawnpoints)
+            player_spawnpoints[self.userid].extend(spawnpoint_manager)
             random.shuffle(player_spawnpoints[self.userid])
 
         # Return the player's spawn points

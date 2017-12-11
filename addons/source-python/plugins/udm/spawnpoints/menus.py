@@ -24,7 +24,7 @@ from udm.config import cvar_spawn_point_distance
 #   Players
 from udm.players import PlayerEntity
 #   Spawn Points
-from udm.spawnpoints import spawnpoints
+from udm.spawnpoints import spawnpoint_manager
 from udm.spawnpoints import SpawnPoint
 
 
@@ -66,7 +66,7 @@ def on_build_spawnpoints_list_menu(menu, player_index):
     """Reload the menu with all available spawn points."""
     menu.clear()
     menu.extend(
-        [PagedOption(f'#{index + 1}', spawnpoint) for index, spawnpoint in enumerate(spawnpoints)]
+        [PagedOption(f'#{index + 1}', spawnpoint) for index, spawnpoint in enumerate(spawnpoint_manager)]
     )
 
 
@@ -109,16 +109,16 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
     if option.value == SPAWNPOINTS_MANAGER_ADD:
 
         # Get a list of the distance of all spawn points to the player's current location
-        distances = [spawnpoint.get_distance(player.origin) for spawnpoint in spawnpoints]
+        distances = [spawnpoint.get_distance(player.origin) for spawnpoint in spawnpoint_manager]
 
         # Add the player's current location, if it is far enough away from all other spawn points
         if not distances or min(distances) >= cvar_spawn_point_distance.get_float():
-            spawnpoints.append(SpawnPoint(player.origin.x, player.origin.y, player.origin.z, player.view_angle))
+            spawnpoint_manager.append(SpawnPoint(player.origin.x, player.origin.y, player.origin.z, player.view_angle))
 
             # Tell the player about the addition
             player.tell(
                 spawnpoints_manager_menu.title,
-                f'Spawn Point {MESSAGE_COLOR_WHITE}#{len(spawnpoints)} {MESSAGE_COLOR_ORANGE}has been added.'
+                f'Spawn Point {MESSAGE_COLOR_WHITE}#{len(spawnpoint_manager)} {MESSAGE_COLOR_ORANGE}has been added.'
             )
 
         # Send this menu back to the player
@@ -128,13 +128,13 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
     elif option.value == SPAWNPOINTS_MANAGER_REMOVE:
 
         # Find the spawn point closest to the player's current location
-        for spawnpoint in spawnpoints.copy():
-            if spawnpoint in spawnpoints and spawnpoint.get_distance(player.origin) < 20:
+        for spawnpoint in spawnpoint_manager.copy():
+            if spawnpoint in spawnpoint_manager and spawnpoint.get_distance(player.origin) < 20:
                 # Store its position
-                position = spawnpoints.index(spawnpoint) + 1
+                position = spawnpoint_manager.index(spawnpoint) + 1
 
                 # Remove it from the spawn points list
-                spawnpoints.remove(spawnpoint)
+                spawnpoint_manager.remove(spawnpoint)
 
                 # Tell the player about the removal
                 player.tell(
@@ -156,7 +156,7 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
     elif option.value == SPAWNPOINTS_MANAGER_SAVE:
 
         # Save the spawn points list to file
-        spawnpoints.save()
+        spawnpoint_manager.save()
 
         # Tell the player about it
         player.tell(

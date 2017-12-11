@@ -67,7 +67,7 @@ class SpawnPoint(Vector):
         }
 
 
-class _SpawnPoints(list):
+class _SpawnPointManager(list):
     """Class used to provide spawn point managing functionality:
 
         * load spawn points from a JSON file
@@ -108,10 +108,10 @@ class _SpawnPoints(list):
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
 # Store a global instance of `_SpawnPoints`
-spawnpoints = _SpawnPoints()
+spawnpoint_manager = _SpawnPointManager()
 
 # Load all spawn points for the current map
-spawnpoints.load()
+spawnpoint_manager.load()
 
 
 # =============================================================================
@@ -120,5 +120,5 @@ spawnpoints.load()
 @OnLevelInit
 def on_level_init(map_name):
     """Reload spawn points."""
-    spawnpoints.clear()
-    spawnpoints.load()
+    spawnpoint_manager.clear()
+    spawnpoint_manager.load()
