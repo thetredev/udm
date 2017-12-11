@@ -17,7 +17,6 @@ See the [issues list](https://github.com/backraw/udm/issues) for current bugs.
 * Weapon Menus - accessible via the chat command ```guns```
 * Buy anywhere for CS:GO - Open up the buy menu anywhere on the map, like in standard CS:GO Deathmatch mode
 * Multiple inventories: each inventory can hold either one or two weapons - easy primary/secondary only handling!
-* Imitate disabling the CS:GO convar ```mp_solid_teammates``` for CS:S
 * Admin Menu - accessible via the chat command ```!udm```
 * [Spawn Points](https://github.com/backraw/udm/tree/master/addons/source-python/data/plugins/udm/spawnpoints) - manageable in game via the Admin menu
 * Damage Protection (timed on spawn, but indefinitely when using the Admin menu)
@@ -95,10 +94,6 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
    udm_respawn_delay 2
 
 
-// Options
-//   * 0 = Off
-//   * 1 = Enable for teammates only
-//   * 2 = Enable for teammates and enemies
 // Default Value: 1
 // Enable or disable non-blocking mode for players.
    udm_enable_noblock 1
