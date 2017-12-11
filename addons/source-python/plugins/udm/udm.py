@@ -310,11 +310,7 @@ def on_pre_bump_weapon(stack_data):
             # Handle the inventory item's silencer option
             if inventory_item.silencer_option is not None:
                 if weapon.get_property_bool('m_bSilencerOn') != inventory_item.silencer_option:
-                    weapon.set_property_bool('m_bSilencerOn', inventory_item.silencer_option)
-
-                    # It's not enough to set m_bSilencerOn (for CS:S at least)
-                    # See https://forums.alliedmods.net/showthread.php?t=167616
-                    weapon.set_property_bool('m_weaponMode', inventory_item.silencer_option)
+                    WeaponManager.set_silencer(weapon, inventory_item.silencer_option)
 
 
 @EntityPostHook(EntityCondition.is_human_player, 'drop_weapon')

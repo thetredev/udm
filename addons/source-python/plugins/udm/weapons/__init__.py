@@ -144,6 +144,15 @@ class WeaponManager(dict):
         self._tags = list(data_file.keys())
 
     @staticmethod
+    def set_silencer(weapon, silencer_option):
+        """Attach or detach the silencer on the weapon."""
+        weapon.set_property_bool('m_bSilencerOn', silencer_option)
+
+        # It's not enough to set m_bSilencerOn (for CS:S at least)
+        # See https://forums.alliedmods.net/showthread.php?t=167616
+        weapon.set_property_bool('m_weaponMode', silencer_option)
+
+    @staticmethod
     def remove_weapon(index):
         """Safely remove a weapon entity."""
         with contextlib.suppress(ValueError):
