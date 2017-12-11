@@ -533,7 +533,6 @@ def on_saycommand_guns(command_info, *args):
 
     # Else equip the selected inventory
     else:
-        player.strip()
         player.equip_inventory()
 
         # Tell the player
