@@ -423,8 +423,8 @@ def client_command_filter(command, index):
                 # Equip a random weapon if the player has random mode activated
                 if player.random_mode:
 
-                    # Make the player drop the weapon
-                    player.drop_weapon(player.active_weapon)
+                    # Remove the player's active weapon
+                    player.active_weapon.remove()
 
                     # Equip the player with a random weapon
                     player.equip_random_weapon(weapon_data.tag)
