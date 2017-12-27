@@ -312,7 +312,7 @@ def on_pre_bump_weapon(stack_data):
 @EntityPreHook(EntityCondition.is_human_player, 'drop_weapon')
 @EntityPreHook(EntityCondition.is_bot_player, 'drop_weapon')
 def on_pre_drop_weapon(stack_data):
-    """Remove the dropped weapon after half the respawn delay."""
+    """Remove the dropped weapon after one second."""
     # Get the weapon dropped
     weapon_ptr = stack_data[1]
 
@@ -322,10 +322,9 @@ def on_pre_drop_weapon(stack_data):
         # Get a Weapon instance for the dropped weapon
         weapon = make_object(Weapon, weapon_ptr)
 
-        # Remove it after <respawn delay> / 2 seconds
+        # Remove it after one second
         delay_manager(
-            f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2,
-            WeaponManager.remove_weapon, (weapon.index, )
+            f'drop_{weapon.index}', 1, WeaponManager.remove_weapon, (weapon.index, )
         )
 
 
