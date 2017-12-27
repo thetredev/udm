@@ -316,11 +316,13 @@ def on_pre_drop_weapon(stack_data):
     # Get the weapon dropped
     weapon_ptr = stack_data[1]
 
-    # Stop if the weapon pointer is None
-    if weapon_ptr is not None and weapon_ptr != 0:
+    # Continue only for valid weapons
+    if weapon_ptr:
 
-        # Remove the dropped weapon after the delay if this was a valid drop_weapon() call
+        # Get a Weapon instance for the dropped weapon
         weapon = make_object(Weapon, weapon_ptr)
+
+        # Remove it after <respawn delay> / 2 seconds
         delay_manager(
             f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2,
             WeaponManager.remove_weapon, (weapon.index, )
