@@ -194,11 +194,19 @@ def on_player_death(game_event):
     if userid_attacker:
         attacker = PlayerEntity.from_userid(userid_attacker)
 
-        # Refill the attacker's active weapon's clip for a headshot
+        # Handle headshot reward
         if cvar_refill_clip_on_headshot.get_int() > 0 and game_event['headshot']:
+
+            # Get the weapon's data
+            weapon_data = weapon_manager.by_name(attacker.active_weapon.weapon_name)
+
+            # Restore the weapon's ammo
+            attacker.active_weapon.ammo = weapon_data.maxammo
+
+            # Restore the weapon's clip
             delay_manager(
                 f'refill_clip_{attacker.active_weapon.index}', 0.1,
-                attacker.active_weapon.set_clip, (weapon_manager.by_name(attacker.active_weapon.weapon_name).clip, )
+                attacker.active_weapon.set_clip, (weapon_data.clip, )
             )
 
         # Give a High Explosive grenade, if it was a HE grenade kill
