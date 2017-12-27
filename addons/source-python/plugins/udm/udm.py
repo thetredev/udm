@@ -22,7 +22,6 @@ from cvars import cvar
 from entities.entity import Entity
 from entities.hooks import EntityCondition
 from entities.hooks import EntityPreHook
-from entities.hooks import EntityPostHook
 #   Events
 from events import Event
 from events.hooks import PreEvent
@@ -304,16 +303,18 @@ def on_pre_bump_weapon(stack_data):
                     WeaponManager.set_silencer(weapon, inventory_item.silencer_option)
 
 
-@EntityPostHook(EntityCondition.is_human_player, 'drop_weapon')
-@EntityPostHook(EntityCondition.is_bot_player, 'drop_weapon')
-def on_post_drop_weapon(stack_data, nothing):
+@EntityPreHook(EntityCondition.is_human_player, 'drop_weapon')
+@EntityPreHook(EntityCondition.is_bot_player, 'drop_weapon')
+def on_pre_drop_weapon(stack_data):
     """Remove the dropped weapon after half the respawn delay."""
-    # Get a PlayerEntity instance for the player
-    player = make_object(PlayerEntity, stack_data[0])
+    # Get the weapon dropped
+    weapon_ptr = stack_data[1]
 
-    # Remove the dropped weapon after the delay if this was a valid drop_weapon() call
-    if player.classname == 'player':
-        weapon = make_object(Weapon, stack_data[1])
+    # Stop if the weapon pointer is None
+    if weapon_ptr is not None and weapon_ptr != 0:
+
+        # Remove the dropped weapon after the delay if this was a valid drop_weapon() call
+        weapon = make_object(Weapon, weapon_ptr)
         delay_manager(
             f'drop_{weapon.index}', abs(cvar_respawn_delay.get_float()) / 2,
             WeaponManager.remove_weapon, (weapon.index, )
