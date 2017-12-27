@@ -19,8 +19,6 @@ from colors import Color
 from colors import WHITE
 #   Filters
 from filters.players import PlayerIter
-#   Listeners
-from listeners import OnLevelEnd
 #   Memory
 from memory import make_object
 #   Messages
@@ -356,14 +354,3 @@ class PlayerEntity(Player):
 
         # Return True if the player carries all the weapons in their selected inventory
         return True
-
-
-# =============================================================================
-# >> LISTENERS
-# =============================================================================
-@OnLevelEnd
-def on_level_end():
-    """Clear personal player dictionaries."""
-    player_random_weapons.clear()
-    player_spawnpoints.clear()
-    player_team_changes.clear()

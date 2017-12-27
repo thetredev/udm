@@ -30,6 +30,7 @@ from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners import OnEntityDeleted
 from listeners import OnEntitySpawned
+from listeners import OnLevelEnd
 from listeners import OnServerActivate
 from listeners import OnServerOutput
 #   Memory
@@ -372,6 +373,14 @@ def on_entity_spawned(base_entity):
     elif base_entity.classname in map_functions:
         entity = Entity(base_entity.index)
         entity.call_input('Disable')
+
+
+@OnLevelEnd
+def on_level_end():
+    """Clear personal player dictionaries."""
+    player_random_weapons.clear()
+    player_spawnpoints.clear()
+    player_team_changes.clear()
 
 
 @OnServerActivate
