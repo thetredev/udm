@@ -76,7 +76,6 @@ from udm.spawnpoints.menus import spawnpoints_manager_menu
 from udm.weapons import is_silencer_option_primary
 from udm.weapons import is_silencer_option_secondary
 from udm.weapons import weapon_manager
-from udm.weapons import WeaponManager
 
 
 # =============================================================================
@@ -290,7 +289,7 @@ def on_pre_bump_weapon(stack_data):
 
         if player.random_mode:
             if weapon_data.has_silencer:
-                WeaponManager.set_silencer(weapon, random.randint(0, 1))
+                weapon_manager.set_silencer(weapon, random.randint(0, 1))
 
         # If the player is not in random mode,
         else:
@@ -306,7 +305,7 @@ def on_pre_bump_weapon(stack_data):
             # Handle the inventory item's silencer option
             if inventory_item.silencer_option is not None:
                 if weapon.get_property_bool('m_bSilencerOn') != inventory_item.silencer_option:
-                    WeaponManager.set_silencer(weapon, inventory_item.silencer_option)
+                    weapon_manager.set_silencer(weapon, inventory_item.silencer_option)
 
 
 @EntityPreHook(EntityCondition.is_human_player, 'drop_weapon')
@@ -324,7 +323,7 @@ def on_pre_drop_weapon(stack_data):
 
         # Remove it after one second
         delay_manager(
-            f'drop_{weapon.index}', 1, WeaponManager.remove_weapon, (weapon.index, )
+            f'drop_{weapon.index}', 1, weapon_manager.remove_weapon, (weapon.index, )
         )
 
 
