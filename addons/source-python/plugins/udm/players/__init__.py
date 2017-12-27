@@ -227,6 +227,14 @@ class PlayerEntity(Player):
                 call_on_cancel=True
             )
 
+    def refill_ammo(self, clip_fix=0):
+        """Restore the player's active weapon's ammo."""
+        # Get the weapon's data
+        weapon_data = weapon_manager.by_name(self.active_weapon.weapon_name)
+
+        # Add up the weapon's ammo
+        self.active_weapon.ammo = weapon_data.maxammo - self.active_weapon.clip + weapon_data.clip + clip_fix
+
     def get_random_weapon(self, tag):
         """Return a random weapon for the given weapon tag."""
         return self.random_weapons[tag].pop()

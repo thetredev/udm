@@ -14,7 +14,6 @@ import random
 from commands.client import ClientCommandFilter
 from commands.typed import TypedSayCommand
 #   Core
-from core import GAME_NAME
 from core import OutputReturn
 #   Cvars
 from cvars import cvar
@@ -95,22 +94,6 @@ manipulated_int_convars.append(ManipulatedIntConVar('mp_buy_anywhere', 1))
 
 # Solid Teammates
 manipulated_int_convars.append(ManipulatedIntConVar('mp_solid_teammates', int(cvar_enable_noblock.get_int() == 0)))
-
-# Enable infinite ammo (999)
-if cvar_enable_infinite_ammo.get_int() > 0:
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_338mag_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_min_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_p250_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_357sig_small_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_45acp_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_50AE_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_box_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_small_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_556mm_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_57mm_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_762mm_max', -2))
-    manipulated_int_convars.append(ManipulatedIntConVar('ammo_9mm_max', -2))
 
 
 # =============================================================================
@@ -257,6 +240,28 @@ def on_hegrenade_detonate(game_event):
     if cvar_equip_hegrenade.get_int() == 3:
         player = PlayerEntity.from_userid(game_event['userid'])
         player.give_weapon('weapon_hegrenade')
+
+
+@Event('weapon_reload')
+def on_weapon_reload(game_event):
+    """Refill the player's ammo."""
+    if cvar_enable_infinite_ammo.get_int() > 0:
+        player = PlayerEntity.from_userid(game_event['userid'])
+        player.refill_ammo()
+
+
+@Event('weapon_fire')
+def on_weapon_fire_on_empty(game_event):
+    """Refill the player's ammo, if the player's active weapon's clip is about to be empty."""
+    if cvar_enable_infinite_ammo.get_int() > 0:
+        player = PlayerEntity.from_userid(game_event['userid'])
+
+        # Refill only valid weapons
+        if weapon_manager.by_name(player.active_weapon.weapon_name) is not None:
+
+            # Refill only if this is the last round
+            if player.active_weapon.clip == 1:
+                player.refill_ammo(1)
 
 
 # =============================================================================
