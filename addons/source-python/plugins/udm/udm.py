@@ -382,6 +382,9 @@ def on_level_end():
     player_spawnpoints.clear()
     player_team_changes.clear()
 
+    # Cancel all delays
+    delay_manager.clear()
+
 
 @OnServerActivate
 def on_server_activate(edicts, edict_count, max_clients):

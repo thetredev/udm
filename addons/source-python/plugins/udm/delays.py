@@ -9,7 +9,6 @@
 #   Core
 from core import AutoUnload
 #   Listeners
-from listeners import OnLevelEnd
 from listeners.tick import Delay
 
 # Script Imports
@@ -101,12 +100,3 @@ class _DelayManager(dict, AutoUnload):
 
 # Store a global instance of `_DelayManager`
 delay_manager = _DelayManager(info.name)
-
-
-# =============================================================================
-# >> LISTENERS
-# =============================================================================
-@OnLevelEnd
-def on_level_end():
-    """Cancel all pending delays on level end."""
-    delay_manager.clear()
