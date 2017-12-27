@@ -369,6 +369,7 @@ def on_entity_deleted(base_entity):
     """Cancel the refill & drop delays for the deleted entity."""
     if base_entity.classname.startswith(weapon_manager.prefix):
         delay_manager.cancel(f'drop_{base_entity.index}')
+        delay_manager.cancel(f'refill_clip_{base_entity.index}')
 
 
 @OnEntitySpawned
