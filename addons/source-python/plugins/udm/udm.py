@@ -293,10 +293,9 @@ def on_pre_bump_weapon(stack_data):
     weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
     # Only block bumping for valid weapons
-    if weapon_data is not None:
+    if weapon_data is not None and weapon_data.has_silencer:
 
         if player.random_mode:
-            if weapon_data.has_silencer:
                 weapon_manager.set_silencer(weapon, random.randint(0, 1))
 
         # If the player is not in random mode,
