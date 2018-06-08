@@ -65,9 +65,10 @@ class PlayerEntity(Player):
 
         * Respawn
         * Damage Protection
-        * Interfacing the player's inventory
-        * Player personal random weapons
-        * Player personal spawn points
+        * Access personal inventories
+        * Access personal random weapons
+        * Access personal spawn points
+        * Refill weapon ammo
     """
 
     @classmethod
