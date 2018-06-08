@@ -58,13 +58,6 @@ player_random_weapons = defaultdict(lambda: {tag: list() for tag in weapon_manag
 
 
 # =============================================================================
-# >> ALIVE PLAYERS GENERATOR
-# =============================================================================
-# Store an instance of PlayerIter for alive players
-_playeriter_alive = PlayerIter('alive')
-
-
-# =============================================================================
 # >> PLAYER ENTITY
 # =============================================================================
 class PlayerEntity(Player):
@@ -80,7 +73,7 @@ class PlayerEntity(Player):
     @classmethod
     def alive(cls):
         """Yield a `PlayerEntity` (subclass) instance for each alive player."""
-        for player in _playeriter_alive:
+        for player in PlayerIter('alive'):
             yield cls(player.index)
 
     @classmethod
