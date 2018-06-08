@@ -93,6 +93,8 @@ class PlayerEntity(Player):
     def disable_damage_protection(cls, index):
         """Disable damage protection if the player is still connected."""
         with contextlib.suppress(ValueError):
+
+            # Get a PlayerEntity instance for the player index
             player = cls(index)
 
             # Disable god mode
@@ -103,12 +105,12 @@ class PlayerEntity(Player):
 
     @staticmethod
     def reset_team_changes(userid):
-        """Reset the team change count for the player."""
+        """Reset the player's team change count."""
         if userid in player_team_changes:
             del player_team_changes[userid]
 
     def tell(self, prefix, message):
-        """Tell the player a prefixed chat message."""
+        """Send the player a prefixed chat message."""
         SayText2(
             f'{MESSAGE_COLOR_ORANGE}[{MESSAGE_COLOR_WHITE}{prefix}{MESSAGE_COLOR_ORANGE}] {message}'
         ).send(self.index)
