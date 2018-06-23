@@ -22,7 +22,37 @@ from udm.info import info
 with ConfigManager(info.name, f'{info.name}_') as config:
 
     config.text('----------------------------------')
-    config.text('   * General')
+    config.text('   * Respawn')
+    config.text('----------------------------------')
+
+    cvar_respawn_delay = config.cvar(
+        'respawn_delay',
+        2,
+        'The respawn delay in seconds.'
+    )
+
+    config.text('----------------------------------')
+    config.text('   * Spawn Protection')
+    config.text('----------------------------------')
+
+    cvar_spawn_protection_delay = config.cvar(
+        'spawn_protection_delay',
+        2,
+        'The spawn protection delay in seconds.'
+    )
+
+    config.text('----------------------------------')
+    config.text('   * Spawn Points')
+    config.text('----------------------------------')
+
+    cvar_spawn_point_distance = config.cvar(
+        'spawn_point_distance',
+        150,
+        "The minimum distance players have to have between a spawn point for it to be 'safe'."
+    )
+
+    config.text('----------------------------------')
+    config.text('   * Infinite Ammo')
     config.text('----------------------------------')
 
     cvar_enable_infinite_ammo = config.cvar(
@@ -31,28 +61,14 @@ with ConfigManager(info.name, f'{info.name}_') as config:
         'Enable infinite ammo?'
     )
 
-    cvar_respawn_delay = config.cvar(
-        'respawn_delay',
-        2,
-        'The respawn delay in seconds.'
-    )
+    config.text('----------------------------------')
+    config.text('   * NoBlock')
+    config.text('----------------------------------')
 
     cvar_enable_noblock = config.cvar(
         'enable_noblock',
         1,
         'Enable or disable non-blocking mode for players.'
-    )
-
-    cvar_spawn_protection_delay = config.cvar(
-        'spawn_protection_delay',
-        2,
-        'The spawn protection delay in seconds.'
-    )
-
-    cvar_spawn_point_distance = config.cvar(
-        'spawn_point_distance',
-        150,
-        "The minimum distance players have to have between a spawn point for it to be 'safe'."
     )
 
     config.text('----------------------------------')
@@ -72,7 +88,7 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     )
 
     config.text('----------------------------------')
-    config.text('   * High Explosive Grenade')
+    config.text('   * HE Grenade Behavior')
     config.text('----------------------------------')
 
     cvar_equip_hegrenade = config.cvar(
@@ -87,7 +103,7 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     cvar_equip_hegrenade.Options.append('3 = Equip on spawn and after each detonation')
 
     config.text('----------------------------------')
-    config.text('   * Team Changes Per Round')
+    config.text('   * Team Changes Management')
     config.text('----------------------------------')
 
     cvar_team_changes_per_round = config.cvar(
