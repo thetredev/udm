@@ -25,7 +25,6 @@ from entities.hooks import EntityPreHook
 from events import Event
 from events.hooks import PreEvent
 #   Filters
-from filters.entities import EntityIter
 from filters.weapons import WeaponClassIter
 #   Listeners
 from listeners import OnEntityDeleted
@@ -59,6 +58,9 @@ from udm.cvars import ManipulatedIntConVar
 from udm.cvars import manipulated_int_convars
 #   Delays
 from udm.delays import delay_manager
+#   Entities
+from udm.entities import EntityInputDispatcher
+from udm.entities import EntityRemover
 #   Info
 from udm.info import info
 #   Menus
@@ -104,10 +106,10 @@ mp_restartgame = cvar.find_var('mp_restartgame')
 # >> FORBIDDEN ENTITIES
 # =============================================================================
 # Store a list of forbidden entities
-forbidden_entities = [weapon_data.name for weapon_data in WeaponClassIter(is_filters='objective')] + [
-    'hostage_entity', 'item_defuser'
-]
-
+forbidden_entities = list(
+    [weapon_data.name for weapon_data in WeaponClassIter(is_filters='objective')] +
+    ['hostage_entity', 'item_defuser']
+)
 
 # =============================================================================
 # >> MAP FUNCTIONS
@@ -536,14 +538,10 @@ def load():
     manipulated_int_convars.manipulate_values()
 
     # Remove forbidden entities
-    for forbidden_entity_classname in forbidden_entities:
-        for entity in EntityIter(forbidden_entity_classname):
-            entity.remove()
+    EntityRemover.perform_action(forbidden_entities)
 
     # Disable map functions
-    for map_function_entity_classname in map_functions:
-        for entity in EntityIter(map_function_entity_classname):
-            entity.call_input('Disable')
+    EntityInputDispatcher.perform_action(map_functions, 'Disable')
 
     # Restart the game after 3 seconds
     mp_restartgame.set_int(3)
@@ -552,9 +550,7 @@ def load():
 def unload():
     """Reset deathmatch gameplay."""
     # Enable map functions
-    for map_function_entity_classname in map_functions:
-        for entity in EntityIter(map_function_entity_classname):
-            entity.call_input('Enable')
+    EntityInputDispatcher.perform_action(map_functions, 'Enable')
 
     # Clear the list of player personal random weapons
     player_random_weapons.clear()
