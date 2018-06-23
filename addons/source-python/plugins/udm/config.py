@@ -120,7 +120,7 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     )
 
     config.text('----------------------------------')
-    config.text('   * Chat Commands')
+    config.text('   * Say Commands')
     config.text('----------------------------------')
 
     cvar_saycommand_admin = config.cvar(
