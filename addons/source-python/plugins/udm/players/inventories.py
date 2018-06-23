@@ -30,7 +30,7 @@ class _InventoryItem(object):
         self._basename = None
 
         # Store the silencer option for this inventory item
-        self.silencer_option = None
+        self.silencer_option = False
 
     def set_basename(self, value):
         """Set the basename and silencer option if the weapon can be silenced."""

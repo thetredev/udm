@@ -347,8 +347,7 @@ class PlayerEntity(Player):
                 return False
 
             # Return False if the weapon is in a different silencer state than it's supposed to be
-            if item.silencer_option is not None and item.silencer_option !=\
-                    weapon_equipped.get_property_bool('m_bSilencerOn'):
+            if item.data.has_silencer and item.silencer_option != weapon_equipped.get_property_bool('m_bSilencerOn'):
                 return False
 
         # Return True if the player carries all the weapons in their selected inventory
