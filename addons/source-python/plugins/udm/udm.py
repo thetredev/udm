@@ -87,14 +87,12 @@ admin_menu.register_submenu(spawnpoints_manager_menu)
 # =============================================================================
 # >> REGISTER MANIPULATED INTEGER CONVARS
 # =============================================================================
-# Buy Time, Start Money & Buy Anywhere
-manipulated_int_convars.append(ManipulatedIntConVar('mp_buytime', 60 * 60))
-manipulated_int_convars.append(ManipulatedIntConVar('mp_startmoney', 10_000))
-manipulated_int_convars.append(ManipulatedIntConVar('mp_buy_anywhere', 1))
-
-# Solid Teammates
-manipulated_int_convars.append(ManipulatedIntConVar('mp_solid_teammates', int(cvar_enable_noblock.get_int() == 0)))
-
+manipulated_int_convars.extend([
+    ManipulatedIntConVar('mp_buytime', 60 * 60),
+    ManipulatedIntConVar('mp_startmoney', 10_000),
+    ManipulatedIntConVar('mp_buy_anywhere', 1),
+    ManipulatedIntConVar('mp_solid_teammates', int(cvar_enable_noblock.get_int() == 0))
+])
 
 # =============================================================================
 # >> RESTART GAME CONVAR
