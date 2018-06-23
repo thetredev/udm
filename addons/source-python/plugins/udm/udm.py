@@ -42,7 +42,6 @@ from weapons.entity import Weapon
 #   Admin
 from udm.admin import admin_menu
 #   Colors
-from udm.colors import MESSAGE_COLOR_ORANGE
 from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
 from udm.config import cvar_enable_infinite_ammo
@@ -55,7 +54,6 @@ from udm.config import cvar_saycommand_admin
 from udm.config import cvar_saycommand_guns
 from udm.config import cvar_spawn_protection_delay
 from udm.config import cvar_team_changes_per_round
-from udm.config import cvar_team_changes_reset_delay
 #   Cvars
 from udm.cvars import ManipulatedIntConVar
 from udm.cvars import manipulated_int_convars
@@ -446,31 +444,7 @@ def client_command_filter(command, index):
 
     # Allow the team change, if the player hasn't yet exceeded the maximum team change count
     if player.team_changes < cvar_team_changes_per_round.get_int() + 1:
-        player.team = team_index
-
-        # Take a note of the team change
-        player.team_changes += 1
-
-        # Reset the player's team change count after the team change reset delay if the maximum team change count
-        # has been reached
-        if player.team_changes == cvar_team_changes_per_round.get_int() + 1:
-            delay_time = abs(cvar_team_changes_reset_delay.get_float())
-
-            delay_manager(
-                f'reset_team_changes_{player.userid}', delay_time * 60.0,
-                PlayerEntity.reset_team_changes, (player.userid, )
-            )
-
-            # Tell the player
-            player.tell(
-                info.verbose_name,  f'{MESSAGE_COLOR_WHITE}You will have to wait {MESSAGE_COLOR_ORANGE}%.1f'
-                f'{MESSAGE_COLOR_WHITE} minutes to join any other team from now on.' % delay_time
-            )
-
-        # Respawn the player after the respawn delay
-        delay_manager(
-            f'respawn_{player.userid}', abs(cvar_respawn_delay.get_float()), PlayerEntity.respawn, (player.index, )
-        )
+        player.team_changed(team_index)
 
         # Allow the client command
         return True

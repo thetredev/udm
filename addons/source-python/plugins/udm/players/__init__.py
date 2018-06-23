@@ -32,8 +32,14 @@ from weapons.entity import Weapon
 #   Colors
 from udm.colors import MESSAGE_COLOR_ORANGE
 from udm.colors import MESSAGE_COLOR_WHITE
+#   Config
+from udm.config import cvar_team_changes_per_round
+from udm.config import cvar_team_changes_reset_delay
+from udm.config import cvar_respawn_delay
 #   Delays
 from udm.delays import delay_manager
+#   Info
+from udm.info import info
 #   Players
 from udm.players.inventories import player_inventories
 #   Spawn Points
@@ -316,6 +322,33 @@ class PlayerEntity(Player):
 
         # Return it
         return spawn_locations
+
+    def team_changed(self, team_index):
+        self.team = team_index
+
+        # Take a note of the team change
+        self.team_changes += 1
+
+        # Reset the player's team change count after the team change reset delay if the maximum team change count
+        # has been reached
+        if self.team_changes == cvar_team_changes_per_round.get_int() + 1:
+            delay_time = abs(cvar_team_changes_reset_delay.get_float())
+
+            delay_manager(
+                f'reset_team_changes_{self.userid}', delay_time * 60.0,
+                PlayerEntity.reset_team_changes, (self.userid,)
+            )
+
+            # Tell the player
+            self.tell(
+                info.verbose_name, f'{MESSAGE_COLOR_WHITE}You will have to wait {MESSAGE_COLOR_ORANGE}%.1f'
+                                   f'{MESSAGE_COLOR_WHITE} minutes to join any other team from now on.' % delay_time
+            )
+
+        # Respawn the player after the respawn delay
+        delay_manager(
+            f'respawn_{self.userid}', abs(cvar_respawn_delay.get_float()), PlayerEntity.respawn, (self.index,)
+        )
 
     def set_team_changes(self, value):
         """Store `value` as the team change count for the player."""
