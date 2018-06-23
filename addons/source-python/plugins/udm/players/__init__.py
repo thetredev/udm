@@ -153,7 +153,7 @@ class PlayerEntity(Player):
 
     def equip_inventory_item(self, tag):
         """Equip the inventory item for `tag`."""
-        # Remove any weapon not belonging to the player's inventory
+        # Remove any weapon which is not listed in the player's inventory
         tags_to_remove = [tag for tag in weapon_manager.tags if tag not in self.inventory]
 
         if tags_to_remove:
