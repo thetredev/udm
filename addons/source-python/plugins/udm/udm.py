@@ -406,7 +406,7 @@ def on_server_output(severity, msg):
 # =============================================================================
 @ClientCommandFilter
 def client_command_filter(command, index):
-    """Handle buy anywhere & spwaning in the middle of the round."""
+    """Handle buy anywhere & spawning in the middle of the round."""
     # Get a PlayerEntity instance for the player
     player = PlayerEntity(index)
 
