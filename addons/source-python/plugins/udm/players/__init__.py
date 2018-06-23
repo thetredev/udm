@@ -259,14 +259,18 @@ class PlayerEntity(Player):
     @property
     def random_weapons(self):
         """Return personal random weapons for the player."""
-        # Add weapon names to each weapon tag if the list for the respective tag is empty
-        for tag, weapon_list in player_random_weapons[self.userid].items():
+        # Get the player's personal random weapon map
+        random_weapons = player_random_weapons[self.userid]
 
+        # Iterate through it
+        for tag, weapon_list in random_weapons.items():
+
+            # Fill in all weapons of `tag` in shuffled form if the tag's weapon list is empty
             if not weapon_list:
                 weapon_list.extend([weapon_data.name for weapon_data in weapon_manager.by_tag(tag)])
                 random.shuffle(weapon_list)
 
-        # Return the player's random weapons
+        # Return it
         return player_random_weapons[self.userid]
 
     @property
