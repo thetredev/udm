@@ -421,16 +421,7 @@ def client_command_filter(command, index):
 
     # Handle client command `buy`
     if client_command == 'buy':
-
-        # Disable random mode for the player
-        player.random_mode = False
-
-        # Get the weapon the player is trying to buy
-        weapon = command[1]
-
-        # Add the weapon to the player's selected inventory if it is valid for UDM
-        if weapon in weapon_manager:
-            player.inventory.add_inventory_item(player, weapon)
+        player.choose_weapon(command[1])
 
         # Block any further command handling
         return False
@@ -541,9 +532,6 @@ def on_saycommand_guns(command_info, *args):
     # Stop if the selection isn't valid
     if selection <= 0:
         return False
-
-    # Disable random mode
-    player.random_mode = False
 
     # Make the player's choice their inventory selection
     player.inventory_selection = selection - 1

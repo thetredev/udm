@@ -46,7 +46,7 @@ def on_close_secondary_menu(menu, player_index):
 def on_select_secondary_weapon(menu, player_index, option):
     """Add the secondary weapon to the player's inventory."""
     player = PlayerEntity(player_index)
-    player.inventory.add_inventory_item(player, option.value)
+    player.choose_weapon(option.value)
 
 
 # =============================================================================
@@ -66,7 +66,7 @@ def on_close_primary_menu(menu, player_index):
 def on_select_primary_weapon(menu, player_index, option):
     """Add the primary weapon to the player's inventory."""
     player = PlayerEntity(player_index)
-    player.inventory.add_inventory_item(player, option.value)
+    player.choose_weapon(option.value)
 
     # Send the secondary menu to the player
     secondary_menu.send(player.index)

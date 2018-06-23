@@ -198,6 +198,13 @@ class PlayerEntity(Player):
         for tag in self.random_weapons.keys():
             self.equip_random_weapon(tag)
 
+    def choose_weapon(self, weapon_basename):
+        """Handle choosing a weapon from the buy menu or the weapon menu."""
+        self.random_mode = False
+
+        if weapon_basename in weapon_manager:
+            self.inventory.add_inventory_item(self, weapon_basename)
+
     def strip(self, is_filters=None, not_filters=('melee', 'grenade')):
         """Remove the player's weapons in `is_filters` & keep those in `not_filters`."""
         for weapon in self.weapons(is_filters=is_filters, not_filters=not_filters):
