@@ -176,7 +176,7 @@ def on_player_spawn(game_event):
     """Prepare the player for battle if they are alive and on a team."""
     player = PlayerEntity.from_userid(game_event['userid'])
 
-    if player.team > 1 and not player.dead:
+    if not player.dead and player.team > 1:
         prepare_player(player)
 
 
