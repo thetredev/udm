@@ -42,16 +42,6 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     )
 
     config.text('----------------------------------')
-    config.text('   * Spawn Points')
-    config.text('----------------------------------')
-
-    cvar_spawn_point_distance = config.cvar(
-        'spawn_point_distance',
-        150,
-        "The minimum distance players have to have between a spawn point for it to be 'safe'."
-    )
-
-    config.text('----------------------------------')
     config.text('   * Infinite Ammo')
     config.text('----------------------------------')
 

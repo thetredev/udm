@@ -32,13 +32,12 @@ from weapons.entity import Weapon
 #   Colors
 from udm.colors import MESSAGE_COLOR_ORANGE
 from udm.colors import MESSAGE_COLOR_WHITE
-#   Config
-from udm.config import cvar_spawn_point_distance
 #   Delays
 from udm.delays import delay_manager
 #   Players
 from udm.players.inventories import player_inventories
 #   Spawn Points
+from udm.spawnpoints import SAFE_SPAWN_DISTANCE
 from udm.spawnpoints import spawnpoint_manager
 #   Weapons
 from udm.weapons import weapon_manager
@@ -249,7 +248,7 @@ class PlayerEntity(Player):
             distances = [origin.get_distance(spawnpoint) for origin in player_origins]
 
             # Continue if there is enough space around the spawn point
-            if min(distances) >= cvar_spawn_point_distance.get_float():
+            if min(distances) >= SAFE_SPAWN_DISTANCE:
 
                 # Remove the spawn point from the player's spawn points list
                 self.spawnpoints.remove(spawnpoint)

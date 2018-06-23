@@ -16,11 +16,10 @@ from udm.admin import admin_menu
 #   Colors
 from udm.colors import MESSAGE_COLOR_ORANGE
 from udm.colors import MESSAGE_COLOR_WHITE
-#   Config
-from udm.config import cvar_spawn_point_distance
 #   Players
 from udm.players import PlayerEntity
 #   Spawn Points
+from udm.spawnpoints import SAFE_SPAWN_DISTANCE
 from udm.spawnpoints import spawnpoint_manager
 from udm.spawnpoints import SpawnPoint
 
@@ -109,7 +108,7 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
         distances = [spawnpoint.get_distance(player.origin) for spawnpoint in spawnpoint_manager]
 
         # Add the player's current location, if it is far enough away from all other spawn points
-        if not distances or min(distances) >= cvar_spawn_point_distance.get_float():
+        if not distances or min(distances) >= SAFE_SPAWN_DISTANCE:
             spawnpoint_manager.append(SpawnPoint(player.origin.x, player.origin.y, player.origin.z, player.view_angle))
 
             # Tell the player about the addition
