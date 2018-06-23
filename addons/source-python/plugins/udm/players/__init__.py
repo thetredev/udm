@@ -198,6 +198,29 @@ class PlayerEntity(Player):
         for tag in self.random_weapons.keys():
             self.equip_random_weapon(tag)
 
+    def weapon_dropped(self):
+        """Handle removing the player's active weapon from their inventory if it has been dropped."""
+        if self.active_weapon is not None:
+            weapon_data = weapon_manager.by_name(self.active_weapon.weapon_name)
+
+            if weapon_data is not None:
+
+                # Equip a random weapon if the player has random mode activated
+                if self.random_mode:
+
+                    # Remove the player's active weapon
+                    self.active_weapon.remove()
+
+                    # Equip the player with a random weapon
+                    self.equip_random_weapon(weapon_data.tag)
+
+                # Else, equip random weapons of the player's inventory is empty
+                else:
+                    self.inventory.remove_inventory_item(self, weapon_data.tag)
+
+                    if not self.inventory:
+                        self.equip_random_weapons()
+
     def choose_weapon(self, weapon_basename):
         """Handle choosing a weapon from the buy menu or the weapon menu."""
         self.random_mode = False

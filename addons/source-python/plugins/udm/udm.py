@@ -428,28 +428,7 @@ def client_command_filter(command, index):
 
     # Handle the client command `drop`
     if client_command == 'drop':
-
-        # Remove the player's active weapon from their inventory
-        if player.active_weapon is not None:
-            weapon_data = weapon_manager.by_name(player.active_weapon.weapon_name)
-
-            if weapon_data is not None:
-
-                # Equip a random weapon if the player has random mode activated
-                if player.random_mode:
-
-                    # Remove the player's active weapon
-                    player.active_weapon.remove()
-
-                    # Equip the player with a random weapon
-                    player.equip_random_weapon(weapon_data.tag)
-
-                # Else, equip random weapons of the player's inventory is empty
-                else:
-                    player.inventory.remove_inventory_item(player, weapon_data.tag)
-
-                    if not player.inventory:
-                        player.equip_random_weapons()
+        player.weapon_dropped()
 
         # Block any further command handling
         return False
