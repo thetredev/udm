@@ -65,17 +65,10 @@ class _PlayerInventory(defaultdict):
         """Override keys to reverse its order."""
         yield from sorted(self, reverse=True)
 
-    def add_inventory_item(self, player, basename):
+    def add_inventory_item(self, basename, weapon_data):
         """Add an inventory item for `basename` and equip the player with it."""
-        # Get the weapon's data
-        weapon_data = weapon_manager[basename]
-
         # Set the inventory item's basename
         self[weapon_data.tag].basename = basename
-
-        # Equip the inventory item if the player is not dead
-        if player.team_index > 1 and not player.dead:
-            player.equip_inventory_item(weapon_data.tag)
 
     def remove_inventory_item(self, player, tag):
         """Remove an inventory item for weapon tag `tag`."""

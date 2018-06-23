@@ -229,10 +229,21 @@ class PlayerEntity(Player):
 
     def choose_weapon(self, weapon_basename):
         """Handle choosing a weapon from the buy menu or the weapon menu."""
+        # Disable random mode
         self.random_mode = False
 
+        # Only allow choosing valid weapons
         if weapon_basename in weapon_manager:
-            self.inventory.add_inventory_item(self, weapon_basename)
+
+            # Get the weapon's data
+            weapon_data = weapon_manager[weapon_basename]
+
+            # Add the weapon to the player's inventory
+            self.inventory.add_inventory_item(weapon_basename, weapon_data)
+
+            # Equip the player with the weapon if the player is alive and on a team
+            if not self.dead and self.team_index > 1:
+                self.equip_inventory_item(weapon_data.tag)
 
     def strip(self, is_filters=None, not_filters=('melee', 'grenade')):
         """Remove the player's weapons in `is_filters` & keep those in `not_filters`."""
