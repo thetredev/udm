@@ -39,7 +39,7 @@ class _InventoryItem(object):
 
         # Set the silencer option to True if the game is CS:GO, else False
         if self.data.has_silencer:
-            self._silencer_option = GAME_NAME == 'csgo'
+            self.silencer_option = GAME_NAME == 'csgo'
 
     def get_basename(self):
         """Return the basename."""
