@@ -295,7 +295,7 @@ def on_pre_bump_weapon(stack_data):
     if weapon_data is not None and weapon_data.has_silencer:
 
         if player.random_mode:
-                weapon_manager.set_silencer(weapon, random.randint(0, 1))
+            weapon_manager.set_silencer(weapon, random.randint(0, 1))
 
         # If the player is not in random mode,
         else:
