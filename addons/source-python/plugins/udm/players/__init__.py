@@ -169,7 +169,7 @@ class PlayerEntity(Player):
         if weapon is None:
             self.give_weapon(inventory_item.data.name)
 
-        # Remove it, if the player isn't supposed to be equipped with it
+        # Replace it with the correct weapon, if the player isn't supposed to be equipped with it
         else:
             weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
