@@ -196,14 +196,11 @@ def on_player_death(game_event):
             # Get the weapon's data
             weapon_data = weapon_manager.by_name(attacker.active_weapon.weapon_name)
 
+            # Refill the weapon's clip
+            attacker.refill_clip(weapon_data)
+
             # Restore the weapon's ammo
             attacker.active_weapon.ammo = weapon_data.maxammo
-
-            # Restore the weapon's clip
-            delay_manager(
-                f'refill_clip_{attacker.active_weapon.index}', 0.1,
-                attacker.active_weapon.set_clip, (weapon_data.clip, )
-            )
 
         # Give a High Explosive grenade, if it was a HE grenade kill
         if cvar_equip_hegrenade.get_int() == 2 and game_event['weapon'] == 'hegrenade':

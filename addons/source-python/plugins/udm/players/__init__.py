@@ -75,6 +75,7 @@ class PlayerEntity(Player):
         * Access personal random weapons
         * Access personal spawn points
         * Refill weapon ammo
+        * Refill weapon clip
     """
 
     @classmethod
@@ -275,6 +276,13 @@ class PlayerEntity(Player):
 
         # Add up the weapon's ammo
         self.active_weapon.ammo = weapon_data.maxammo - self.active_weapon.clip + weapon_data.clip + clip_fix
+
+    def refill_clip(self, weapon_data):
+        """Restore the player's active weapon's clip."""
+        delay_manager(
+            f'refill_clip_{self.active_weapon.index}', 0.1,
+            self.active_weapon.set_clip, (weapon_data.clip,)
+        )
 
     def get_random_weapon(self, tag):
         """Return a random weapon for the given weapon tag."""
