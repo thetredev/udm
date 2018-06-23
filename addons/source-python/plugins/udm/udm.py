@@ -145,9 +145,8 @@ def prepare_player(player):
     spawnpoint = player.get_random_spawnpoint()
 
     # Spawn the player on the location found
-    if spawnpoint is not None:
-        player.origin = spawnpoint
-        player.view_angle = spawnpoint.angle
+    player.origin = spawnpoint
+    player.view_angle = spawnpoint.angle
 
     # Equip the current inventory if not currently using the admin menu
     if player.userid not in admin_menu.users:

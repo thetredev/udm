@@ -39,6 +39,7 @@ from udm.players.inventories import player_inventories
 #   Spawn Points
 from udm.spawnpoints import SAFE_SPAWN_DISTANCE
 from udm.spawnpoints import spawnpoint_manager
+from udm.spawnpoints import SpawnPoint
 #   Weapons
 from udm.weapons import weapon_manager
 
@@ -237,10 +238,6 @@ class PlayerEntity(Player):
         # Get a list of current player origins
         player_origins = [player.origin for player in PlayerEntity.alive() if player.userid != self.userid]
 
-        # Return None if nobody else is on the server
-        if not player_origins:
-            return None
-
         # Loop through all the player's spawn points
         for spawnpoint in self.spawnpoints.copy():
 
@@ -256,8 +253,8 @@ class PlayerEntity(Player):
                 # Return the spawn point found
                 return spawnpoint
 
-        # Return None if no spawn point has been found
-        return None
+        # Return the player's current location as a spawn point if no spawn point has been found
+        return SpawnPoint(self.origin.x, self.origin.y, self.origin.z, self.view_angle)
 
     @property
     def random_weapons(self):
