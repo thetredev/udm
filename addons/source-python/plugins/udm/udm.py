@@ -388,7 +388,7 @@ def on_level_end():
 
 @OnServerActivate
 def on_server_activate(edicts, edict_count, max_clients):
-    """Set plugin values for defaultable integer convars."""
+    """Manipulate integer convars."""
     manipulated_int_convars.manipulate_values()
 
 
