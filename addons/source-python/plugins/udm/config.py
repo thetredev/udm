@@ -1,6 +1,6 @@
 # ../udm/config/__init__.py
 
-"""Provides cvars for plugin configuration."""
+"""Provides config cvars for plugin configuration."""
 
 # =============================================================================
 # >> IMPORTS
