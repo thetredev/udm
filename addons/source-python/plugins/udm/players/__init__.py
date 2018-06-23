@@ -272,13 +272,16 @@ class PlayerEntity(Player):
     @property
     def spawn_locations(self):
         """Return personal spawn locations for the player."""
-        # Add a shuffled copy of the spawn points list for the map, if the player's spawn points list is empty
-        if not player_spawn_locations[self.userid]:
-            player_spawn_locations[self.userid].extend(spawnpoint_manager)
-            random.shuffle(player_spawn_locations[self.userid])
+        # Get the player's personal spawn locations list
+        spawn_locations = player_spawn_locations[self.userid]
 
-        # Return the player's spawn points
-        return player_spawn_locations[self.userid]
+        # Fill in spawn points in shuffled form if it is empty
+        if not spawn_locations:
+            spawn_locations.extend(spawnpoint_manager)
+            random.shuffle(spawn_locations)
+
+        # Return it
+        return spawn_locations
 
     def set_team_changes(self, value):
         """Store `value` as the team change count for the player."""
