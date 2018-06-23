@@ -65,6 +65,11 @@ class SpawnPoint(Vector):
         """Return a `SpawnPoint` (subclass) object from a player's location."""
         return cls(player.origin.x, player.origin.y, player.origin.z, player.view_angle)
 
+    def move_player(self, player):
+        """Move the player to this spawn point location."""
+        player.origin = self
+        player.view_angle = self.angle
+
     @property
     def angle(self):
         """Return the QAngle object."""

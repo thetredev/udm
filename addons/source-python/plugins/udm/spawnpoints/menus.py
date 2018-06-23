@@ -130,9 +130,8 @@ def on_spawnpoints_list_menu_select(menu, player_index, option):
     # Get a PlayerEntity instance for the player
     player = PlayerEntity(player_index)
 
-    # Set their origin and view angle
-    player.origin = option.value
-    player.view_angle = option.value.angle
+    # Move player to the chosen spawn point
+    option.value.move_player(player)
 
     # Send the Spawn Points Manager menu to the player
     spawnpoints_manager_menu.send(player.index)
