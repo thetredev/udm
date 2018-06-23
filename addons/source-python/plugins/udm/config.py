@@ -21,6 +21,9 @@ from udm.info import info
 # ../cfg/source-python/udm.cfg
 with ConfigManager(info.name, f'{info.name}_') as config:
 
+    config.text('Ultimate Deathmatch plugin configuration file')
+    config.text(' ')
+
     config.text('----------------------------------')
     config.text('   * Respawn')
     config.text('----------------------------------')
