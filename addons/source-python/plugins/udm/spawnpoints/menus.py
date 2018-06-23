@@ -65,7 +65,7 @@ _spawnpoints_list_menu = PagedMenu(title='Spawn Points List')
 # >> SPAWN POINTS LIST MENU CALLBACKS
 # =============================================================================
 @_spawnpoints_list_menu.register_build_callback
-def on_build_spawnpoints_list_menu(menu, player_index):
+def on_spawnpoints_list_menu_build(menu, player_index):
     """Reload the menu with all available spawn points."""
     menu.clear()
     menu.extend(
@@ -73,14 +73,8 @@ def on_build_spawnpoints_list_menu(menu, player_index):
     )
 
 
-@_spawnpoints_list_menu.register_close_callback
-def on_close_spawnpoints_list_menu(menu, player_index):
-    """Send the Spawn Points Manager menu to the player."""
-    spawnpoints_manager_menu.send(player_index)
-
-
 @_spawnpoints_list_menu.register_select_callback
-def on_select_spawnpoint(menu, player_index, option):
+def on_spawnpoints_list_menu_select(menu, player_index, option):
     """Spawn the player at the selected location."""
     # Get a PlayerEntity instance for the player
     player = PlayerEntity(player_index)
@@ -93,17 +87,17 @@ def on_select_spawnpoint(menu, player_index, option):
     spawnpoints_manager_menu.send(player.index)
 
 
+@_spawnpoints_list_menu.register_close_callback
+def on_spawnpoints_list_menu_close(menu, player_index):
+    """Send the Spawn Points Manager menu to the player."""
+    spawnpoints_manager_menu.send(player_index)
+
+
 # =============================================================================
 # >> SPAWN POINTS MANAGER MENU CALLBACKS
 # =============================================================================
-@spawnpoints_manager_menu.register_close_callback
-def on_close_spawnpoints_manager_menu(menu, player_index):
-    """Send the Admin Menu when the player closes the Spawn Points Manager menu."""
-    admin_menu.send(player_index)
-
-
 @spawnpoints_manager_menu.register_select_callback
-def on_select_spawnpoints_manager_option(menu, player_index, option):
+def on_spawnpoints_manager_menu_select(menu, player_index, option):
     """Handle the selected option."""
     # Get a PlayerEntity instance for the player
     player = PlayerEntity(player_index)
@@ -168,3 +162,7 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
 
         # Send this menu back to the player
         spawnpoints_manager_menu.send(player.index)
+@spawnpoints_manager_menu.register_close_callback
+def on_spawn_points_manager_menu_close(menu, player_index):
+    """Send the Admin Menu when the player closes the Spawn Points Manager menu."""
+    admin_menu.send(player_index)
