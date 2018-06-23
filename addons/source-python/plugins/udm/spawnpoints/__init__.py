@@ -60,6 +60,11 @@ class SpawnPoint(Vector):
         # Store the QAngle object
         self._angle = angle
 
+    @classmethod
+    def from_player_location(cls, player):
+        """Return a `SpawnPoint` (subclass) object from a player's location."""
+        return cls(player.origin.x, player.origin.y, player.origin.z, player.view_angle)
+
     @property
     def angle(self):
         """Return the QAngle object."""

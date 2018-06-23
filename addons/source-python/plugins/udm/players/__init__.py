@@ -254,7 +254,7 @@ class PlayerEntity(Player):
                 return spawn_location
 
         # Return the player's current location as a spawn point if no spawn point has been found
-        return SpawnPoint(self.origin.x, self.origin.y, self.origin.z, self.view_angle)
+        return SpawnPoint.from_player_location(self)
 
     @property
     def random_weapons(self):

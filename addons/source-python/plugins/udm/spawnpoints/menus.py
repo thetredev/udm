@@ -41,7 +41,7 @@ def add_spawnpoint_at_player_location(player):
 
     # Add the player's current location, if it is far enough away from all other spawn points
     if not distances or min(distances) >= SAFE_SPAWN_DISTANCE:
-        spawnpoint_manager.append(SpawnPoint(player.origin.x, player.origin.y, player.origin.z, player.view_angle))
+        spawnpoint_manager.append(SpawnPoint.from_player_location(player))
 
         # Tell the player about the addition
         player.tell(
