@@ -17,7 +17,8 @@ from udm.info import info
 # =============================================================================
 # >> CONFIGURATION CVARS
 # =============================================================================
-# Write the configuration file ../cfg/source-python/udm.cfg
+
+# ../cfg/source-python/udm.cfg
 with ConfigManager(info.name, f'{info.name}_') as config:
 
     config.text('----------------------------------')
