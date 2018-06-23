@@ -67,7 +67,7 @@ from udm.info import info
 from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import player_random_weapons
-from udm.players import player_spawnpoints
+from udm.players import player_spawn_locations
 from udm.players import player_team_changes
 from udm.players import PlayerEntity
 #   Spawn Points
@@ -386,7 +386,7 @@ def on_entity_spawned(base_entity):
 def on_level_end():
     """Clear personal player dictionaries."""
     player_random_weapons.clear()
-    player_spawnpoints.clear()
+    player_spawn_locations.clear()
     player_team_changes.clear()
 
     # Cancel all delays
@@ -620,7 +620,7 @@ def unload():
     player_random_weapons.clear()
 
     # Clear the list of player personal spawn points
-    player_spawnpoints.clear()
+    player_spawn_locations.clear()
 
     # Clear player team change counts
     player_team_changes.clear()

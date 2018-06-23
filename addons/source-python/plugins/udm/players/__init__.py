@@ -51,7 +51,7 @@ from udm.weapons import weapon_manager
 player_team_changes = defaultdict(int)
 
 # Store personal player spawn points
-player_spawnpoints = defaultdict(list)
+player_spawn_locations = defaultdict(list)
 
 # Store personal player random weapons
 player_random_weapons = defaultdict(lambda: {tag: list() for tag in weapon_manager.tags})
@@ -239,7 +239,7 @@ class PlayerEntity(Player):
         player_origins = [player.origin for player in PlayerEntity.alive() if player.userid != self.userid]
 
         # Loop through all the player's spawn points
-        for spawnpoint in self.spawnpoints.copy():
+        for spawnpoint in self.spawn_locations.copy():
 
             # Calculate the distances between the spawn point and all player origins
             distances = [origin.get_distance(spawnpoint) for origin in player_origins]
@@ -248,7 +248,7 @@ class PlayerEntity(Player):
             if min(distances) >= SAFE_SPAWN_DISTANCE:
 
                 # Remove the spawn point from the player's spawn points list
-                self.spawnpoints.remove(spawnpoint)
+                self.spawn_locations.remove(spawnpoint)
 
                 # Return the spawn point found
                 return spawnpoint
@@ -270,15 +270,15 @@ class PlayerEntity(Player):
         return player_random_weapons[self.userid]
 
     @property
-    def spawnpoints(self):
-        """Return personal spawn points for the player."""
+    def spawn_locations(self):
+        """Return personal spawn locations for the player."""
         # Add a shuffled copy of the spawn points list for the map, if the player's spawn points list is empty
-        if not player_spawnpoints[self.userid]:
-            player_spawnpoints[self.userid].extend(spawnpoint_manager)
-            random.shuffle(player_spawnpoints[self.userid])
+        if not player_spawn_locations[self.userid]:
+            player_spawn_locations[self.userid].extend(spawnpoint_manager)
+            random.shuffle(player_spawn_locations[self.userid])
 
         # Return the player's spawn points
-        return player_spawnpoints[self.userid]
+        return player_spawn_locations[self.userid]
 
     def set_team_changes(self, value):
         """Store `value` as the team change count for the player."""
