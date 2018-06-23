@@ -107,6 +107,10 @@ spawnpoints_manager_menu = PagedMenu(
 )
 
 
+# Register the menu as a submenu for the Admin menu
+admin_menu.register_submenu(spawnpoints_manager_menu)
+
+
 # =============================================================================
 # >> SPAWN POINTS LIST MENU
 # =============================================================================

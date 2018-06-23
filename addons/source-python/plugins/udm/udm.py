@@ -70,18 +70,10 @@ from udm.players import player_random_weapons
 from udm.players import player_spawn_locations
 from udm.players import player_team_changes
 from udm.players import PlayerEntity
-#   Spawn Points
-from udm.spawnpoints.menus import spawnpoints_manager_menu
 #   Weapons
 from udm.weapons import is_silencer_option_primary
 from udm.weapons import is_silencer_option_secondary
 from udm.weapons import weapon_manager
-
-
-# =============================================================================
-# >> REGISTER ADMIN MENU SUBMENUS
-# =============================================================================
-admin_menu.register_submenu(spawnpoints_manager_menu)
 
 
 # =============================================================================
@@ -93,6 +85,7 @@ manipulated_int_convars.extend([
     ManipulatedIntConVar('mp_buy_anywhere', 1),
     ManipulatedIntConVar('mp_solid_teammates', int(cvar_enable_noblock.get_int() == 0))
 ])
+
 
 # =============================================================================
 # >> RESTART GAME CONVAR
