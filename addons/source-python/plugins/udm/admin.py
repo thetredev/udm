@@ -20,7 +20,6 @@ from udm.players import PlayerEntity
 # =============================================================================
 # >> ADMIN MENU
 # =============================================================================
-# TODO: Use submenu API from SP?
 class _AdminMenu(PagedMenu):
     """Class used to provide a way to send this menu when a submenu is closed."""
 
