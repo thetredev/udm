@@ -25,6 +25,13 @@ from udm.spawnpoints import SpawnPoint
 
 
 # =============================================================================
+# >> CONSTANTS
+# =============================================================================
+# Player location distance tolerance to a spawn point (in units)
+SPAWN_POINT_TOLERANCE_UNITS = 20.0
+
+
+# =============================================================================
 # >> SPAWN POINTS MANAGER MENU
 # =============================================================================
 # Store menu options
@@ -125,7 +132,7 @@ def on_select_spawnpoints_manager_option(menu, player_index, option):
 
         # Find the spawn point closest to the player's current location
         for spawnpoint in spawnpoint_manager.copy():
-            if spawnpoint in spawnpoint_manager and spawnpoint.get_distance(player.origin) < 20:
+            if spawnpoint in spawnpoint_manager and spawnpoint.get_distance(player.origin) < SPAWN_POINT_TOLERANCE_UNITS:
                 # Store its position
                 position = spawnpoint_manager.index(spawnpoint) + 1
 
