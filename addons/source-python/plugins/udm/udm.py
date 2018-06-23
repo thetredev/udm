@@ -142,7 +142,7 @@ def prepare_player(player):
     )
 
     # Choose a random spawn point
-    spawnpoint = player.get_random_spawnpoint()
+    spawnpoint = player.get_spawn_location()
 
     # Spawn the player on the location found
     player.origin = spawnpoint

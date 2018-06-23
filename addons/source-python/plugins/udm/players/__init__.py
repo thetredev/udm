@@ -233,25 +233,25 @@ class PlayerEntity(Player):
         """Return a random weapon for the given weapon tag."""
         return self.random_weapons[tag].pop()
 
-    def get_random_spawnpoint(self):
-        """Return a random spawn point for the player."""
+    def get_spawn_location(self):
+        """Return a unique spawn location for the player."""
         # Get a list of current player origins
         player_origins = [player.origin for player in PlayerEntity.alive() if player.userid != self.userid]
 
         # Loop through all the player's spawn points
-        for spawnpoint in self.spawn_locations.copy():
+        for spawn_location in self.spawn_locations.copy():
 
             # Calculate the distances between the spawn point and all player origins
-            distances = [origin.get_distance(spawnpoint) for origin in player_origins]
+            distances = [origin.get_distance(spawn_location) for origin in player_origins]
 
             # Continue if there is enough space around the spawn point
             if min(distances) >= SAFE_SPAWN_DISTANCE:
 
                 # Remove the spawn point from the player's spawn points list
-                self.spawn_locations.remove(spawnpoint)
+                self.spawn_locations.remove(spawn_location)
 
                 # Return the spawn point found
-                return spawnpoint
+                return spawn_location
 
         # Return the player's current location as a spawn point if no spawn point has been found
         return SpawnPoint(self.origin.x, self.origin.y, self.origin.z, self.view_angle)
