@@ -469,7 +469,6 @@ def on_saycommand_guns(command_info, *args):
 
     # If no selection was made, send the Primary Weapons menu
     if selection is None:
-        player.random_mode = False
         primary_menu.send(player.index)
 
         # Tell the player
@@ -478,7 +477,7 @@ def on_saycommand_guns(command_info, *args):
         # Stop here and block the message from appearing in the chat window
         return False
 
-    # Ignore invalid input
+    # Ignore invalid input when evaluating the inventory selection
     try:
         selection = int(selection)
     except ValueError:
