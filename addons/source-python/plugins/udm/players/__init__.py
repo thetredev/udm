@@ -435,7 +435,7 @@ class PlayerEntity(Player):
 
     @property
     def carries_inventory(self):
-        """Return whether the player is currently carrying the weapons in their selected inventory."""
+        """Return whether the player is currently carrying the weapons of their selected inventory."""
         for tag, item in self.inventory.items():
 
             # Get the equipped weapon for the tag
