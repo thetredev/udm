@@ -1,6 +1,6 @@
 # ../udm/udm.py
 
-"""Ultimate Deathmatch Plugin"""
+"""Ultimate Deathmatch Plugin for Source.Python."""
 
 # =============================================================================
 # >> IMPORTS
