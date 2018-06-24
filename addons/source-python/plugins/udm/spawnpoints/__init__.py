@@ -84,6 +84,19 @@ class SpawnPoint(Vector):
         }
 
 
+class SpawnPointDispatcher(object):
+    """Class used to move a player to a spawn point location from another thread."""
+
+    @staticmethod
+    def perform_action(player):
+        """Move the player to a spawn point location."""
+        # Choose a random spawn point
+        spawnpoint = player.get_spawn_location()
+
+        # Move the player to the spawn point found
+        spawnpoint.move_player(player)
+
+
 class _SpawnPointManager(list):
     """Class used to provide spawn point managing functionality:
 

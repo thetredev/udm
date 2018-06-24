@@ -32,6 +32,7 @@ from listeners import OnEntitySpawned
 from listeners import OnLevelEnd
 from listeners import OnServerActivate
 from listeners import OnServerOutput
+from listeners.tick import GameThread
 #   Memory
 from memory import make_object
 #   Weapons
@@ -70,6 +71,8 @@ from udm.players import player_random_weapons
 from udm.players import player_spawn_locations
 from udm.players import player_team_changes
 from udm.players import PlayerEntity
+#   Spawn Points
+from udm.spawnpoints import SpawnPointDispatcher
 #   Weapons
 from udm.weapons import is_silencer_option_primary
 from udm.weapons import is_silencer_option_secondary
@@ -116,6 +119,10 @@ map_functions = [
 # =============================================================================
 def prepare_player(player):
     """Prepare the player for battle."""
+    # Perform setting the player's spawn location on another thread
+    spawnpoint_dispatch_thread = GameThread(target=SpawnPointDispatcher.perform_action, args=(player, ))
+    spawnpoint_dispatch_thread.start()
+
     # Give armor
     player.give_named_item('item_assaultsuit')
 
@@ -131,12 +138,6 @@ def prepare_player(player):
         None if player.userid in admin_menu.users
         else cvar_spawn_protection_delay.get_float()
     )
-
-    # Choose a random spawn point
-    spawnpoint = player.get_spawn_location()
-
-    # Move the player to the spawn point found
-    spawnpoint.move_player(player)
 
     # Equip the current inventory if not currently using the admin menu
     if player.userid not in admin_menu.users:
