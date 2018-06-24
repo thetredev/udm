@@ -10,6 +10,8 @@
 from collections import defaultdict
 #   Contextlib
 import contextlib
+#   Datetime
+import datetime
 #   Random
 import random
 
@@ -351,17 +353,36 @@ class PlayerEntity(Player):
         # Reset the player's team change count after the team change reset delay if the maximum team change count
         # has been reached
         if self.team_changes == cvar_team_changes_per_round.get_int() + 1:
-            delay_time = abs(cvar_team_changes_reset_delay.get_float())
+            penalty_seconds = abs(cvar_team_changes_reset_delay.get_float()) * 60.0
 
             delay_manager(
-                f'reset_team_changes_{self.userid}', delay_time * 60.0,
+                f'reset_team_changes_{self.userid}', penalty_seconds,
                 PlayerEntity.reset_team_changes, (self.userid,)
             )
 
+            penalty_start = datetime.datetime.now()
+            penalty_end = penalty_start + datetime.timedelta(seconds=penalty_seconds)
+
+            penalty_delta = penalty_end - penalty_start
+            minutes, seconds = str(penalty_delta).split(':')[1:]
+
+            penalty_map = {
+                'minutes': int(minutes),
+                'seconds': int(seconds)
+            }
+
+            penalty_strings = [f'{penalty_map[key]} {key}' for key in sorted(penalty_map) if penalty_map[key] > 0]
+
+            # Fix postfix 's' if the respective time value is not higher than 1
+            penalty_strings = [s if s[0] > '1' else s[:-1] for s in penalty_strings]
+
+            # Join the strings together
+            penalty_string = ' and '.join(penalty_strings)
+
             # Tell the player
             self.tell(
-                info.verbose_name, f'{MESSAGE_COLOR_WHITE}You will have to wait {MESSAGE_COLOR_ORANGE}%.1f'
-                                   f'{MESSAGE_COLOR_WHITE} minutes to join any other team from now on.' % delay_time
+                info.verbose_name, f'{MESSAGE_COLOR_WHITE}You will have to wait {MESSAGE_COLOR_ORANGE}{penalty_string}'
+                                   f'{MESSAGE_COLOR_WHITE} to join any other team from now on.'
             )
 
         # Respawn the player after the respawn delay
