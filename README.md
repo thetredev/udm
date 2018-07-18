@@ -80,50 +80,54 @@ You are good to go! For more information on managing admins, please refer to the
 ## Configuration File
 The configuration file ```../cfg/source-python/udm.cfg``` will automatically be created for you after the plugin has loaded for the first time:
 ```
+// Ultimate Deathmatch plugin configuration file
 // ----------------------------------
-//    * General
+//    * Respawn
+// ----------------------------------
+
+// Default Value: 2
+// The respawn delay (in seconds).
+   udm_respawn_delay 2
+
+// ----------------------------------
+//    * Spawn Protection
+// ----------------------------------
+
+// Default Value: 2
+// The spawn protection delay (in seconds).
+   udm_spawn_protection_delay 2
+
+// ----------------------------------
+//    * Infinite Ammo
 // ----------------------------------
 
 // Default Value: 1
 // Enable infinite ammo?
    udm_enable_infinite_ammo 1
 
-
-// Default Value: 2
-// The respawn delay in seconds.
-   udm_respawn_delay 2
-
+// ----------------------------------
+//    * NoBlock
+// ----------------------------------
 
 // Default Value: 1
-// Enable or disable non-blocking mode for players.
+// Enable NoBlock mode for players?
    udm_enable_noblock 1
-
-
-// Default Value: 2
-// The spawn protection delay in seconds.
-   udm_spawn_protection_delay 2
-
-
-// Default Value: 150
-// The minimum distance players have to have between a spawn point for it to be
-//   'safe'.
-   udm_spawn_point_distance 150
 
 // ----------------------------------
 //    * Kill Rewards
 // ----------------------------------
 
 // Default Value: 1
-// Refill the killer's clip if they killed an enemy with a headshot.
+// Refill the players's clip following a headshot kill?
    udm_refill_clip_on_headshot 1
 
 
 // Default Value: 1
-// Restore the killer's health to 100HP if they killed an enemy with the knife.
+// Restore the players's health to 100HP following a knife kill?
    udm_restore_health_on_knife_kill 1
 
 // ----------------------------------
-//    * High Explosive Grenade
+//    * HE Grenade Behavior
 // ----------------------------------
 
 // Options
@@ -132,35 +136,34 @@ The configuration file ```../cfg/source-python/udm.cfg``` will automatically be 
 //   * 2 = Equip on spawn and on each HE grenade kill
 //   * 3 = Equip on spawn and after each detonation
 // Default Value: 2
-// High Explosive grenade behaviour
+// High Explosive grenade behavior
    udm_equip_hegrenade 2
 
 // ----------------------------------
-//    * Team Changes Per Round
+//    * Team Changes Management
 // ----------------------------------
 
 // Default Value: 2
-// The maximum amount of times a players are allowed to change their team per
+// The maximum amount of times a players is allowed to change their team per
 //   round.
    udm_team_changes_per_round 2
 
 
 // Default Value: 1.5
-// The time in minutes a player who exceeded the maximum team change count has
-//   to wait until they can choose a team again.
+// Time penalty (in minutes) for exceeding the maximum team change count.
    udm_team_changes_reset_delay 1.5
 
 // ----------------------------------
-//    * Chat Commands
+//    * Say Commands
 // ----------------------------------
 
 // Default Value: "!udm"
-// The chat command used to open the admin menu.
+// The say command used to open the admin menu.
    udm_saycommand_admin "!udm"
 
 
 // Default Value: "guns"
-// The chat command used to open the weapons menu.
+// The say command used to open the weapons menu.
    udm_saycommand_guns "guns"
 ```
 
