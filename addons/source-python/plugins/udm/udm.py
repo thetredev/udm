@@ -276,18 +276,18 @@ def on_pre_bump_weapon(stack_data):
     # Get a Weapon instance for the weapon
     weapon = make_object(Weapon, stack_data[1])
 
-    # Get the weapon's data
-    weapon_data = weapon_manager.by_name(weapon.weapon_name)
+    # Ignore the knife...
+    if weapon.classname not in ('weapon_knife', 'weapon_hegrenade'):
 
-    # Only block bumping for valid weapons
-    if weapon_data is not None and weapon_data.has_silencer:
+        # Get the weapon's data
+        weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
-        if player.random_mode:
-            weapon_manager.set_silencer(weapon, random.randint(0, 1))
+        # Block invalid weapons
+        if weapon_data is None:
+            return False
 
-        # If the player is not in random mode,
-        else:
-
+        # Block weapons the player didn't select for their inventory
+        if not player.random_mode:
             if weapon_data.tag not in player.inventory:
                 return False
 
@@ -296,9 +296,19 @@ def on_pre_bump_weapon(stack_data):
             if inventory_item.data.name not in (weapon.weapon_name, weapon.classname):
                 return False
 
-            # Handle the inventory item's silencer option
-            if weapon_data.has_silencer and weapon.get_property_bool('m_bSilencerOn') != inventory_item.silencer_option:
-                weapon_manager.set_silencer(weapon, inventory_item.silencer_option)
+        # Handle silencing
+        if weapon_data.has_silencer:
+
+            # Silence randomly
+            if player.random_mode:
+                weapon_manager.set_silencer(weapon, random.randint(0, 1))
+
+            # Or configured
+            else:
+                inventory_item = player.inventory[weapon_data.tag]
+
+                if weapon.get_property_bool('m_bSilencerOn') != inventory_item.silencer_option:
+                    weapon_manager.set_silencer(weapon, inventory_item.silencer_option)
 
 
 @EntityPreHook(EntityCondition.is_human_player, 'drop_weapon')
