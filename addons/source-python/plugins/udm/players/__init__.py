@@ -253,6 +253,15 @@ class PlayerEntity(Player):
             if not self.dead and self.team_index > 1:
                 self.equip_inventory_item(weapon_data.tag)
 
+    def inventory_item_by_weapon_name(self, weapon_name):
+        """Return the player's inventory item for the given weapon name."""
+        for inventory_item in self.inventory.values():
+            if inventory_item.data.name == weapon_name:
+                return inventory_item
+
+        # Return None if no inventory item has been found
+        return None
+
     def strip(self, is_filters=None, not_filters=('melee', 'grenade')):
         """Remove the player's weapons in `is_filters` & keep those in `not_filters`."""
         for weapon in self.weapons(is_filters=is_filters, not_filters=not_filters):

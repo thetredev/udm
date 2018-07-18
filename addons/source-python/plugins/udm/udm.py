@@ -350,10 +350,10 @@ def on_pre_secondary_fire(stack_data):
             player = PlayerEntity(weapon.owner.index)
 
             # Set the silencer option for the player's inventory item
-            for inventory_item in player.inventory.values():
-                if inventory_item.data.name == weapon.weapon_name:
-                    inventory_item.silencer_option = not weapon.get_property_bool('m_bSilencerOn')
-                    break
+            inventory_item = player.inventory_item_by_weapon_name(weapon.weapon_name)
+
+            if inventory_item is not None:
+                inventory_item.silencer_option = not weapon.get_property_bool('m_bSilencerOn')
 
 
 # =============================================================================
