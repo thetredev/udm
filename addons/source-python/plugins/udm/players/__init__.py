@@ -302,7 +302,7 @@ class PlayerEntity(Player):
             distances = [origin.get_distance(spawn_location) for origin in player_origins]
 
             # Continue if there is enough space around the spawn point
-            if min(distances) >= SAFE_SPAWN_DISTANCE:
+            if distances and min(distances) >= SAFE_SPAWN_DISTANCE:
 
                 # Remove the spawn point from the player's spawn points list
                 self.spawn_locations.remove(spawn_location)
