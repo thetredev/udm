@@ -388,8 +388,11 @@ def on_server_activate(edicts, edict_count, max_clients):
 
 @OnServerOutput
 def on_server_output(severity, msg):
-    """Block the warning that any bot has spawned outside of a buy zone."""
+    """Block server warnings this plugin causes."""
     if 'bot spawned outside of a buy zone' in msg:
+        return OutputReturn.BLOCK
+
+    if 'hostage position' in msg:
         return OutputReturn.BLOCK
 
     return OutputReturn.CONTINUE
