@@ -150,6 +150,14 @@ class PlayerEntity(Player):
         # Return the correct weapon entity
         return weapon
 
+    def equip_weapon(self, weapon_name):
+        """Equip the player with the weapon from `weapon_name`."""
+        # Give the player the weapon entity
+        weapon = self.give_weapon(weapon_name)
+
+        # Force the player to use it
+        self.client_command(f'use {weapon.classname}', True)
+
     def equip_inventory(self):
         """Equip the player's currently selected inventory."""
         if self.inventory:
@@ -176,7 +184,7 @@ class PlayerEntity(Player):
 
         # Equip the weapon if the player isn't equipped with it
         if weapon is None:
-            self.give_weapon(inventory_item.data.name)
+            self.equip_weapon(inventory_item.data.name)
 
         # Replace it with the correct weapon, if the player isn't supposed to be equipped with it
         else:
@@ -186,14 +194,11 @@ class PlayerEntity(Player):
                 weapon.remove()
 
                 # Equip the correct weapon
-                self.give_weapon(inventory_item.data.name)
+                self.equip_weapon(inventory_item.data.name)
 
     def equip_random_weapon(self, tag):
         """Equip the player with a random weapon."""
-        weapon = self.give_weapon(self.get_random_weapon(tag))
-
-        # Make the player switch to that weapon afterwards
-        self.client_command(f'use {weapon.classname}', True)
+        self.equip_weapon(self.get_random_weapon(tag))
 
     def equip_random_weapons(self):
         """Equip random weapons by weapon tag."""
