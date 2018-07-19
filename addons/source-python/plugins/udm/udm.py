@@ -55,7 +55,6 @@ from udm.config import cvar_saycommand_guns
 from udm.config import cvar_spawn_protection_delay
 from udm.config import cvar_team_changes_per_round
 #   Cvars
-from udm.cvars import ManipulatedIntConVar
 from udm.cvars import manipulated_int_convars
 #   Delays
 from udm.delays import delay_manager
@@ -77,17 +76,6 @@ from udm.spawnpoints import SpawnPointDispatcher
 from udm.weapons import is_silencer_option_primary
 from udm.weapons import is_silencer_option_secondary
 from udm.weapons import weapon_manager
-
-
-# =============================================================================
-# >> REGISTER MANIPULATED INTEGER CONVARS
-# =============================================================================
-manipulated_int_convars.extend([
-    ManipulatedIntConVar('mp_buytime', 60 * 60),
-    ManipulatedIntConVar('mp_startmoney', 10_000),
-    ManipulatedIntConVar('mp_buy_anywhere', 1),
-    ManipulatedIntConVar('mp_solid_teammates', int(cvar_enable_noblock.get_int() == 0))
-])
 
 
 # =============================================================================

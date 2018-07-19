@@ -11,11 +11,15 @@ from core import AutoUnload
 #   Cvars
 from cvars import cvar
 
+# Script Imports
+#   Config
+from udm.config import cvar_enable_noblock
+
 
 # =============================================================================
 # >> MANIPULATED INTEGER CONVARS
 # =============================================================================
-class ManipulatedIntConVar(AutoUnload):
+class _ManipulatedIntConVar(AutoUnload):
     """Class used to manipulate an integer convar on load & reset the default value on unload."""
 
     def __init__(self, name, manipulated_value):
@@ -54,4 +58,9 @@ class _ManipulatedIntConVars(list):
 
 
 # Store a global instance of `ManipulatedIntConVars`
-manipulated_int_convars = _ManipulatedIntConVars()
+manipulated_int_convars = _ManipulatedIntConVars([
+    _ManipulatedIntConVar('mp_buytime', 60 * 60),
+    _ManipulatedIntConVar('mp_startmoney', 10_000),
+    _ManipulatedIntConVar('mp_buy_anywhere', 1),
+    _ManipulatedIntConVar('mp_solid_teammates', int(cvar_enable_noblock.get_int() == 0))
+])
