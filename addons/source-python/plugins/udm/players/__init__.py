@@ -155,8 +155,11 @@ class PlayerEntity(Player):
         # Give the player the weapon entity
         weapon = self.give_weapon(weapon_name)
 
-        # Force the player to use it
-        self.client_command(f'use {weapon.classname}', True)
+        # Set the player's last weapon, so `lastinv` (e.g. pressing Q) works as intended
+        if self.random_mode:
+            self.client_command(f'use {weapon.classname}', True)
+        else:
+            self.last_weapon = weapon.index
 
     def equip_inventory(self):
         """Equip the player's currently selected inventory."""
