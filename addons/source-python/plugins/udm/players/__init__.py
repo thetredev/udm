@@ -64,6 +64,9 @@ player_spawn_locations = defaultdict(list)
 # Store personal player random weapons
 player_random_weapons = defaultdict(lambda: {tag: list() for tag in weapon_manager.tags})
 
+# Store FFA team changes
+player_ffa_team_changes = set()
+
 
 # =============================================================================
 # >> PLAYER ENTITY
@@ -417,6 +420,25 @@ class PlayerEntity(Player):
 
     # Set the `team_changes` property for PlayerEntity
     team_changes = property(get_team_changes, set_team_changes)
+
+    def set_ffa_team_changed(self, value):
+        """Handle FFA team changes."""
+        # Switch the player silently to the other team
+        self.team_index = 5 - self.team
+
+        # Add or remove the player to the list of FFA team changes
+        # depending on whether it should be enabled or disabled
+        if value:
+            player_ffa_team_changes.add(self.userid)
+
+        elif self.userid in player_ffa_team_changes:
+            player_ffa_team_changes.remove(self.userid)
+
+    def get_ffa_team_changed(self):
+        """Return whether the player's team has been changed due to FFA."""
+        return self.userid in player_ffa_team_changes
+
+    ffa_team_changed = property(get_ffa_team_changed, set_ffa_team_changed)
 
     def set_inventory_selection(self, inventory_index):
         """Set the player's inventory selection to `inventory_index`."""
