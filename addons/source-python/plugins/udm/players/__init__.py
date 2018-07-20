@@ -118,10 +118,10 @@ class PlayerEntity(Player):
         if userid in player_team_changes:
             del player_team_changes[userid]
 
-    def tell(self, prefix, message):
+    def tell(self, message):
         """Send the player a prefixed chat message."""
         SayText2(
-            f'{MESSAGE_COLOR_ORANGE}[{MESSAGE_COLOR_WHITE}{prefix}{MESSAGE_COLOR_ORANGE}] {message}'
+            f'{MESSAGE_COLOR_ORANGE}[{MESSAGE_COLOR_WHITE}{info.verbose_name}{MESSAGE_COLOR_ORANGE}] {message}'
         ).send(self.index)
 
     def give_weapon(self, name):
@@ -398,8 +398,8 @@ class PlayerEntity(Player):
 
             # Tell the player
             self.tell(
-                info.verbose_name, f'{MESSAGE_COLOR_WHITE}You will have to wait {MESSAGE_COLOR_ORANGE}{penalty_string}'
-                                   f'{MESSAGE_COLOR_WHITE} to join any other team from now on.'
+                f'{MESSAGE_COLOR_WHITE}You will have to wait {MESSAGE_COLOR_ORANGE}{penalty_string}'
+                f'{MESSAGE_COLOR_WHITE} to join any other team from now on.'
             )
 
         # Respawn the player after the respawn delay

@@ -461,7 +461,7 @@ def on_saycommand_guns(command_info, *args):
         primary_menu.send(player.index)
 
         # Tell the player
-        player.tell(info.verbose_name, f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
+        player.tell(f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
         # Stop here and block the message from appearing in the chat window
         return False
@@ -484,14 +484,14 @@ def on_saycommand_guns(command_info, *args):
         primary_menu.send(player.index)
 
         # Tell the player
-        player.tell(info.verbose_name, f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
+        player.tell(f'Editing inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
     # Else equip the selected inventory
     else:
         player.equip_inventory()
 
         # Tell the player
-        player.tell(info.verbose_name, f'Equipping inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
+        player.tell(f'Equipping inventory {MESSAGE_COLOR_WHITE}{player.inventory_selection + 1}')
 
     # Block the message from appearing in the chat window
     return False
