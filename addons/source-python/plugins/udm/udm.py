@@ -341,11 +341,11 @@ def on_pre_take_damage(stack_data):
         victim = make_object(PlayerEntity, stack_data[0])
 
         # Get the take damage info
-        info = make_object(TakeDamageInfo, stack_data[1])
+        damage_info = make_object(TakeDamageInfo, stack_data[1])
 
         # Get PlayerEntity instance for the attacker
-        if info.attacker > 0:
-            attacker = PlayerEntity(info.attacker)
+        if damage_info.attacker > 0:
+            attacker = PlayerEntity(damage_info.attacker)
 
             # Change the victim's team index if both players are on the same team
             if attacker.team == victim.team:
