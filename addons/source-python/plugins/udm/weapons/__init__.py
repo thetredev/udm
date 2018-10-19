@@ -41,7 +41,7 @@ is_silencer_option_secondary = EntityCondition.equals_entity_classname(
 )
 
 # Store a tuple of weapons which can be silenced
-silencer_weapons = (
+silencer_available = (
     'usp_silencer' if GAME_NAME == 'csgo' else 'usp',
     'm4a1_silencer' if GAME_NAME == 'csgo' else 'm4a1'
 )
@@ -72,7 +72,7 @@ class _WeaponData(object):
         self._display_name = display_name
 
         # Store whether the weapon has a silencer
-        self._has_silencer = basename in silencer_weapons
+        self._has_silencer = basename in silencer_available
 
         # Store the weapon's name
         self._name = weapon_class.name
