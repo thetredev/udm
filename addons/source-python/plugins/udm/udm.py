@@ -294,9 +294,7 @@ def on_pre_bump_weapon(stack_data):
             # Or configured
             else:
                 inventory_item = player.inventory[weapon_data.tag]
-
-                if weapon.get_property_bool('m_bSilencerOn') != inventory_item.silencer_option:
-                    weapon_manager.set_silencer(weapon, inventory_item.silencer_option)
+                weapon_manager.set_silencer(weapon, inventory_item.silencer_option)
 
 
 @EntityPreHook(EntityCondition.is_human_player, 'drop_weapon')
