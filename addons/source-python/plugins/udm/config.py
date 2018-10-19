@@ -45,16 +45,6 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     )
 
     config.text('----------------------------------')
-    config.text('   * Free for All')
-    config.text('----------------------------------')
-
-    cvar_ffa = config.cvar(
-        'ffa',
-        1,
-        'Enable Free for All'
-    )
-
-    config.text('----------------------------------')
     config.text('   * Infinite Ammo')
     config.text('----------------------------------')
 

@@ -18,11 +18,9 @@ from core import OutputReturn
 #   Cvars
 from cvars import cvar
 #   Entities
-from entities import TakeDamageInfo
 from entities.entity import Entity
 from entities.hooks import EntityCondition
 from entities.hooks import EntityPreHook
-from entities.hooks import EntityPostHook
 #   Events
 from events import Event
 from events.hooks import PreEvent
@@ -45,12 +43,10 @@ from weapons.entity import Weapon
 from udm.admin import admin_menu
 #   Colors
 from udm.colors import MESSAGE_COLOR_WHITE
-from udm.colors import MESSAGE_COLOR_ORANGE
 #   Config
 from udm.config import cvar_enable_infinite_ammo
 from udm.config import cvar_enable_noblock
 from udm.config import cvar_equip_hegrenade
-from udm.config import cvar_ffa
 from udm.config import cvar_refill_clip_on_headshot
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_restore_health_on_knife_kill
@@ -72,7 +68,6 @@ from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import player_random_weapons
 from udm.players import player_spawn_locations
-from udm.players import player_ffa_team_changes
 from udm.players import player_team_changes
 from udm.players import PlayerEntity
 #   Spawn Points
@@ -165,14 +160,6 @@ def on_player_spawn(game_event):
 
     if not player.dead and player.team > 1:
         prepare_player(player)
-
-        # Tell the player about the Free for All mode setting
-        # if they haven't configured their inventory yet
-        if not player.inventory:
-            player.tell(
-                f'{MESSAGE_COLOR_WHITE}Free for All mode: {MESSAGE_COLOR_ORANGE}'
-                f"{'Enabled' if cvar_ffa.get_int() else 'Disabled'}"
-            )
 
 
 @Event('player_death')
@@ -329,41 +316,6 @@ def on_pre_drop_weapon(stack_data):
         delay_manager(
             f'drop_{weapon.index}', 1, weapon_manager.remove_weapon, (weapon.index, )
         )
-
-
-@EntityPreHook(EntityCondition.is_human_player, 'on_take_damage')
-@EntityPreHook(EntityCondition.is_bot_player, 'on_take_damage')
-def on_pre_take_damage(stack_data):
-    """Handle team changes for FFA mode."""
-    if cvar_ffa.get_int():
-
-        # Get a PlayerEntity instance for the victim
-        victim = make_object(PlayerEntity, stack_data[0])
-
-        # Get the take damage info
-        damage_info = make_object(TakeDamageInfo, stack_data[1])
-
-        # Get PlayerEntity instance for the attacker
-        if damage_info.attacker > 0:
-            attacker = PlayerEntity(damage_info.attacker)
-
-            # Change the victim's team index if both players are on the same team
-            if attacker.team == victim.team:
-                victim.ffa_team_changed = True
-
-
-@EntityPostHook(EntityCondition.is_human_player, 'on_take_damage')
-@EntityPostHook(EntityCondition.is_bot_player, 'on_take_damage')
-def on_post_take_damage(stack_data, unused):
-    """Revert FFA team changes."""
-    if cvar_ffa.get_int():
-
-        # Get a PlayerEntity instance for the victim
-        victim = make_object(PlayerEntity, stack_data[0])
-
-        # Switch the player back to their original team, if a team change happened because of the FFA mode.
-        if victim.ffa_team_changed:
-            victim.ffa_team_changed = False
 
 
 @EntityPreHook(is_silencer_option_primary, 'secondary_attack')
@@ -596,9 +548,6 @@ def unload():
 
     # Clear player team change counts
     player_team_changes.clear()
-
-    # Clear the list of FFA-caused team changes
-    player_ffa_team_changes.clear()
 
     # Restart the game after 1 second
     mp_restartgame.set_int(1)

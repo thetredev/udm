@@ -26,7 +26,6 @@ See the [issues list](https://github.com/backraw/udm/issues) for current bugs.
 * Noblock (see the config file below)
 * Give back High Explosive grenade (4 options - see the config file below)
 * Restore the killer's health to 100HP if they killed an enemy with the knife (see the config file below)
-* Free for All mode
 
 Check out the tech demo: https://www.youtube.com/watch?v=srTt0N0AakQ
 
