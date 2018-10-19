@@ -189,14 +189,12 @@ class PlayerEntity(Player):
         if weapon is None:
             self.equip_weapon(inventory_item.data.name)
 
-        # Replace it with the correct weapon, if the player isn't supposed to be equipped with it
+        # Else, replace it with the correct weapon
         else:
             weapon_data = weapon_manager.by_name(weapon.weapon_name)
 
-            if weapon_data.name != inventory_item.data.name:
+            if weapon_data.name != inventory_item.data.name or weapon_data.has_silencer:
                 weapon.remove()
-
-                # Equip the correct weapon
                 self.equip_weapon(inventory_item.data.name)
 
     def equip_random_weapon(self, tag):
