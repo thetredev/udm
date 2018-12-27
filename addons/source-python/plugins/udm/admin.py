@@ -81,5 +81,5 @@ def on_select_admin_submenu(menu, player_index, option):
 # =============================================================================
 @OnLevelInit
 def on_level_init(map_name):
-    """Clear the Admin menu users dict."""
+    """Clear the Admin menu users list."""
     admin_menu.users.clear()
