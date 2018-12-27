@@ -66,9 +66,6 @@ from udm.info import info
 #   Menus
 from udm.weapons.menus import primary_menu
 #   Players
-from udm.players import player_random_weapons
-from udm.players import player_spawn_locations
-from udm.players import player_team_changes
 from udm.players import PlayerEntity
 #   Spawn Points
 from udm.spawnpoints import SpawnPointDispatcher
@@ -214,7 +211,7 @@ def on_player_disconnect(game_event):
 def on_round_end(game_event):
     """Cancel all pending delays and team change counts."""
     delay_manager.clear()
-    player_team_changes.clear()
+    PlayerEntity.team_changes_store.clear()
 
 
 @Event('hegrenade_detonate')
@@ -368,9 +365,7 @@ def on_entity_spawned(base_entity):
 @OnLevelEnd
 def on_level_end():
     """Clear personal player dictionaries."""
-    player_random_weapons.clear()
-    player_spawn_locations.clear()
-    player_team_changes.clear()
+    PlayerEntity.clear_data()
 
     # Cancel all delays
     delay_manager.clear()
@@ -538,14 +533,8 @@ def unload():
     # Enable map functions
     EntityInputDispatcher.perform_action(map_functions, 'Enable')
 
-    # Clear the list of player personal random weapons
-    player_random_weapons.clear()
-
-    # Clear the list of player personal spawn points
-    player_spawn_locations.clear()
-
-    # Clear player team change counts
-    player_team_changes.clear()
+    # Clear player data
+    PlayerEntity.clear_data()
 
     # Restart the game after 1 second
     mp_restartgame.set_int(1)

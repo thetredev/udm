@@ -53,19 +53,6 @@ from udm.weapons import weapon_manager
 
 
 # =============================================================================
-# >> TEAM CHANGES
-# =============================================================================
-# Store team changes count for each player
-player_team_changes = defaultdict(int)
-
-# Store personal player spawn points
-player_spawn_locations = defaultdict(list)
-
-# Store personal player random weapons
-player_random_weapons = defaultdict(lambda: {tag: list() for tag in weapon_manager.tags})
-
-
-# =============================================================================
 # >> PLAYER ENTITY
 # =============================================================================
 class PlayerEntity(Player):
@@ -80,6 +67,15 @@ class PlayerEntity(Player):
         * Refill weapon clip
     """
 
+    # Store team changes count for each player
+    team_changes_store = defaultdict(int)
+
+    # Store personal player spawn points
+    spawn_locations_store = defaultdict(list)
+
+    # Store personal player random weapons
+    random_weapons_store = defaultdict(lambda: {tag: list() for tag in weapon_manager.tags})
+
     @classmethod
     def alive(cls):
         """Yield a `PlayerEntity` (subclass) instance for each alive player."""
@@ -91,6 +87,12 @@ class PlayerEntity(Player):
         """Yield a `PlayerEntity` (subclass) instance for each alive player of team `team_index`."""
         for player in PlayerIter(('alive', 't' if team_index == 2 else 'ct')):
             yield cls(player.index)
+
+    @classmethod
+    def clear_data(cls):
+        cls.team_changes_store.clear()
+        cls.spawn_locations_store.clear()
+        cls.random_weapons_store.clear()
 
     @classmethod
     def respawn(cls, index):
@@ -115,8 +117,8 @@ class PlayerEntity(Player):
     @classmethod
     def reset_team_changes(cls, userid):
         """Reset the player's team change count."""
-        if userid in player_team_changes:
-            del player_team_changes[userid]
+        if userid in cls.team_changes_store:
+            del cls.team_changes_store[userid]
 
     def tell(self, message):
         """Send the player a prefixed chat message."""
@@ -332,7 +334,7 @@ class PlayerEntity(Player):
     def random_weapons(self):
         """Return personal random weapons for the player."""
         # Get the player's personal random weapon map
-        random_weapons = player_random_weapons[self.userid]
+        random_weapons = self.random_weapons_store[self.userid]
 
         # Iterate through it
         for tag, weapon_list in random_weapons.items():
@@ -343,13 +345,13 @@ class PlayerEntity(Player):
                 random.shuffle(weapon_list)
 
         # Return it
-        return player_random_weapons[self.userid]
+        return random_weapons
 
     @property
     def spawn_locations(self):
         """Return personal spawn locations for the player."""
         # Get the player's personal spawn locations list
-        spawn_locations = player_spawn_locations[self.userid]
+        spawn_locations = self.spawn_locations_store[self.userid]
 
         # Fill in spawn points in shuffled form if it is empty
         if not spawn_locations:
@@ -407,11 +409,11 @@ class PlayerEntity(Player):
 
     def set_team_changes(self, value):
         """Store `value` as the team change count for the player."""
-        player_team_changes[self.uniqueid] = value
+        self.team_changes_store[self.uniqueid] = value
 
     def get_team_changes(self):
         """Return the team change count for the player."""
-        return player_team_changes[self.uniqueid]
+        return self.team_changes_store[self.uniqueid]
 
     # Set the `team_changes` property for PlayerEntity
     team_changes = property(get_team_changes, set_team_changes)
