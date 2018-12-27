@@ -129,6 +129,11 @@ class WeaponManager(dict):
         for tag, weapon_names in self.ini.items():
             for basename, display_name in weapon_names.items():
 
+                # If the configured weapon does not exist in that game,
+                # raise an error and tell the user what's wrong
+                if basename not in sp_weapon_manager:
+                    raise ValueError(f'Weapon ({basename} => {display_name}) does not exist in game {GAME_NAME}.')
+
                 # Get the weapon class from Source.Python's `weapon_manager`
                 weapon_class = sp_weapon_manager[basename.replace('_silenced', '')]
 
