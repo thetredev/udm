@@ -392,6 +392,23 @@ class PlayerEntity(Player):
         """Return a random weapon for the given weapon tag."""
         return self.random_weapons[tag].pop()
 
+    @property
+    def random_weapons(self):
+        """Return personal random weapons for the player."""
+        # Get the player's personal random weapon map
+        random_weapons = self.random_weapons_store[self.userid]
+
+        # Iterate through it
+        for tag, weapon_list in random_weapons.items():
+
+            # Fill in all weapons of `tag` in shuffled form if the tag's weapon list is empty
+            if not weapon_list:
+                weapon_list.extend([weapon_data.name for weapon_data in weapon_manager.by_tag(tag)])
+                random.shuffle(weapon_list)
+
+        # Return it
+        return random_weapons
+
     def get_spawn_location(self):
         """Return a unique spawn location for the player."""
         # Get a list of current player origins
@@ -414,23 +431,6 @@ class PlayerEntity(Player):
 
         # Return the player's current location as a spawn point if no spawn point has been found
         return SpawnPoint.from_player_location(self)
-
-    @property
-    def random_weapons(self):
-        """Return personal random weapons for the player."""
-        # Get the player's personal random weapon map
-        random_weapons = self.random_weapons_store[self.userid]
-
-        # Iterate through it
-        for tag, weapon_list in random_weapons.items():
-
-            # Fill in all weapons of `tag` in shuffled form if the tag's weapon list is empty
-            if not weapon_list:
-                weapon_list.extend([weapon_data.name for weapon_data in weapon_manager.by_tag(tag)])
-                random.shuffle(weapon_list)
-
-        # Return it
-        return random_weapons
 
     @property
     def spawn_locations(self):
