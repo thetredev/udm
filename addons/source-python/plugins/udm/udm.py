@@ -15,8 +15,6 @@ from commands.client import ClientCommandFilter
 from commands.typed import TypedSayCommand
 #   Core
 from core import OutputReturn
-#   Cvars
-from cvars import cvar
 #   Entities
 from entities.entity import Entity
 from entities.hooks import EntityCondition
@@ -55,7 +53,8 @@ from udm.config import cvar_saycommand_guns
 from udm.config import cvar_spawn_protection_delay
 from udm.config import cvar_team_changes_per_round
 #   Cvars
-from udm.cvars import manipulated_int_convars
+from udm.cvars import default_convars
+from udm.cvars import mp_restartgame
 #   Delays
 from udm.delays import delay_manager
 #   Entities
@@ -73,12 +72,6 @@ from udm.spawnpoints import SpawnPointDispatcher
 from udm.weapons import is_silencer_option_primary
 from udm.weapons import is_silencer_option_secondary
 from udm.weapons import weapon_manager
-
-
-# =============================================================================
-# >> RESTART GAME CONVAR
-# =============================================================================
-mp_restartgame = cvar.find_var('mp_restartgame')
 
 
 # =============================================================================
@@ -374,7 +367,7 @@ def on_level_end():
 @OnServerActivate
 def on_server_activate(edicts, edict_count, max_clients):
     """Manipulate integer convars."""
-    manipulated_int_convars.manipulate_values()
+    default_convars.manipulate_values()
 
 
 @OnServerOutput
@@ -516,7 +509,7 @@ def on_saycommand_admin(command_info):
 def load():
     """Prepare deathmatch gameplay."""
     # Manipulate convar values
-    manipulated_int_convars.manipulate_values()
+    default_convars.manipulate_values()
 
     # Remove forbidden entities
     EntityRemover.perform_action(forbidden_entities)
