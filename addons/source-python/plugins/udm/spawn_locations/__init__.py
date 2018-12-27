@@ -1,4 +1,4 @@
-# ../udm/spawnpoints/__init__.py
+# ../udm/spawn_locations/__init__.py
 
 """Provides spawn point management."""
 
@@ -37,7 +37,7 @@ SAFE_SPAWN_DISTANCE = 150.0
 # =============================================================================
 # >> CLASSES
 # =============================================================================
-class SpawnPoint(Vector):
+class SpawnLocation(Vector):
     """Class used to attach a QAngle to a Vector and provide a JSON representation for the respective locations."""
 
     def __init__(self, x, y, z, angle):
@@ -72,7 +72,7 @@ class SpawnPoint(Vector):
         }
 
 
-class SpawnPointManager(list):
+class SpawnLocationManager(list):
     """Class used to provide spawn point managing functionality:
 
         * load spawn points from a JSON file
@@ -80,7 +80,7 @@ class SpawnPointManager(list):
     """
 
     # Store the spawn points data path
-    path = PLUGIN_DATA_PATH.joinpath(info.name, 'spawnpoints', GAME_NAME)
+    path = PLUGIN_DATA_PATH.joinpath(info.name, 'spawn_locations', GAME_NAME)
 
     def load(self):
         """Load spawn points from the spawn points data file for the current map."""
@@ -94,7 +94,7 @@ class SpawnPointManager(list):
 
         # Append each entry as a `SpawnPoint` object
         for data in contents:
-            self.append(SpawnPoint(*data['vector'], QAngle(*data['angle'])))
+            self.append(SpawnLocation(*data['vector'], QAngle(*data['angle'])))
 
     def save(self):
         """Save spawn points to the spawn points data file for the current map."""
@@ -119,10 +119,10 @@ class SpawnPointManager(list):
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
 # Store a global instance of `_SpawnPoints`
-spawnpoint_manager = SpawnPointManager()
+spawn_location_manager = SpawnLocationManager()
 
 # Load all spawn points for the current map
-spawnpoint_manager.load()
+spawn_location_manager.load()
 
 
 # =============================================================================
@@ -131,5 +131,5 @@ spawnpoint_manager.load()
 @OnLevelInit
 def on_level_init(map_name):
     """Reload spawn points."""
-    spawnpoint_manager.clear()
-    spawnpoint_manager.load()
+    spawn_location_manager.clear()
+    spawn_location_manager.load()

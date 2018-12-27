@@ -45,9 +45,9 @@ from udm.delays import delay_manager
 #   Info
 from udm.info import info
 #   Spawn Points
-from udm.spawnpoints import SAFE_SPAWN_DISTANCE
-from udm.spawnpoints import spawnpoint_manager
-from udm.spawnpoints import SpawnPoint
+from udm.spawn_locations import SAFE_SPAWN_DISTANCE
+from udm.spawn_locations import spawn_location_manager
+from udm.spawn_locations import SpawnLocation
 #   Weapons
 from udm.weapons import weapon_manager
 
@@ -430,7 +430,7 @@ class PlayerEntity(Player):
                 return spawn_location
 
         # Return the player's current location as a spawn point if no spawn point has been found
-        return SpawnPoint.from_player_location(self)
+        return SpawnLocation.from_player_location(self)
 
     def move_to_random_spawn_location(self):
         """Moves the player to a random spawn location."""
@@ -448,7 +448,7 @@ class PlayerEntity(Player):
 
         # Fill in spawn points in shuffled form if it is empty
         if not spawn_locations:
-            spawn_locations.extend(spawnpoint_manager)
+            spawn_locations.extend(spawn_location_manager)
             random.shuffle(spawn_locations)
 
         # Return it

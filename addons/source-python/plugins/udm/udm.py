@@ -97,8 +97,8 @@ map_functions = [
 def prepare_player(player):
     """Prepare the player for battle."""
     # Perform setting the player's spawn location on another thread
-    spawnpoint_dispatch_thread = GameThread(target=player.move_to_random_spawn_location)
-    spawnpoint_dispatch_thread.start()
+    move_player_thread = GameThread(target=player.move_to_random_spawn_location)
+    move_player_thread.start()
 
     # Give armor
     player.give_named_item('item_assaultsuit')
