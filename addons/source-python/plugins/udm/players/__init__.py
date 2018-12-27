@@ -112,8 +112,8 @@ class PlayerEntity(Player):
             # Reset the color
             player.color = WHITE
 
-    @staticmethod
-    def reset_team_changes(userid):
+    @classmethod
+    def reset_team_changes(cls, userid):
         """Reset the player's team change count."""
         if userid in player_team_changes:
             del player_team_changes[userid]
