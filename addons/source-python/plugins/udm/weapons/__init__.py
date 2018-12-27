@@ -48,13 +48,6 @@ silencer_available = (
 
 
 # =============================================================================
-# >> PRIVATE GLOBAL VARIABLES
-# =============================================================================
-# Store the path to the weapons data file
-_weapons_ini = PLUGIN_DATA_PATH.joinpath(info.name, 'weapons', f'{GAME_NAME}.ini')
-
-
-# =============================================================================
 # >> WEAPON DATA
 # =============================================================================
 class _WeaponData(object):
@@ -125,13 +118,15 @@ class _WeaponData(object):
 class WeaponManager(dict):
     """Class used to manage weapons listed in the weapons data file."""
 
-    def __init__(self, data_file):
+    ini = ConfigObj(PLUGIN_DATA_PATH.joinpath(info.name, 'weapons', f'{GAME_NAME}.ini'))
+
+    def __init__(self):
         """Object initialization."""
         # Call dict's constructor
         super().__init__()
 
         # Update this dictionary with the weapon data file entries
-        for tag, weapon_names in data_file.items():
+        for tag, weapon_names in self.ini.items():
             for basename, display_name in weapon_names.items():
 
                 # Get the weapon class from Source.Python's `weapon_manager`
@@ -141,7 +136,7 @@ class WeaponManager(dict):
                 self[basename] = _WeaponData(basename, weapon_class, display_name, tag)
 
         # Store the tags provided by the weapon data file
-        self._tags = list(data_file.keys())
+        self._tags = list(self.ini.keys())
 
     @staticmethod
     def set_silencer(weapon, silencer_option):
@@ -188,4 +183,4 @@ class WeaponManager(dict):
 
 
 # Store a global instance of `WeaponManager`
-weapon_manager = WeaponManager(ConfigObj(_weapons_ini))
+weapon_manager = WeaponManager()
