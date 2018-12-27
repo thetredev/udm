@@ -187,5 +187,5 @@ class WeaponManager(dict):
         return self._tags
 
 
-# Store a global instance of `_WeaponManager`
+# Store a global instance of `WeaponManager`
 weapon_manager = WeaponManager(ConfigObj(_weapons_ini))
