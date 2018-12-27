@@ -35,7 +35,7 @@ SAFE_SPAWN_DISTANCE = 150.0
 
 
 # =============================================================================
-# >> SPAWN POINTS
+# >> CLASSES
 # =============================================================================
 class SpawnPoint(Vector):
     """Class used to attach a QAngle to a Vector and provide a JSON representation for the respective locations."""
