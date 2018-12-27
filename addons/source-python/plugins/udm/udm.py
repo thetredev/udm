@@ -66,8 +66,6 @@ from udm.info import info
 from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import PlayerEntity
-#   Spawn Points
-from udm.spawnpoints import SpawnPointDispatcher
 #   Weapons
 from udm.weapons import is_silencer_option_primary
 from udm.weapons import is_silencer_option_secondary
@@ -99,7 +97,7 @@ map_functions = [
 def prepare_player(player):
     """Prepare the player for battle."""
     # Perform setting the player's spawn location on another thread
-    spawnpoint_dispatch_thread = GameThread(target=SpawnPointDispatcher.perform_action, args=(player, ))
+    spawnpoint_dispatch_thread = GameThread(target=player.move_to_random_spawn_location)
     spawnpoint_dispatch_thread.start()
 
     # Give armor

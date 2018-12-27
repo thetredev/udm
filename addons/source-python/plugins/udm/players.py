@@ -432,6 +432,14 @@ class PlayerEntity(Player):
         # Return the player's current location as a spawn point if no spawn point has been found
         return SpawnPoint.from_player_location(self)
 
+    def move_to_random_spawn_location(self):
+        """Moves the player to a random spawn location."""
+        # Choose a random spawn point
+        spawnpoint = self.get_spawn_location()
+
+        # Move the player to the spawn point found
+        spawnpoint.move_player(self)
+
     @property
     def spawn_locations(self):
         """Return personal spawn locations for the player."""
