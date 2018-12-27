@@ -19,6 +19,8 @@ import random
 #   Colors
 from colors import Color
 from colors import WHITE
+#   Core
+from core import GAME_NAME
 #   Filters
 from filters.players import PlayerIter
 #   Memory
@@ -42,14 +44,93 @@ from udm.config import cvar_respawn_delay
 from udm.delays import delay_manager
 #   Info
 from udm.info import info
-#   Players
-from udm.players.inventories import player_inventories
 #   Spawn Points
 from udm.spawnpoints import SAFE_SPAWN_DISTANCE
 from udm.spawnpoints import spawnpoint_manager
 from udm.spawnpoints import SpawnPoint
 #   Weapons
 from udm.weapons import weapon_manager
+
+
+# =============================================================================
+# >> CLASSES
+# =============================================================================
+class InventoryItem(object):
+    """Class used to provide an inventory item."""
+
+    def __init__(self):
+        """Object initialization."""
+        # Default the weapon's basename to None
+        self._basename = None
+
+        # Store the silencer option for this inventory item
+        self.silencer_option = False
+
+    def set_basename(self, value):
+        """Set the basename and silencer option if the weapon can be silenced."""
+        # Set the basename
+        self._basename = value
+
+        # Set the silencer option to True if the game is CS:GO, else False
+        self.silencer_option = self.data.has_silencer and GAME_NAME == 'csgo'
+
+    def get_basename(self):
+        """Return the basename."""
+        return self._basename
+
+    # Set the "basename" property for `_InventoryItem`
+    basename = property(get_basename, set_basename)
+
+    @property
+    def data(self):
+        """Return the weapon's data."""
+        return weapon_manager[self.basename]
+
+
+class Inventory(defaultdict):
+    """Class used to provide a weapon inventory for players."""
+
+    def __init__(self):
+        """Make `_InventoryItem` the default value type."""
+        super().__init__(InventoryItem)
+
+    def keys(self):
+        """Override keys to reverse its order."""
+        yield from sorted(self, reverse=True)
+
+    def add_inventory_item(self, basename, weapon_data):
+        """Add an inventory item for `basename` and equip the player with it."""
+        # Set the inventory item's basename
+        self[weapon_data.tag].basename = basename
+
+    def remove_inventory_item(self, player, tag):
+        """Remove an inventory item for weapon tag `tag`."""
+        # Get the currently equipped weapon entity for the weapon tag
+        weapon = player.get_weapon(is_filters=tag)
+
+        if weapon is not None:
+            weapon.remove()
+
+        # Remove the weapon tag from this inventory
+        if tag in self.keys():
+            del self[tag]
+
+
+class Inventories(defaultdict):
+    """Class used to provide multiple inventories and weapon selections for players."""
+
+    # Store weapon selections
+    selections = defaultdict(int)
+
+    # Store random weapon selections, defaults to True for every new player
+    selections_random = defaultdict(lambda: True)
+
+    def clear(self):
+        """Perform a full clean up of all the inventories."""
+        for inventory in self.values():
+            inventory.clear()
+
+        super().clear()
 
 
 # =============================================================================
@@ -66,6 +147,9 @@ class PlayerEntity(Player):
         * Refill weapon ammo
         * Refill weapon clip
     """
+
+    # Store personal player inventories
+    inventories_store = Inventories(lambda: defaultdict(Inventory))
 
     # Store team changes count for each player
     team_changes_store = defaultdict(int)
@@ -90,6 +174,7 @@ class PlayerEntity(Player):
 
     @classmethod
     def clear_data(cls):
+        cls.inventories_store.clear()
         cls.team_changes_store.clear()
         cls.spawn_locations_store.clear()
         cls.random_weapons_store.clear()
@@ -420,22 +505,22 @@ class PlayerEntity(Player):
 
     def set_inventory_selection(self, inventory_index):
         """Set the player's inventory selection to `inventory_index`."""
-        player_inventories.selections[self.uniqueid] = inventory_index
+        self.inventories_store.selections[self.uniqueid] = inventory_index
 
     def get_inventory_selection(self):
         """Return the player's current inventory selection."""
-        return player_inventories.selections[self.uniqueid]
+        return self.inventories_store.selections[self.uniqueid]
 
     # Set the `inventory_selection` property for PlayerEntity
     inventory_selection = property(get_inventory_selection, set_inventory_selection)
 
     def set_random_mode(self, value):
         """Set random mode for the player."""
-        player_inventories.selections_random[self.userid] = value
+        self.inventories_store.selections_random[self.userid] = value
 
     def get_random_mode(self):
         """Return whether the player is currently in random mode."""
-        return player_inventories.selections_random[self.userid]
+        return self.inventories_store.selections_random[self.userid]
 
     # Set the `random_mode` property for PlayerEntity
     random_mode = property(get_random_mode, set_random_mode)
@@ -443,7 +528,7 @@ class PlayerEntity(Player):
     @property
     def inventories(self):
         """Return the player's inventories."""
-        return player_inventories[self.uniqueid]
+        return self.inventories_store[self.uniqueid]
 
     @property
     def inventory(self):
