@@ -26,6 +26,10 @@ class _AdminMenu(PagedMenu):
     # Store players who are currently using the Admin menu
     users = list()
 
+    def is_used_by(self, userid):
+        """Return whether the player is using this menu."""
+        return userid in self.users
+
     def register_submenu(self, submenu):
         """Always send this menu when a submenu is closed."""
         # Add the submenu

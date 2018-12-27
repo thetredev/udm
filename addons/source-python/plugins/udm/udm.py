@@ -114,7 +114,7 @@ def prepare_player(player):
 
     # Enable damage protection
     player.enable_damage_protection(
-        None if player.userid in admin_menu.users
+        None if admin_menu.is_used_by(player.userid)
         else cvar_spawn_protection_delay.get_float()
     )
 
