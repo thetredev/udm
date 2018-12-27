@@ -35,18 +35,6 @@ SAFE_SPAWN_DISTANCE = 150.0
 
 
 # =============================================================================
-# >> PRIVATE GLOBAL VARIABLES
-# =============================================================================
-# Store the path to the plugin's spawn points data
-# ../addons/source-python/data/plugins/udm/spawnpoints
-_spawnpoints_path = PLUGIN_DATA_PATH.joinpath(info.name, 'spawnpoints', GAME_NAME)
-
-# Create the spawn points data path if it does not exist
-if not _spawnpoints_path.exists():
-    _spawnpoints_path.makedirs()
-
-
-# =============================================================================
 # >> SPAWN POINTS
 # =============================================================================
 class SpawnPoint(Vector):
@@ -84,12 +72,15 @@ class SpawnPoint(Vector):
         }
 
 
-class _SpawnPointManager(list):
+class SpawnPointManager(list):
     """Class used to provide spawn point managing functionality:
 
         * load spawn points from a JSON file
         * save spawn points to a JSON file
     """
+
+    # Store the spawn points data path
+    path = PLUGIN_DATA_PATH.joinpath(info.name, 'spawnpoints', GAME_NAME)
 
     def load(self):
         """Load spawn points from the spawn points data file for the current map."""
@@ -118,14 +109,17 @@ class _SpawnPointManager(list):
     @property
     def json_file(self):
         """Return the path to the JSON file for the current map."""
-        return _spawnpoints_path.joinpath(global_vars.map_name + '.json')
+        if not self.path.exists():
+            self.path.makedirs()
+
+        return self.path.joinpath(f'{global_vars.map_name}.json')
 
 
 # =============================================================================
 # >> PUBLIC GLOBAL VARIABLES
 # =============================================================================
 # Store a global instance of `_SpawnPoints`
-spawnpoint_manager = _SpawnPointManager()
+spawnpoint_manager = SpawnPointManager()
 
 # Load all spawn points for the current map
 spawnpoint_manager.load()
