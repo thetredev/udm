@@ -9,13 +9,13 @@
 #   Menus
 from menus import PagedMenu
 from menus import PagedOption
+#   Messages
+from messages.colors.saytext2 import ORANGE as MESSAGE_COLOR_ORANGE
+from messages.colors.saytext2 import WHITE as MESSAGE_COLOR_WHITE
 
 # Script Imports
 #   Admin
 from udm.admin import admin_menu
-#   Colors
-from udm.colors import MESSAGE_COLOR_ORANGE
-from udm.colors import MESSAGE_COLOR_WHITE
 #   Players
 from udm.players import PlayerEntity
 #   Spawn Locations

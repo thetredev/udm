@@ -33,14 +33,15 @@ from listeners import OnServerOutput
 from listeners.tick import GameThread
 #   Memory
 from memory import make_object
+#   Messages
+from messages.colors.saytext2 import BRIGHT_GREEN
+from messages.colors.saytext2 import WHITE as MESSAGE_COLOR_WHITE
 #   Weapons
 from weapons.entity import Weapon
 
 # Script Imports
 #   Admin
 from udm.admin import admin_menu
-#   Colors
-from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
 from udm.config import cvar_enable_infinite_ammo
 from udm.config import cvar_enable_noblock

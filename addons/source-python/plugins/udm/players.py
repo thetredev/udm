@@ -27,15 +27,14 @@ from filters.players import PlayerIter
 from memory import make_object
 #   Messages
 from messages import SayText2
+from messages.colors.saytext2 import ORANGE as MESSAGE_COLOR_ORANGE
+from messages.colors.saytext2 import WHITE as MESSAGE_COLOR_WHITE
 #   Players
 from players.entity import Player
 #   Weapons
 from weapons.entity import Weapon
 
 # Script Imports
-#   Colors
-from udm.colors import MESSAGE_COLOR_ORANGE
-from udm.colors import MESSAGE_COLOR_WHITE
 #   Config
 from udm.config import cvar_team_changes_per_round
 from udm.config import cvar_team_changes_reset_delay
@@ -208,7 +207,7 @@ class PlayerEntity(Player):
     def tell(self, message):
         """Send the player a prefixed chat message."""
         SayText2(
-            f'{MESSAGE_COLOR_ORANGE}[{MESSAGE_COLOR_WHITE}{info.verbose_name}{MESSAGE_COLOR_ORANGE}] {message}'
+            f'{MESSAGE_COLOR_WHITE}[{MESSAGE_COLOR_WHITE}{info.verbose_name}{MESSAGE_COLOR_ORANGE}] {message}'
         ).send(self.index)
 
     def give_weapon(self, name):
