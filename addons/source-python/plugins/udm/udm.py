@@ -66,6 +66,8 @@ from udm.info import info
 from udm.weapons.menus import primary_menu
 #   Players
 from udm.players import PlayerEntity
+#   Spawn Locations
+from udm.spawn_locations import menus
 #   Weapons
 from udm.weapons import is_silencer_option_primary
 from udm.weapons import is_silencer_option_secondary
@@ -515,6 +517,9 @@ def load():
 
     # Disable map functions
     EntityInputDispatcher.perform_action(map_functions, 'Disable')
+
+    # Register the Spawn Locations Manager menu as a submenu for the Admin menu
+    admin_menu.register_submenu(menus.spawn_location_manager_menu)
 
     # Restart the game after 3 seconds
     mp_restartgame.set_int(3)

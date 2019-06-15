@@ -116,10 +116,6 @@ spawn_location_manager_menu = PagedMenu(
 )
 
 
-# Register the menu as a submenu for the Admin menu
-admin_menu.register_submenu(spawn_location_manager_menu)
-
-
 # =============================================================================
 # >> SPAWN LOCATION LIST MENU
 # =============================================================================
