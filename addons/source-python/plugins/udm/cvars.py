@@ -27,18 +27,20 @@ class DefaultConVar(object):
         # Store the convar
         self.convar = cvar.find_var(name)
 
-        # Get its default value
-        if isinstance(value, int):
-            value = self.convar.get_int()
+        # Get its default value, if it exists
+        if self.convar is not None:
 
-        elif isinstance(value, str):
-            value = self.convar.get_string()
+            if isinstance(value, int):
+                value = self.convar.get_int()
 
-        elif isinstance(value, bool):
-            value = self.convar.get_bool()
+            elif isinstance(value, str):
+                value = self.convar.get_string()
 
-        else:
-            raise NotImplementedError(f'Type {type(value)} is not supported for this class.')
+            elif isinstance(value, bool):
+                value = self.convar.get_bool()
+
+            else:
+                raise NotImplementedError(f'Type {type(value)} is not supported for this class.')
 
         # Store its default value
         self.default = value
