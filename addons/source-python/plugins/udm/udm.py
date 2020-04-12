@@ -14,6 +14,7 @@ import random
 from commands.client import ClientCommandFilter
 from commands.typed import TypedSayCommand
 #   Core
+from core import GAME_NAME
 from core import OutputReturn
 #   Entities
 from entities.entity import Entity
@@ -28,14 +29,16 @@ from filters.weapons import WeaponClassIter
 from listeners import OnEntityDeleted
 from listeners import OnEntitySpawned
 from listeners import OnLevelEnd
+from listeners import OnPlayerRunCommand
 from listeners import OnServerActivate
 from listeners import OnServerOutput
 from listeners.tick import GameThread
 #   Memory
 from memory import make_object
 #   Messages
-from messages.colors.saytext2 import BRIGHT_GREEN
 from messages.colors.saytext2 import WHITE as MESSAGE_COLOR_WHITE
+#   Players
+from players.constants import PlayerButtons
 #   Weapons
 from weapons.entity import Weapon
 
@@ -70,8 +73,6 @@ from udm.players import PlayerEntity
 #   Spawn Locations
 from udm.spawn_locations import menus
 #   Weapons
-from udm.weapons import is_silencer_option_primary
-from udm.weapons import is_silencer_option_secondary
 from udm.weapons import weapon_manager
 
 
@@ -308,32 +309,6 @@ def on_pre_drop_weapon(stack_data):
         )
 
 
-@EntityPreHook(is_silencer_option_primary, 'secondary_attack')
-@EntityPreHook(is_silencer_option_secondary, 'secondary_attack')
-def on_pre_secondary_fire(stack_data):
-    """Store the silencer option when the player attaches or detaches the silencer."""
-    # Get a Weapon instance for the weapon
-    weapon = make_object(Weapon, stack_data[0])
-
-    # Make sure the weapon's owner is valid
-    if weapon.owner is not None and weapon.owner.is_player():
-
-        # Get the weapon's data
-        weapon_data = weapon_manager.by_name(weapon.weapon_name)
-
-        # Store the silencer option if the weapon can be silenced
-        if weapon_data is not None and weapon_data.has_silencer:
-
-            # Get a PlayerEntity instance for the player
-            player = PlayerEntity(weapon.owner.index)
-
-            # Set the silencer option for the player's inventory item
-            inventory_item = player.inventory_item_by_weapon_name(weapon.weapon_name)
-
-            if inventory_item is not None:
-                inventory_item.silencer_option = not weapon.get_property_bool('m_bSilencerOn')
-
-
 # =============================================================================
 # >> LISTENERS
 # =============================================================================
@@ -364,6 +339,42 @@ def on_level_end():
 
     # Cancel all delays
     delay_manager.clear()
+
+
+@OnPlayerRunCommand
+def on_player_run_command(player, user_cmd):
+    """Store the silencer option when the player attaches or detaches the silencer."""
+    # Ignore dead players
+    if player.dead:
+        return
+
+    # Ignore bots
+    if player.is_bot():
+        return
+
+    # Only respect secondary attack
+    if not user_cmd.buttons & PlayerButtons.ATTACK2:
+        return
+
+    # Get the player's active weapon
+    weapon = player.active_weapon
+
+    # Ignore weapon errors
+    if weapon is None:
+        return
+
+    # Only respect weapons with silencers
+    if weapon.classname not in (
+        'weapon_m4a1',
+        'weapon_hkp2000' if GAME_NAME == 'csgo' else 'weapon_usp'
+    ):
+        return
+
+    # Set the silencer option for the player's inventory item
+    inventory_item = PlayerEntity(player.index).inventory_item_by_weapon_name(weapon.weapon_name)
+
+    if inventory_item is not None:
+        inventory_item.silencer_option = not weapon.get_property_bool('m_bSilencerOn')
 
 
 @OnServerActivate

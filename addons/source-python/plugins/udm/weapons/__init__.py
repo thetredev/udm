@@ -16,8 +16,6 @@ from configobj import ConfigObj
 # Source.Python Imports
 #   Core
 from core import GAME_NAME
-#   Entities
-from entities.hooks import EntityCondition
 #   Paths
 from paths import PLUGIN_DATA_PATH
 #   Weapons
@@ -32,16 +30,8 @@ from udm.info import info
 # =============================================================================
 # >> SILENCER OPTION ENTITIES
 # =============================================================================
-# Store an entity condition for the primary silencer option
-is_silencer_option_primary = EntityCondition.equals_entity_classname('weapon_m4a1')
-
-# Store an entity condition for the secondary silencer option
-is_silencer_option_secondary = EntityCondition.equals_entity_classname(
-    'weapon_hkp2000' if GAME_NAME == 'csgo' else 'weapon_usp'
-)
-
 # Store a tuple of weapons which can be silenced
-silencer_available = (
+silencer_entities = (
     'usp_silencer' if GAME_NAME == 'csgo' else 'usp',
     'm4a1_silencer' if GAME_NAME == 'csgo' else 'm4a1'
 )
@@ -65,7 +55,7 @@ class _WeaponData(object):
         self._display_name = display_name
 
         # Store whether the weapon has a silencer
-        self._has_silencer = basename in silencer_available
+        self._has_silencer = basename in silencer_entities
 
         # Store the weapon's name
         self._name = weapon_class.name
