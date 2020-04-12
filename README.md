@@ -15,6 +15,7 @@ See the [issues list](https://github.com/backraw/udm/issues) for current bugs.
 ### Features
 * [Restrict the amount of times a player can join a different team](https://github.com/backraw/udm/commit/74b9bf689fab6c1e347a38a84715273871b2dfef) (prevent spawn spamming)
 * Weapon Menus - accessible via the chat command ```guns```
+* Compatible with official CS:GO Deathmatch game mode
 * Buy anywhere for CS:GO - Open up the buy menu anywhere on the map, like in standard CS:GO Deathmatch mode
 * Multiple inventories: each inventory can hold either one or two weapons - easy primary/secondary only handling!
 * Admin Menu - accessible via the chat command ```!udm```
