@@ -121,7 +121,7 @@ def prepare_player(player):
     )
 
     # Equip the current inventory if not currently using the admin menu
-    if player.userid not in admin_menu.users:
+    if not admin_menu.is_used_by(player.userid):
         player.equip_inventory()
 
 
@@ -251,7 +251,7 @@ def on_pre_bump_weapon(stack_data):
     player = make_object(PlayerEntity, stack_data[0])
 
     # Block the weapon bump if the player is using the admin menu
-    if player.userid in admin_menu.users:
+    if admin_menu.is_used_by(player.userid):
         return False
 
     # Get a Weapon instance for the weapon
