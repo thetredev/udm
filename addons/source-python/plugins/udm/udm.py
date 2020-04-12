@@ -335,7 +335,7 @@ def on_entity_spawned(base_entity):
 @OnLevelEnd
 def on_level_end():
     """Clear personal player dictionaries."""
-    PlayerEntity.clear_data()
+    PlayerEntity.clear_data(keep_inventories=True)
 
     # Cancel all delays
     delay_manager.clear()

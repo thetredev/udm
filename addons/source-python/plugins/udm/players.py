@@ -172,11 +172,13 @@ class PlayerEntity(Player):
             yield cls(player.index)
 
     @classmethod
-    def clear_data(cls):
-        cls.inventories_store.clear()
+    def clear_data(cls, keep_inventories=False):
         cls.team_changes_store.clear()
         cls.spawn_locations_store.clear()
         cls.random_weapons_store.clear()
+
+        if not keep_inventories:
+            cls.inventories_store.clear()
 
     @classmethod
     def respawn(cls, index):
