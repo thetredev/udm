@@ -19,8 +19,8 @@ class EntityRemover(object):
     @staticmethod
     def perform_action(entities):
         """Remove all entities specified from the server."""
-        for forbidden_entity_classname in entities:
-            for entity in EntityIter(forbidden_entity_classname):
+        for classname in entities:
+            for entity in EntityIter(classname):
                 entity.remove()
 
 
@@ -30,6 +30,6 @@ class EntityInputDispatcher(object):
     @staticmethod
     def perform_action(entities, input_name):
         """Dispatch the specified input on all entities."""
-        for forbidden_entity_classname in entities:
-            for entity in EntityIter(forbidden_entity_classname):
+        for classname in entities:
+            for entity in EntityIter(classname):
                 entity.call_input(input_name)
