@@ -46,7 +46,6 @@ def add_spawn_location_at_player_location(player):
 
         # Tell the player about the addition
         player.tell(
-            spawn_location_manager_menu.title,
             f'Spawn Location {MESSAGE_COLOR_WHITE}#{len(spawn_location_manager)} {MESSAGE_COLOR_ORANGE}has been added.'
         )
 
@@ -57,29 +56,30 @@ def add_spawn_location_at_player_location(player):
 def remove_spawn_location_at_player_location(player):
     """Remove the spawn location at the player's current location."""
     # Find near spawn locations
-    spawn_location_distances = [
-        (spawn_location, spawn_location.get_distance(player.origin))
-        for spawn_location in spawn_location_manager
+    spawn_location_distances = [(
+            spawn_location_manager.index(spawn_location),
+            spawn_location,
+            spawn_location.get_distance(player.origin)
+        ) for spawn_location in spawn_location_manager
     ]
 
     near_spawn_locations = [
-        (spawn_location, distance) for spawn_location, distance in spawn_location_distances
-        if distance < SPAWN_LOCATION_TOLERANCE_UNITS
+        spawn_location_info for spawn_location_info in spawn_location_distances
+        if spawn_location_info[2] <= SPAWN_LOCATION_TOLERANCE_UNITS
     ]
 
     # Remove the nearest spawn location from the list
     if near_spawn_locations:
-        spawn_location = min(near_spawn_locations, key=lambda x: x[1])
+        index, spawn_location = min(near_spawn_locations, key=lambda x: x[2])[:2]
 
         # Store its position
-        position = spawn_location_manager.index(spawn_location) + 1
+        position = index + 1
 
         # Remove it from the spawn location list
         spawn_location_manager.remove(spawn_location)
 
         # Tell the player about the removal
         player.tell(
-            spawn_location_manager_menu.title,
             f'Spawn Location {MESSAGE_COLOR_WHITE}#{position} {MESSAGE_COLOR_ORANGE}has been removed.'
         )
 
@@ -97,7 +97,7 @@ def save_spawn_locations(player):
     spawn_location_manager.save()
 
     # Tell the player about it
-    player.tell(spawn_location_manager_menu.title, 'Spawn Locations have been saved.')
+    player.tell('Spawn Locations have been saved.')
 
     # Send the spawn location manager menu back to the player
     spawn_location_manager_menu.send(player.index)
