@@ -374,7 +374,10 @@ def on_player_run_command(player, user_cmd):
     inventory_item = PlayerEntity(player.index).inventory_item_by_weapon_name(weapon.weapon_name)
 
     if inventory_item is not None:
-        inventory_item.silencer_option = not weapon.get_property_bool('m_bSilencerOn')
+        inventory_item.silencer_option = weapon.get_property_bool('m_bSilencerOn')
+
+        if GAME_NAME == 'csgo':
+            inventory_item.silencer_option = not inventory_item.silencer_option
 
 
 @OnServerActivate
