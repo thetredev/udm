@@ -527,14 +527,14 @@ def load():
     # Manipulate convar values
     default_convars.manipulate_values()
 
-    # Remove forbidden entities
-    EntityRemover.perform_action(forbidden_entities)
+    # Register the Spawn Locations Manager menu as a submenu for the Admin menu
+    admin_menu.register_submenu(menus.spawn_location_manager_menu)
 
     # Disable map functions
     EntityInputDispatcher.perform_action(map_functions, 'Disable')
 
-    # Register the Spawn Locations Manager menu as a submenu for the Admin menu
-    admin_menu.register_submenu(menus.spawn_location_manager_menu)
+    # Remove forbidden entities after 2 seconds
+    delay_manager(f'remove_forbidden_entities', 2, EntityRemover.perform_action, (forbidden_entities,))
 
     # Restart the game after 3 seconds
     mp_restartgame.set_int(3)
