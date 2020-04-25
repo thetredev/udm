@@ -159,6 +159,9 @@ class PlayerEntity(Player):
     # Store personal player random weapons
     random_weapons_store = defaultdict(lambda: {tag: list() for tag in weapon_manager.tags})
 
+    # Store whether players are being flashed
+    flashed_players_store = defaultdict(bool)
+
     @classmethod
     def alive(cls):
         """Yield a `PlayerEntity` (subclass) instance for each alive player."""
@@ -176,6 +179,7 @@ class PlayerEntity(Player):
         cls.team_changes_store.clear()
         cls.spawn_locations_store.clear()
         cls.random_weapons_store.clear()
+        cls.flashed_players_store.clear()
 
         if not keep_inventories:
             cls.inventories_store.clear()
@@ -533,6 +537,17 @@ class PlayerEntity(Player):
 
     # Set the `random_mode` property for PlayerEntity
     random_mode = property(get_random_mode, set_random_mode)
+
+    def set_flashed(self, value):
+        """Store whether the player is currently being flashed."""
+        self.flashed_players_store[self.userid] = value
+
+    def get_flashed(self):
+        """Return whether the player is currently being flashed."""
+        return self.flashed_players_store[self.userid]
+
+    # Set the 'flashed' property for PlayerEntity
+    flashed = property(get_flashed, set_flashed)
 
     @property
     def inventories(self):
