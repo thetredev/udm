@@ -81,7 +81,7 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     )
 
     config.text('----------------------------------')
-    config.text('   * HE Grenade Behavior')
+    config.text('   * High Explosive Grenade Behavior')
     config.text('----------------------------------')
 
     cvar_equip_hegrenade = config.cvar(
