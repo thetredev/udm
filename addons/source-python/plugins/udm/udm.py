@@ -48,6 +48,7 @@ from udm.admin import admin_menu
 #   Config
 from udm.config import cvar_enable_infinite_ammo
 from udm.config import cvar_enable_noblock
+from udm.config import cvar_equip_flashbang_grenade
 from udm.config import cvar_equip_hegrenade
 from udm.config import cvar_refill_clip_on_headshot
 from udm.config import cvar_respawn_delay
@@ -111,6 +112,10 @@ def prepare_player(player):
     if cvar_equip_hegrenade.get_int() > 0:
         player.give_weapon('weapon_hegrenade')
 
+    # Give a Flashbang grenade if configured that way
+    if cvar_equip_flashbang_grenade.get_int() > 0:
+        player.give_named_item('weapon_flashbang')
+
     # Enable or disable non-blocking mode, depending on the configuration
     player.noblock = cvar_enable_noblock.get_int() > 0
 
@@ -155,9 +160,30 @@ def on_player_spawn(game_event):
         prepare_player(player)
 
 
+@Event('player_blind')
+def on_player_blind(game_event):
+    """Remember the player is being flashed for the given duration."""
+    player = PlayerEntity.from_userid(game_event['userid'])
+
+    # Generate the delay key
+    delay_key = f'flashed_{player.userid}'
+
+    # Cancel any previous 'flashed' delays for the player
+    delay_manager.cancel(delay_key)
+
+    # Remember the player is being flashed
+    player.flashed = True
+
+    # Forget the player being flashed after the given duration
+    delay_manager(delay_key, int(game_event['blind_duration']), player.set_flashed, (False, ))
+
+
 @Event('player_death')
 def on_player_death(game_event):
     """Handle attacker rewards & respawn the victim."""
+    # Get a PlayerEntity instance for the victim
+    victim = PlayerEntity.from_userid(game_event['userid'])
+
     # Get the attacker's userid
     userid_attacker = game_event['attacker']
 
@@ -181,12 +207,13 @@ def on_player_death(game_event):
         if cvar_equip_hegrenade.get_int() == 2 and game_event['weapon'] == 'hegrenade':
             attacker.give_weapon('weapon_hegrenade')
 
+        # Give a Flashbang grenade, if the victim was flashed
+        if cvar_equip_flashbang_grenade.get_int() == 3 and victim.flashed:
+            attacker.give_weapon('weapon_flashbang')
+
         # Restore the attacker's health if it was a knife kill
         if cvar_restore_health_on_knife_kill.get_int() > 0 and game_event['weapon'].startswith('knife'):
             attacker.health = 100
-
-    # Get a PlayerEntity instance for the victim
-    victim = PlayerEntity.from_userid(game_event['userid'])
 
     # Respawn the victim after the configured respawn delay
     delay_manager(
@@ -201,6 +228,7 @@ def on_player_disconnect(game_event):
 
     delay_manager.cancel(f'respawn_{player.userid}')
     delay_manager.cancel(f'protect_{player.userid}')
+    delay_manager.cancel(f'flashed_{player.userid}')
 
     player.clear_data(keep_inventories=True)
 
@@ -210,6 +238,14 @@ def on_round_end(game_event):
     """Cancel all pending delays and team change counts."""
     delay_manager.clear()
     PlayerEntity.team_changes_store.clear()
+
+
+@Event('flashbang_detonate')
+def on_flashbang_detonate(game_event):
+    """Equip the player with another Flashbang grenade if configured that way."""
+    if cvar_equip_flashbang_grenade.get_int() == 2:
+        player = PlayerEntity.from_userid(game_event['userid'])
+        player.give_weapon('weapon_flashbang')
 
 
 @Event('hegrenade_detonate')
@@ -260,7 +296,7 @@ def on_pre_bump_weapon(stack_data):
     weapon = make_object(Weapon, stack_data[1])
 
     # Ignore the knife...
-    if weapon.classname not in ('weapon_knife', 'weapon_hegrenade'):
+    if weapon.classname not in ('weapon_knife', 'weapon_hegrenade', 'weapon_flashbang'):
 
         # Get the weapon's data
         weapon_data = weapon_manager.by_name(weapon.weapon_name)
@@ -316,10 +352,11 @@ def on_pre_drop_weapon(stack_data):
 # =============================================================================
 @OnEntityDeleted
 def on_entity_deleted(base_entity):
-    """Cancel the refill & drop delays for the deleted entity."""
+    """Cancel the player delays for the deleted entity."""
     if base_entity.classname.startswith(weapon_manager.prefix):
         delay_manager.cancel(f'drop_{base_entity.index}')
         delay_manager.cancel(f'refill_clip_{base_entity.index}')
+        delay_manager.cancel(f'flashed_{base_entity.index}')
 
 
 @OnEntitySpawned
