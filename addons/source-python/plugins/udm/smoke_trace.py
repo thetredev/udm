@@ -1,5 +1,5 @@
 # ../smoke_trace/smoke_trace.py
-# Code taken from: https://forums.sourcepython.com/viewtopic.php?f=20&t=2248
+# Code taken and modified from: https://forums.sourcepython.com/viewtopic.php?f=20&t=2248
 
 """Provides a way to figure out whether or not a bullet flew through smoke before impact."""
 
@@ -13,14 +13,6 @@ import math
 # Source.Python
 #   Entities
 from entities.dictionary import EntityDictionary
-#   Events
-from events import Event
-#   Listeners
-from listeners import OnEntityDeleted
-#   Mathlib
-from mathlib import Vector
-#   Players
-from players.dictionary import PlayerDictionary
 
 
 # =============================================================================
@@ -34,7 +26,6 @@ SMOKE_RADIUS = 155
 # >> GLOBAL VARIABLES
 # =============================================================================
 smoke_instances = EntityDictionary()
-player_instances = PlayerDictionary()
 
 
 # =============================================================================
@@ -53,6 +44,7 @@ def is_line_blocked_by_smoke(start, end, bloat=1.0):
         bool: True if the line is blocked by a smoke, False otherwise.
     """
     smoke_radius_sq = SMOKE_RADIUS * SMOKE_RADIUS * bloat * bloat
+    max_smoked_length = 0.7 * SMOKE_RADIUS
     total_smoked_length = 0.0
 
     line_dir = end - start
@@ -94,12 +86,10 @@ def is_line_blocked_by_smoke(start, end, bloat=1.0):
 
                     if along_dist > 0:
                         # The line goes through the closest point.
-                        total_smoked_length += half_smoked_length + (
-                                close - start).length
+                        total_smoked_length += half_smoked_length + (close - start).length
                     else:
                         # The line starts after the closest point.
-                        total_smoked_length += half_smoked_length - (
-                                close - start).length
+                        total_smoked_length += half_smoked_length - (close - start).length
 
             # Is the ending point inside the smoke?
             elif end_sq < smoke_radius_sq:
@@ -109,59 +99,18 @@ def is_line_blocked_by_smoke(start, end, bloat=1.0):
                 v = end - smoke_origin
                 if v.dot(line_dir) > 0:
                     # The line goes through the closest point.
-                    total_smoked_length += half_smoked_length + (
-                            close - end).length
+                    total_smoked_length += half_smoked_length + (close - end).length
 
                 else:
                     # The line ends before reaching the closest point.
-                    total_smoked_length += half_smoked_length - (
-                            close - end).length
+                    total_smoked_length += half_smoked_length - (close - end).length
 
             else:
                 # Both the starting and ending points are outside the smoke.
                 smoked_length = 2.0 * math.sqrt(smoke_radius_sq - length_sq)
                 total_smoked_length += smoked_length
 
-    max_smoked_length = 0.7 * SMOKE_RADIUS
-    return total_smoked_length > max_smoked_length
+            if total_smoked_length > max_smoked_length:
+                return True, smoke
 
-
-# =============================================================================
-# >> EVENTS
-# =============================================================================
-@Event('bullet_impact')
-def bullet_impact(event):
-    blocked = is_line_blocked_by_smoke(
-        start=player_instances.from_userid(event['userid']).eye_location,
-        end=Vector(event['x'], event['y'], event['z'])
-    )
-
-    # Did the bullet go through a smoke?
-    if blocked:
-        pass
-
-
-@Event('smokegrenade_detonate')
-def smoke_detonate(event):
-    # Add the 'smokegrenade_projectile' that just detonated to the dictionary.
-    # The entity itself doesn't get removed upon detonation, but after the
-    # smoke effect disappears.
-    smoke_instances[event['entityid']]
-
-
-# =============================================================================
-# >> LISTENERS
-# =============================================================================
-@OnEntityDeleted
-def on_entity_deleted(base_entity):
-    """Called when an entity is being removed."""
-    try:
-        index = base_entity.index
-    except ValueError:
-        return
-
-    # Is this a 'smokegrenade_projectile' entity?
-    try:
-        smoke_instances.pop(index)
-    except KeyError:
-        pass
+    return False, None

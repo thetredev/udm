@@ -162,6 +162,9 @@ class PlayerEntity(Player):
     # Store whether players are being flashed
     flashed_players_store = defaultdict(bool)
 
+    # Store player UserIDs who have been shot through smoke by the player
+    smoke_victims_store = defaultdict(set)
+
     @classmethod
     def alive(cls):
         """Yield a `PlayerEntity` (subclass) instance for each alive player."""
@@ -180,6 +183,7 @@ class PlayerEntity(Player):
         cls.spawn_locations_store.clear()
         cls.random_weapons_store.clear()
         cls.flashed_players_store.clear()
+        cls.smoke_victims_store.clear()
 
         if not keep_inventories:
             cls.inventories_store.clear()
@@ -548,6 +552,11 @@ class PlayerEntity(Player):
 
     # Set the 'flashed' property for PlayerEntity
     flashed = property(get_flashed, set_flashed)
+
+    @property
+    def smoke_victims(self):
+        """Return the player UserIDs who have been shot through smoke by the player."""
+        return self.smoke_victims_store[self.userid]
 
     @property
     def inventories(self):

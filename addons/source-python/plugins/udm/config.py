@@ -111,6 +111,21 @@ with ConfigManager(info.name, f'{info.name}_') as config:
     cvar_equip_flashbang_grenade.Options.append('3 = Equip on spawn and after each kill caused by flashing an enemy')
 
     config.text('----------------------------------')
+    config.text('   * Smoke Grenade Behavior')
+    config.text('----------------------------------')
+
+    cvar_equip_smoke_grenade = config.cvar(
+        'equip_smoke_grenade',
+        3,
+        'Smoke grenade behavior'
+    )
+
+    cvar_equip_smoke_grenade.Options.append('0 = Off')
+    cvar_equip_smoke_grenade.Options.append('1 = Equip on spawn')
+    cvar_equip_smoke_grenade.Options.append('2 = Equip on spawn and after each detonation')
+    cvar_equip_smoke_grenade.Options.append('3 = Equip on spawn and after killing an enemy trough the smoke')
+
+    config.text('----------------------------------')
     config.text('   * Team Changes Management')
     config.text('----------------------------------')
 

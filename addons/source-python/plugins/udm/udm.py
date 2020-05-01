@@ -6,6 +6,8 @@
 # >> IMPORTS
 # =============================================================================
 # Python Imports
+#   Contextlib
+from contextlib import suppress
 #   Random
 import random
 
@@ -33,6 +35,8 @@ from listeners import OnPlayerRunCommand
 from listeners import OnServerActivate
 from listeners import OnServerOutput
 from listeners.tick import GameThread
+#   Mathlib
+from mathlib import Vector
 #   Memory
 from memory import make_object
 #   Messages
@@ -43,6 +47,8 @@ from players.constants import PlayerButtons
 from weapons.entity import Weapon
 
 # Script Imports
+#   Smoke Trace
+from udm import smoke_trace
 #   Admin
 from udm.admin import admin_menu
 #   Config
@@ -50,6 +56,7 @@ from udm.config import cvar_enable_infinite_ammo
 from udm.config import cvar_enable_noblock
 from udm.config import cvar_equip_flashbang_grenade
 from udm.config import cvar_equip_hegrenade
+from udm.config import cvar_equip_smoke_grenade
 from udm.config import cvar_refill_clip_on_headshot
 from udm.config import cvar_respawn_delay
 from udm.config import cvar_restore_health_on_knife_kill
@@ -116,6 +123,10 @@ def prepare_player(player):
     if cvar_equip_flashbang_grenade.get_int() > 0:
         player.give_named_item('weapon_flashbang')
 
+    # Give a Smoke grenade if configured that way
+    if cvar_equip_smoke_grenade.get_int() > 0:
+        player.give_named_item('weapon_smokegrenade')
+
     # Enable or disable non-blocking mode, depending on the configuration
     player.noblock = cvar_enable_noblock.get_int() > 0
 
@@ -178,6 +189,26 @@ def on_player_blind(game_event):
     delay_manager(delay_key, int(game_event['blind_duration']), player.set_flashed, (False, ))
 
 
+@Event('bullet_impact')
+def bullet_impact(event):
+    """Add the player impacted by the bullet to the list of smoke victims of the smoke grenade thrower."""
+    if cvar_equip_smoke_grenade.get_int() == 3:
+
+        # Get the PlayerEntity instance for the victim
+        victim = PlayerEntity.from_userid(event['userid'])
+
+        # Add the player to the list of smoke victims of the smoke grenade thrower,
+        # if the bullet went through smoke
+        blocked, smoke_entity = smoke_trace.is_line_blocked_by_smoke(
+            start=victim.eye_location,
+            end=Vector(event['x'], event['y'], event['z'])
+        )
+
+        if blocked and smoke_entity.owner is not None:
+            thrower = PlayerEntity(smoke_entity.owner.index)
+            thrower.smoke_victims.add(victim.userid)
+
+
 @Event('player_death')
 def on_player_death(game_event):
     """Handle attacker rewards & respawn the victim."""
@@ -210,6 +241,11 @@ def on_player_death(game_event):
         # Give a Flashbang grenade, if the victim was flashed
         if cvar_equip_flashbang_grenade.get_int() == 3 and victim.flashed:
             attacker.give_weapon('weapon_flashbang')
+
+        # Give a Smoke grenade, if the victim was killed through smoke
+        if cvar_equip_smoke_grenade.get_int() == 3 and victim.userid in attacker.smoke_victims:
+            attacker.give_weapon('weapon_smokegrenade')
+            attacker.smoke_victims.remove(victim.userid)
 
         # Restore the attacker's health if it was a knife kill
         if cvar_restore_health_on_knife_kill.get_int() > 0 and game_event['weapon'].startswith('knife'):
@@ -256,6 +292,19 @@ def on_hegrenade_detonate(game_event):
         player.give_weapon('weapon_hegrenade')
 
 
+@Event('smokegrenade_detonate')
+def on_smokegrenade_detonate(game_event):
+    """Equip the player with another Smoke grenade if configured that way."""
+    if cvar_equip_smoke_grenade.get_int() == 2:
+        player = PlayerEntity.from_userid(game_event['userid'])
+        player.give_weapon('weapon_smokegrenade')
+
+    elif cvar_equip_smoke_grenade.get_int() == 3:
+        # Add the 'smokegrenade_projectile' that just detonated to the `smoke_instances` dictionary
+        # The entity itself doesn't get removed upon detonation, but after the smoke effect disappears
+        smoke_trace.smoke_instances[game_event['entityid']]
+
+
 @Event('weapon_reload')
 def on_weapon_reload(game_event):
     """Refill the player's ammo."""
@@ -296,7 +345,12 @@ def on_pre_bump_weapon(stack_data):
     weapon = make_object(Weapon, stack_data[1])
 
     # Ignore the knife...
-    if weapon.classname not in ('weapon_knife', 'weapon_hegrenade', 'weapon_flashbang'):
+    if weapon.classname not in (
+        'weapon_knife',
+        'weapon_hegrenade',
+        'weapon_flashbang',
+        'weapon_smokegrenade'
+    ):
 
         # Get the weapon's data
         weapon_data = weapon_manager.by_name(weapon.weapon_name)
@@ -357,6 +411,10 @@ def on_entity_deleted(base_entity):
         delay_manager.cancel(f'drop_{base_entity.index}')
         delay_manager.cancel(f'refill_clip_{base_entity.index}')
         delay_manager.cancel(f'flashed_{base_entity.index}')
+
+    # Remove the smoke grenade entity index from the `smoke_instances` dictionary
+    with suppress(KeyError, ValueError):
+        del smoke_trace.smoke_instances[base_entity.index]
 
 
 @OnEntitySpawned
