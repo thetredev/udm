@@ -202,6 +202,8 @@ def on_player_disconnect(game_event):
     delay_manager.cancel(f'respawn_{player.userid}')
     delay_manager.cancel(f'protect_{player.userid}')
 
+    player.clear_data(keep_inventories=True)
+
 
 @Event('round_end')
 def on_round_end(game_event):
