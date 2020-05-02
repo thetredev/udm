@@ -76,6 +76,8 @@ default_convars = DefaultConVars([
     DefaultConVar('mp_solid_teammates', int(cvar_enable_noblock.get_int() == 0)),
     DefaultConVar('mp_respawn_on_death_t', 0),
     DefaultConVar('mp_respawn_on_death_ct', 0),
+    DefaultConVar('mp_randomspawn', 0),
+    DefaultConVar('mp_randomspawn_los', 0),
     DefaultConVar('mp_buy_during_immunity', 0),
     DefaultConVar('mp_respawn_immunitytime', 0 if cvar_spawn_protection_delay.get_int() > 0 else 2),
     DefaultConVar('sv_infinite_ammo', 0 if cvar_enable_infinite_ammo.get_bool() else 2),
