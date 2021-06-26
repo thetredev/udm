@@ -1,0 +1,20 @@
+name: Release UDM
+on:
+  push:
+    branches:
+      - master
+      - add_ci # TODO: remove later
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository code
+        uses: actions/checkout@v2
+      - name: "Publishing release zip"
+        uses: "marvinpinto/action-automatic-releases@latest"
+        with:
+          repo_token: "${{ secrets.GITHUB_TOKEN }}"
+          automatic_release_tag: "udm-${{ github.head_ref }}"
+          prerelease: false
+          files: |
+            addons
