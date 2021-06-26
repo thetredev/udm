@@ -1,0 +1,9 @@
+{
+    "python.analysis.autoSearchPaths": true,
+    "python.analysis.extraPaths": [
+        "../Source.Python/addons/source-python/packages/source-python",
+        "../Source.Python/addons/source-python/packages/site-packages",
+        "../Source.Python/addons/source-python/packages/custom",
+        "addons/source-python/plugins"
+    ]
+}
